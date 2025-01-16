@@ -4,6 +4,7 @@
  * Copyright (c) 2025 IUH. ALL rights reserved.
  */
 package model;
+
 /*
  * @description:
  * @author: Hoang Huy
