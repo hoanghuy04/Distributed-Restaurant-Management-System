@@ -1,1 +1,0 @@
-# Distributed-Restaurant-Management-System
