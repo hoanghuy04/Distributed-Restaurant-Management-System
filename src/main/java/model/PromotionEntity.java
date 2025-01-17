@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,6 +18,7 @@ import java.util.List;
         @NamedQuery(name = "Promotion.findAll", query = "select p from PromotionEntity p")
 })
 public class PromotionEntity extends BaseEntity {
+
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
@@ -47,7 +49,7 @@ public class PromotionEntity extends BaseEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "promotion")
-    private List<PromotionDetailEntity> promotionDetails;
+    private Set<PromotionDetailEntity> promotionDetails;
 
 //    @ManyToOne
 //    @MapsId("itemId")
