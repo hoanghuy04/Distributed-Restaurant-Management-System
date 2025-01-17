@@ -39,8 +39,9 @@ public class PromotionEntity extends BaseEntity {
     private boolean active;
 
     @Column(name = "min_price", nullable = false)
-    private LocalDate minPrice;
+    private double minPrice;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "promotion", fetch = FetchType.LAZY)
     private List<OrderEntity> orders;
 

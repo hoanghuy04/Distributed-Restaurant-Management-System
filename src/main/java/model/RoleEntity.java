@@ -16,7 +16,7 @@ import lombok.*;
 public class RoleEntity {
     @Id
     @EqualsAndHashCode.Include
-    @PrimaryKeyJoinColumn(name = "role_id", columnDefinition = "nvarchar(50)")
+    @Column(name = "role_id", columnDefinition = "nvarchar(50)")
     private String roleId;
 
     @Column(name = "role_name", nullable = false)
