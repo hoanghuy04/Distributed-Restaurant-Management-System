@@ -18,17 +18,17 @@ import model.enums.SizeEnum;
 public class ItemToppingEntity {
     @Id
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false, columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
     private ItemEntity item;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "topping_id")
+    @JoinColumn(name = "topping_id", nullable = false, columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
     private ToppingEntity topping;
 
-    @Column(name = "sellingPrice", nullable = false)
+    @Column(name = "selling_price", nullable = false)
     private double sellingPrice;
 
     public ItemToppingEntity() {
