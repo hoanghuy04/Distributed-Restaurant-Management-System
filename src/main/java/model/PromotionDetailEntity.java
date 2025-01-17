@@ -43,4 +43,10 @@ public class PromotionDetailEntity {
     @JoinColumn(name = "promotion_id", nullable = false)
     @ToString.Exclude
     private PromotionEntity promotion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id", nullable = false)
+    @ToString.Exclude
+    private ItemEntity item;
 }
