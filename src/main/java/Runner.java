@@ -18,4 +18,5 @@ public class Runner {
         EntityManager em = Persistence.createEntityManagerFactory("mariadb")
                 .createEntityManager();
     }
+
 }

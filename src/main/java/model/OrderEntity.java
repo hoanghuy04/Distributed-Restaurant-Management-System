@@ -6,8 +6,10 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import model.enums.*;
 
 import java.time.LocalDate;
@@ -22,9 +24,10 @@ import java.util.Set;
  * @date: 1/16/2025
  * @version: 1.0
  */
+@Data
 @Entity
 @Table(name = "orders")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
 })
@@ -55,22 +58,27 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "deposit", nullable = false)
     private double deposit;
 
+    //    @ToString.Exclude
 //    @ManyToOne
 //    @JoinColumn(name = "customer_id")
 //    private CustomerEntity customer;
 //
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id")
-//    private EmployeeEntity employee;
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeEntity employee;
 //
+//    @ToString.Exclude
 //    @ManyToOne
 //    @JoinColumn(name = "table_id")
 //    private TableEntity table;
 //
+//    @ToString.Exclude
 //    @Convert(converter = CombinedTableConverter.class)
 //    @Column(name = "combined_tables")
 //    private List<TableEntity> combinedTables;
-//
+
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private PromotionEntity promotion;
@@ -95,6 +103,7 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "reservation_status", nullable = false, columnDefinition = "nvarchar(50)")
     private ReservationStatusEnum reservationStatus;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderDetailEntity> orderDetails;
 
@@ -106,47 +115,47 @@ public class OrderEntity extends BaseEntity {
     }
 
     public void setTotalPrice() {
-//        if (orderDetails == null) {
-//            this.totalPrice = 0;
-//        } else {
-//            this.totalPrice = this.orderDetails.stream()
-//                    .mapToDouble(OrderDetailEntity::getLinetotal)
-//                    .sum();
-//        }
+        if (orderDetails == null) {
+            this.totalPrice = 0;
+        } else {
+            this.totalPrice = this.orderDetails.stream()
+                    .mapToDouble(OrderDetailEntity::getLineTotal)
+                    .sum();
+        }
     }
 
     public void setTotalDiscount() {
-//        if (orderDetails == null) {
-//            this.totalDiscount = 0;
-//        } else {
-//            double discountPercentage = 0;
-//            if (this.getPromotion() != null) {
-//                discountPercentage = this.getPromotion().getDiscountPercentage();
-//            }
-//            double itemDiscount = this.orderDetails.stream()
-//                    .mapToDouble(OrderDetailEntity::getDiscount)
-//                    .sum();
-//            this.totalDiscount = itemDiscount + (totalPrice - itemDiscount - deposit) * discountPercentage;
-//        }
+        if (orderDetails == null) {
+            this.totalDiscount = 0;
+        } else {
+            double discountPercentage = 0;
+            if (this.getPromotion() != null) {
+                discountPercentage = this.getPromotion().getDiscountPercentage();
+            }
+            double itemDiscount = this.orderDetails.stream()
+                    .mapToDouble(OrderDetailEntity::getDiscount)
+                    .sum();
+            this.totalDiscount = itemDiscount + (totalPrice - itemDiscount - deposit) * discountPercentage;
+        }
     }
 
     public boolean insertOrderDetail(OrderDetailEntity orderDetail) {
-//        List<OrderDetailEntity> orderDetails = this.getOrderDetails();
-//
-//        Optional<OrderDetailEntity> existingOrderDetail = orderDetails.stream()
-//                .filter(od -> od.equals(orderDetail))
-//                .findFirst();
-//
-//        if (existingOrderDetail.isPresent()) {
-//            existingOrderDetail.get().setQuantity(
-//                    existingOrderDetail.get().getQuantity() + orderDetail.getQuantity()
-//            );
-//        } else {
-//            orderDetails.add(orderDetail);
-//        }
-//
-//        this.setOrderDetails(orderDetails);
-//
+        Set<OrderDetailEntity> orderDetails = this.getOrderDetails();
+
+        Optional<OrderDetailEntity> existingOrderDetail = orderDetails.stream()
+                .filter(od -> od.equals(orderDetail))
+                .findFirst();
+
+        if (existingOrderDetail.isPresent()) {
+            existingOrderDetail.get().setQuantity(
+                    existingOrderDetail.get().getQuantity() + orderDetail.getQuantity()
+            );
+        } else {
+            orderDetails.add(orderDetail);
+        }
+
+        this.setOrderDetails(orderDetails);
+
         return true;
     }
 }
