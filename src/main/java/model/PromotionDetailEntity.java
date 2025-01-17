@@ -31,6 +31,7 @@ public class PromotionDetailEntity {
     @Column(name = "description")
     private String description;
 
+    @ToString.Exclude
     @ManyToOne
     private PromotionEntity promotion;
 }

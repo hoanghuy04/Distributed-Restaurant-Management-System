@@ -44,6 +44,7 @@ public class PromotionEntity extends BaseEntity {
     @OneToMany(mappedBy = "promotion", fetch = FetchType.LAZY)
     private List<OrderEntity> orders;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "promotion")
     private List<PromotionDetailEntity> promotionDetails;
 
