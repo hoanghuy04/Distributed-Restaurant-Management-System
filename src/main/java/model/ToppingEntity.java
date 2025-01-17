@@ -24,7 +24,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class ToppingEntity extends BaseEntity {
     @Id
-    @Column(name = "topping_id")
+    @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
     private String toppingId;
 

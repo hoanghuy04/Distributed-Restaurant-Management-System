@@ -6,6 +6,7 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -15,14 +16,17 @@ import lombok.Getter;
  * @date: 1/16/2025
  * @version: 1.0
  */
+@Data
 @Getter
 @Entity
 @Table(name = "order_details")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
 })
 public class OrderDetailEntity extends BaseEntity {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "order_id", columnDefinition = "nvarchar(50)")
     private String orderId;
 
@@ -30,6 +34,11 @@ public class OrderDetailEntity extends BaseEntity {
     @EqualsAndHashCode.Include
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")
     private String itemId;
+
+    @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
+    private String toppingId;
 
     @Column(nullable = false)
     private int quantity;
@@ -43,29 +52,29 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("itemId")
-//    @JoinColumn(name = "item_id", nullable = false)
-//    private ItemEntity item;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("orderId")
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("toppingId")
-//    @JoinColumn(name = "topping_id", nullable = false)
-//    private ToppingEntity topping;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("toppingId")
+    @JoinColumn(name = "topping_id", nullable = false)
+    private ToppingEntity topping;
 
     public void setLineTotal() {
-//        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
-//                .stream()
-//                .filter(x -> {
-//                    return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
-//                })
-//                .mapToDouble(x -> x.getSellingPrice())
-//                .sum()) * quantity;
+        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
+                .stream()
+                .filter(x -> {
+                    return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
+                })
+                .mapToDouble(x -> x.getSellingPrice())
+                .sum()) * quantity;
     }
 
 
