@@ -17,18 +17,19 @@ import lombok.Getter;
  */
 @Getter
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "order_details")
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
-        @NamedQuery(name = "OrderDetailEntity.findByOrderId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.orderId = :orderId"),
-        @NamedQuery(name = "OrderDetailEntity.findByItemId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.itemId = :itemId"),
-        @NamedQuery(name = "OrderDetailEntity.findByOrderIdAndItemId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.orderId = :orderId AND o.orderDetailId.itemId = :itemId")
 })
-public class OrderDetailEntity {
-    @EmbeddedId
+public class OrderDetailEntity extends BaseEntity {
+    @Id
+    @Column(name = "order_id", columnDefinition = "nvarchar(50)")
+    private String orderId;
+
+    @Id
     @EqualsAndHashCode.Include
-    private OrderDetailId orderDetailId;
+    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
+    private String itemId;
 
     @Column(nullable = false)
     private int quantity;
@@ -39,7 +40,7 @@ public class OrderDetailEntity {
     @Column
     private double discount;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -57,25 +58,6 @@ public class OrderDetailEntity {
 //    @JoinColumn(name = "topping_id", nullable = false)
 //    private ToppingEntity topping;
 
-    public void setOrderDetailId(OrderDetailId orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
-
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setItem(ItemEntity item) {
-//        this.item = item;
-    }
-
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
-
-
     public void setLineTotal() {
 //        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
 //                .stream()
@@ -91,11 +73,4 @@ public class OrderDetailEntity {
 //        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
     }
 
-    public void setTopping(ToppingEntity topping) {
-//        this.topping = topping;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
