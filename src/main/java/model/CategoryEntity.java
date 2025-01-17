@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class CategoryEntity extends BaseEntity{
     @Id
-    @Column(name = "category_id")
+    @Column(name = "category_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
     private String categoryId;
 
