@@ -6,6 +6,7 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -15,14 +16,17 @@ import lombok.Getter;
  * @date: 1/16/2025
  * @version: 1.0
  */
+@Data
 @Getter
 @Entity
 @Table(name = "order_details")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
 })
 public class OrderDetailEntity extends BaseEntity {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "order_id", columnDefinition = "nvarchar(50)")
     private String orderId;
 
