@@ -58,15 +58,15 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "deposit", nullable = false)
     private double deposit;
 
-//    @ToString.Exclude
+    //    @ToString.Exclude
 //    @ManyToOne
 //    @JoinColumn(name = "customer_id")
 //    private CustomerEntity customer;
 //
-//    @ToString.Exclude
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id")
-//    private EmployeeEntity employee;
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeEntity employee;
 //
 //    @ToString.Exclude
 //    @ManyToOne
@@ -77,11 +77,11 @@ public class OrderEntity extends BaseEntity {
 //    @Convert(converter = CombinedTableConverter.class)
 //    @Column(name = "combined_tables")
 //    private List<TableEntity> combinedTables;
-//
-//    @ToString.Exclude
-//    @ManyToOne
-//    @JoinColumn(name = "promotion_id")
-//    private PromotionEntity promotion;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private PromotionEntity promotion;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false, columnDefinition = "nvarchar(50)")
@@ -115,47 +115,47 @@ public class OrderEntity extends BaseEntity {
     }
 
     public void setTotalPrice() {
-//        if (orderDetails == null) {
-//            this.totalPrice = 0;
-//        } else {
-//            this.totalPrice = this.orderDetails.stream()
-//                    .mapToDouble(OrderDetailEntity::getLinetotal)
-//                    .sum();
-//        }
+        if (orderDetails == null) {
+            this.totalPrice = 0;
+        } else {
+            this.totalPrice = this.orderDetails.stream()
+                    .mapToDouble(OrderDetailEntity::getLineTotal)
+                    .sum();
+        }
     }
 
     public void setTotalDiscount() {
-//        if (orderDetails == null) {
-//            this.totalDiscount = 0;
-//        } else {
-//            double discountPercentage = 0;
-//            if (this.getPromotion() != null) {
-//                discountPercentage = this.getPromotion().getDiscountPercentage();
-//            }
-//            double itemDiscount = this.orderDetails.stream()
-//                    .mapToDouble(OrderDetailEntity::getDiscount)
-//                    .sum();
-//            this.totalDiscount = itemDiscount + (totalPrice - itemDiscount - deposit) * discountPercentage;
-//        }
+        if (orderDetails == null) {
+            this.totalDiscount = 0;
+        } else {
+            double discountPercentage = 0;
+            if (this.getPromotion() != null) {
+                discountPercentage = this.getPromotion().getDiscountPercentage();
+            }
+            double itemDiscount = this.orderDetails.stream()
+                    .mapToDouble(OrderDetailEntity::getDiscount)
+                    .sum();
+            this.totalDiscount = itemDiscount + (totalPrice - itemDiscount - deposit) * discountPercentage;
+        }
     }
 
     public boolean insertOrderDetail(OrderDetailEntity orderDetail) {
-//        List<OrderDetailEntity> orderDetails = this.getOrderDetails();
-//
-//        Optional<OrderDetailEntity> existingOrderDetail = orderDetails.stream()
-//                .filter(od -> od.equals(orderDetail))
-//                .findFirst();
-//
-//        if (existingOrderDetail.isPresent()) {
-//            existingOrderDetail.get().setQuantity(
-//                    existingOrderDetail.get().getQuantity() + orderDetail.getQuantity()
-//            );
-//        } else {
-//            orderDetails.add(orderDetail);
-//        }
-//
-//        this.setOrderDetails(orderDetails);
-//
+        Set<OrderDetailEntity> orderDetails = this.getOrderDetails();
+
+        Optional<OrderDetailEntity> existingOrderDetail = orderDetails.stream()
+                .filter(od -> od.equals(orderDetail))
+                .findFirst();
+
+        if (existingOrderDetail.isPresent()) {
+            existingOrderDetail.get().setQuantity(
+                    existingOrderDetail.get().getQuantity() + orderDetail.getQuantity()
+            );
+        } else {
+            orderDetails.add(orderDetail);
+        }
+
+        this.setOrderDetails(orderDetails);
+
         return true;
     }
 }

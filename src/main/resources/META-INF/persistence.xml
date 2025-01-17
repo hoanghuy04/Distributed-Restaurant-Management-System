@@ -9,7 +9,7 @@
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:sqlserver://localhost:1433;databaseName=RestaurantManagement;trustServerCertificate=
 true" />
-            <property name="jakarta.persistence.jdbc.user" value="root" />
+            <property name="jakarta.persistence.jdbc.user" value="sa" />
             <property name="jakarta.persistence.jdbc.password"
                       value="123" />
             <property name="jakarta.persistence.jdbc.driver"
