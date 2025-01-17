@@ -19,13 +19,15 @@ public class PromotionDetailEntity {
 
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
-    private String promotionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id", nullable = false)
+    private PromotionEntity promotion;
 
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
-    private String itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
@@ -37,16 +39,4 @@ public class PromotionDetailEntity {
 
     @Column(name = "description")
     private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("promotionId")
-    @JoinColumn(name = "promotion_id", nullable = false)
-    @ToString.Exclude
-    private PromotionEntity promotion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("itemId")
-    @JoinColumn(name = "item_id", nullable = false)
-    @ToString.Exclude
-    private ItemEntity item;
 }
