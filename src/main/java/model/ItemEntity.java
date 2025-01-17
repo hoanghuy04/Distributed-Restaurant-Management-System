@@ -64,6 +64,11 @@ public class ItemEntity extends BaseEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "item")
+    private Set<PromotionDetailEntity> promotionDetailEntities;
+
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "item")
     private Set<ItemToppingEntity> itemToppings;
 
 //    @ToString.Exclude

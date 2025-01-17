@@ -18,13 +18,16 @@ import model.enums.PromotionTypeEnum;
 public class PromotionDetailEntity {
 
     @Id
-    @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
-    private String promotionId;
+    @EqualsAndHashCode.Include
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id", nullable = false)
+    private PromotionEntity promotion;
 
     @Id
-    @EqualsAndHashCode.Exclude
-    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
-    private String itemId;
+    @EqualsAndHashCode.Include
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
@@ -36,8 +39,4 @@ public class PromotionDetailEntity {
 
     @Column(name = "description")
     private String description;
-
-    @ToString.Exclude
-    @ManyToOne
-    private PromotionEntity promotion;
 }
