@@ -18,11 +18,12 @@ import model.enums.PromotionTypeEnum;
 public class PromotionDetailEntity {
 
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
     private String promotionId;
 
     @Id
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")
     private String itemId;
 
@@ -37,7 +38,9 @@ public class PromotionDetailEntity {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("promotionId")
+    @JoinColumn(name = "promotion_id", nullable = false)
     @ToString.Exclude
-    @ManyToOne
     private PromotionEntity promotion;
 }

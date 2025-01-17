@@ -27,7 +27,7 @@ public class PromotionEntity extends BaseEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "discountPercentage", nullable = false)
+    @Column(name = "discount_percentage", nullable = false)
     private double discountPercentage;
 
     @Column(name = "started_date", nullable = false)
