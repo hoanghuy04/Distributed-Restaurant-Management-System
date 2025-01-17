@@ -17,14 +17,12 @@ import lombok.Getter;
  */
 @Getter
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "order_details")
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
 })
-public class OrderDetailEntity {
+public class OrderDetailEntity extends BaseEntity {
     @Id
-    @EqualsAndHashCode.Include
     @Column(name = "order_id", columnDefinition = "nvarchar(50)")
     private String orderId;
 
@@ -60,22 +58,6 @@ public class OrderDetailEntity {
 //    @JoinColumn(name = "topping_id", nullable = false)
 //    private ToppingEntity topping;
 
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setItem(ItemEntity item) {
-//        this.item = item;
-        
-    }
-
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
-
-
     public void setLineTotal() {
 //        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
 //                .stream()
@@ -91,11 +73,4 @@ public class OrderDetailEntity {
 //        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
     }
 
-    public void setTopping(ToppingEntity topping) {
-//        this.topping = topping;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

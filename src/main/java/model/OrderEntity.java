@@ -24,19 +24,15 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "orders")
-@Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
         @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
 })
-public class OrderEntity {
+public class OrderEntity extends BaseEntity {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "order_id", columnDefinition = "nvarchar(50)")
     private String orderId;
-
-    @Column(name = "order_date", nullable = false)
-    private LocalDateTime orderDate;
 
     @Column(name = "reservation_time", nullable = false)
     private LocalDateTime reservationTime;
@@ -103,7 +99,11 @@ public class OrderEntity {
     private Set<OrderDetailEntity> orderDetails;
 
 
-
+    @Override
+    @Column(name = "order_date", nullable = false, updatable = false)
+    public LocalDateTime getCreatedDate() {
+        return super.getCreatedDate();
+    }
 
     public void setTotalPrice() {
 //        if (orderDetails == null) {
