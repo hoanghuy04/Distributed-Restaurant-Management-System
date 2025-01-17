@@ -5,11 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 
 @Embeddable
-@Setter
-@Getter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class Address {
     @Column(name = "street", columnDefinition = "nvarchar(255)")
     private String street;

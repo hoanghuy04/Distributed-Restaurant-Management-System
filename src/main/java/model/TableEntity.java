@@ -22,9 +22,6 @@ public class TableEntity {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
-//    @Column(name = "combined_table_id", nullable = true, columnDefinition = "nvarchar(255)")
-//    private String combinedTableId;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "table_status", nullable = false, columnDefinition = "nvarchar(50)")
     private TableStatusEnum tableStatus;
