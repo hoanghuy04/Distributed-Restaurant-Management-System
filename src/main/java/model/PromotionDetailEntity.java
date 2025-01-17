@@ -7,9 +7,7 @@ import model.enums.OrderStatusEnum;
 import model.enums.PromotionTypeEnum;
 
 @Entity
-@Setter
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promotion_details")
