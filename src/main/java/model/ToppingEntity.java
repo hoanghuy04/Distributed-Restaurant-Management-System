@@ -21,12 +21,12 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "toppings")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ToppingEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class ToppingEntity extends BaseEntity {
     @Id
-    @Column(name = "item_id")
+    @Column(name = "topping_id")
     @EqualsAndHashCode.Include
-    private String id;
+    private String toppingId;
 
     @Column(name = "name", nullable = false, unique = true, columnDefinition = "nvarchar(255)")
     private String name;
@@ -37,6 +37,7 @@ public class ToppingEntity {
     @Column(name = "stock_quantity", nullable = false)
     private int stockQuantity;
 
+    @Column(name = "description", columnDefinition = "nvarchar(255)")
     private String description;
 
     @Column(name = "active", nullable = false)
@@ -50,10 +51,10 @@ public class ToppingEntity {
 
     }
 
-    public ToppingEntity(String id, String name, double costPrice, int stockQuantity,
+    public ToppingEntity(String toppingId, String name, double costPrice, int stockQuantity,
                          String description, boolean active,
                          Set<ItemToppingEntity> itemToppings) throws Exception {
-        this.id = id;
+        this.toppingId = toppingId;
         this.description = description;
         this.active = active;
         this.itemToppings = itemToppings;

@@ -16,24 +16,28 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "categories")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class CategoryEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class CategoryEntity extends BaseEntity{
     @Id
     @Column(name = "category_id")
     @EqualsAndHashCode.Include
-    private String id;
+    private String categoryId;
 
     @Column(name = "name", nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
+
+    @Column(name = "description", columnDefinition = "nvarchar(255)")
     private String description;
+
+    @Column(name = "active", nullable = false)
     private boolean active;
 
     public CategoryEntity() {
 
     }
 
-    public CategoryEntity(String id, String name, String description, boolean active) throws Exception {
-        this.id = id;
+    public CategoryEntity(String categoryId, String name, String description, boolean active) throws Exception {
+        this.categoryId = categoryId;
         this.description = description;
         this.active = active;
         setName(name);
