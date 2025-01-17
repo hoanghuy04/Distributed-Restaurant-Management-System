@@ -7,6 +7,7 @@ import lombok.ToString;
 import model.enums.TableStatusEnum;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -21,8 +22,8 @@ public class TableEntity {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
-    @Column(name = "combined_table_id", nullable = true, columnDefinition = "nvarchar(255)")
-    private String combinedTableId;
+//    @Column(name = "combined_table_id", nullable = true, columnDefinition = "nvarchar(255)")
+//    private String combinedTableId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "table_status", nullable = false, columnDefinition = "nvarchar(50)")
@@ -35,5 +36,5 @@ public class TableEntity {
 
     @OneToMany(mappedBy = "table")
     @ToString.Exclude
-    private List<OrderEntity> orders;
+    private Set<OrderEntity> orders;
 }

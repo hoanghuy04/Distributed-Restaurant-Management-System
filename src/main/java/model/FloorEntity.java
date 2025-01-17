@@ -26,6 +26,6 @@ public class FloorEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "floor")
-    private List<TableEntity> tables;
+    private Set<TableEntity> tables;
 
 }

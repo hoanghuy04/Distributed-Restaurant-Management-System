@@ -9,6 +9,7 @@ import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -29,7 +30,6 @@ public class CustomerEntity extends BaseEntity{
     @Column(name = "phone", nullable = false, columnDefinition = "nvarchar(255)")
     private String phone;
 
-    @Column(name = "address", nullable = false)
     @Embedded
     private Address address;
 
@@ -45,6 +45,6 @@ public class CustomerEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "customer")
     @ToString.Exclude
-    private List<OrderEntity> orders;
+    private Set<OrderEntity> orders;
 
 }
