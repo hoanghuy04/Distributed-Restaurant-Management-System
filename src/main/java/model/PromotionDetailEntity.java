@@ -17,8 +17,14 @@ import model.enums.PromotionTypeEnum;
 })
 public class PromotionDetailEntity {
 
-    @EmbeddedId
-    private PromotionDetailId promotionDetailId;
+    @Id
+    @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
+    private String promotionId;
+
+    @Id
+    @EqualsAndHashCode.Exclude
+    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
+    private String itemId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
