@@ -21,14 +21,17 @@ import lombok.Getter;
 @Table(name = "order_details")
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
-        @NamedQuery(name = "OrderDetailEntity.findByOrderId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.orderId = :orderId"),
-        @NamedQuery(name = "OrderDetailEntity.findByItemId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.itemId = :itemId"),
-        @NamedQuery(name = "OrderDetailEntity.findByOrderIdAndItemId", query = "SELECT o FROM OrderDetailEntity o WHERE o.orderDetailId.orderId = :orderId AND o.orderDetailId.itemId = :itemId")
 })
 public class OrderDetailEntity {
-    @EmbeddedId
+    @Id
     @EqualsAndHashCode.Include
-    private OrderDetailId orderDetailId;
+    @Column(name = "order_id", columnDefinition = "nvarchar(50)")
+    private String orderId;
+
+    @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
+    private String itemId;
 
     @Column(nullable = false)
     private int quantity;
@@ -39,7 +42,7 @@ public class OrderDetailEntity {
     @Column
     private double discount;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -56,10 +59,6 @@ public class OrderDetailEntity {
 //    @MapsId("toppingId")
 //    @JoinColumn(name = "topping_id", nullable = false)
 //    private ToppingEntity topping;
-
-    public void setOrderDetailId(OrderDetailId orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
 
 
     public void setQuantity(int quantity) {

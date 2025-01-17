@@ -32,7 +32,7 @@ import java.util.Set;
 public class OrderEntity {
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "order_id")
+    @Column(name = "order_id", columnDefinition = "nvarchar(50)")
     private String orderId;
 
     @Column(name = "order_date", nullable = false)
