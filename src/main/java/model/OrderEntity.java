@@ -71,9 +71,9 @@ public class OrderEntity extends BaseEntity {
 //    @Column(name = "combined_tables")
 //    private List<TableEntity> combinedTables;
 //
-//    @ManyToOne
-//    @JoinColumn(name = "promotion_id")
-//    private PromotionEntity promotion;
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private PromotionEntity promotion;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false, columnDefinition = "nvarchar(50)")
