@@ -35,6 +35,11 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")
     private String itemId;
 
+    @Id
+    @EqualsAndHashCode.Include
+    @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
+    private String toppingId;
+
     @Column(nullable = false)
     private int quantity;
 
@@ -47,29 +52,29 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("itemId")
-//    @JoinColumn(name = "item_id", nullable = false)
-//    private ItemEntity item;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("orderId")
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("toppingId")
-//    @JoinColumn(name = "topping_id", nullable = false)
-//    private ToppingEntity topping;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("toppingId")
+    @JoinColumn(name = "topping_id", nullable = false)
+    private ToppingEntity topping;
 
     public void setLineTotal() {
-//        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
-//                .stream()
-//                .filter(x -> {
-//                    return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
-//                })
-//                .mapToDouble(x -> x.getSellingPrice())
-//                .sum()) * quantity;
+        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
+                .stream()
+                .filter(x -> {
+                    return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
+                })
+                .mapToDouble(x -> x.getSellingPrice())
+                .sum()) * quantity;
     }
 
 
