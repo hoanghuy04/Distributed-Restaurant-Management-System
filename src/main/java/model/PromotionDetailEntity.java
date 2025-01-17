@@ -7,9 +7,7 @@ import model.enums.OrderStatusEnum;
 import model.enums.PromotionTypeEnum;
 
 @Entity
-@Setter
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promotion_details")
@@ -33,6 +31,7 @@ public class PromotionDetailEntity {
     @Column(name = "description")
     private String description;
 
+    @ToString.Exclude
     @ManyToOne
     private PromotionEntity promotion;
 }

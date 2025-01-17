@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Setter
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employees")
@@ -39,6 +37,7 @@ public class EmployeeEntity extends BaseEntity {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;
