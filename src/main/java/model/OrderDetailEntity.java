@@ -67,6 +67,7 @@ public class OrderDetailEntity {
 
     public void setItem(ItemEntity item) {
 //        this.item = item;
+        
     }
 
 
