@@ -1,6 +1,7 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
 import model.TableEntity;
 import util.IDGeneratorUtil;
 
@@ -8,6 +9,7 @@ import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class TableDAL implements BaseDAL<TableEntity, String>{
     private EntityManager em;
     @Override
