@@ -34,6 +34,7 @@ public class DataGenerator {
 //    private final OrderDAL orderDAL = new OrderDAL(em);
     private final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
 
+
     // CategoryEntity
     private CategoryEntity generateCategoryEntity() {
         return null;
@@ -100,6 +101,10 @@ public class DataGenerator {
     }
 
     public void generateAndPrintSampleData() {
+        EntityManager em = Persistence
+                .createEntityManagerFactory("mariadb")
+                .createEntityManager();
+
         EntityTransaction tr = em.getTransaction();
 
         for (int i = 0; i < 10; i++) {
@@ -108,6 +113,11 @@ public class DataGenerator {
             //persit
             tr.commit();
         }
+    }
+
+    public static void main(String[] args) {
+        DataGenerator gen = new DataGenerator();
+        gen.generateAndPrintSampleData();
     }
 
 

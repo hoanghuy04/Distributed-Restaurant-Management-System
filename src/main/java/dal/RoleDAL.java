@@ -1,6 +1,8 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.EmployeeEntity;
 import model.RoleEntity;
 import util.IDGeneratorUtil;
@@ -9,6 +11,8 @@ import javax.management.relation.Role;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleDAL implements BaseDAL<RoleEntity, String> {
     private EntityManager entityManager;
 
