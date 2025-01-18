@@ -47,16 +47,19 @@ public class ItemEntity extends BaseEntity {
 
     private final double VAT = 0.2;
 
+    @Column(name = "img", columnDefinition = "nvarchar(50)")
     private String img;
 
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @Column(name = "size", nullable = false, columnDefinition = "nvarchar(50)")
     @Enumerated(EnumType.STRING)
     private SizeEnum size;
 
+    @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false, columnDefinition = "nvarchar(50)")
     private CategoryEntity category;
 
     @ToString.Exclude
@@ -67,6 +70,10 @@ public class ItemEntity extends BaseEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "item")
     private Set<ItemToppingEntity> itemToppings;
+
+//    @ToString.Exclude
+//    @OneToMany(mappedBy = "item")
+//    private Set<PromotionDetailEntity> promotionDetails;
 
     public ItemEntity() {
 

@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import model.enums.*;
+import util.CombinedTableConverterUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,25 +59,25 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "deposit", nullable = false)
     private double deposit;
 
-    //    @ToString.Exclude
-//    @ManyToOne
-//    @JoinColumn(name = "customer_id")
-//    private CustomerEntity customer;
-//
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private CustomerEntity customer;
+
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private EmployeeEntity employee;
-//
-//    @ToString.Exclude
-//    @ManyToOne
-//    @JoinColumn(name = "table_id")
-//    private TableEntity table;
-//
-//    @ToString.Exclude
-//    @Convert(converter = CombinedTableConverter.class)
-//    @Column(name = "combined_tables")
-//    private List<TableEntity> combinedTables;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "table_id")
+    private TableEntity table;
+
+    @ToString.Exclude
+    @Convert(converter = CombinedTableConverterUtil.class)
+    @Column(name = "combined_tables")
+    private List<TableEntity> combinedTables;
 
     @ToString.Exclude
     @ManyToOne
