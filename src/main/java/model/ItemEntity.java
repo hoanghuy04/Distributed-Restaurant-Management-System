@@ -24,6 +24,9 @@ import java.util.Set;
 @Entity
 @Table(name = "items")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NamedQueries({
+        @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i")
+})
 public class ItemEntity extends BaseEntity {
     @Id
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")

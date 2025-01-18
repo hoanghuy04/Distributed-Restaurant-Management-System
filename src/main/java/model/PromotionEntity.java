@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "promotions")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
-        @NamedQuery(name = "Promotion.findAll", query = "select p from PromotionEntity p")
+        @NamedQuery(name = "PromotionEntity.findAll", query = "select p from PromotionEntity p")
 })
 public class PromotionEntity extends BaseEntity {
 
