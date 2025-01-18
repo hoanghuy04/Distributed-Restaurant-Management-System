@@ -11,6 +11,8 @@ import lombok.*;
 @Table(name = "employees")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
+        @NamedQuery(name = "EmployeeEntity.findByPhoneNumber", query = "SELECT e FROM EmployeeEntity e WHERE e.phoneNumber like :phoneNumber"),
+        @NamedQuery(name = "EmployeeEntity.findByEmail", query = "SELECT e FROM EmployeeEntity e WHERE e.email like :email"),
         @NamedQuery(name = "EmployeeEntity.findAll", query = "select e from EmployeeEntity e")
 })
 public class EmployeeEntity extends BaseEntity {

@@ -13,7 +13,9 @@ import model.enums.PromotionTypeEnum;
 @Table(name = "promotion_details")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
-        @NamedQuery(name = "PromotionDetail.findAll", query = "select p from PromotionDetailEntity p")
+        @NamedQuery(name = "PromotionDetailEntity.findAll", query = "select p from PromotionDetailEntity p"),
+        @NamedQuery(name = "PromotionDetailEntity.findByPromotionId", query = "select p from PromotionDetailEntity p where p.promotion.promotionId = :promotionId"),
+        @NamedQuery(name = "PromotionDetailEntity.findByItemId", query = "select p from PromotionDetailEntity p where p.item.itemId = :itemId")
 })
 public class PromotionDetailEntity {
 

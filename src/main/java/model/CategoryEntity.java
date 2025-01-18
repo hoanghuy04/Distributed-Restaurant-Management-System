@@ -1,9 +1,6 @@
 package model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,6 +14,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "categories")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NamedQueries({
+        @NamedQuery(name = "CategoryEntity.findAll", query = "select c from CategoryEntity c")
+})
 public class CategoryEntity extends BaseEntity{
     @Id
     @Column(name = "category_id", columnDefinition = "nvarchar(50)")

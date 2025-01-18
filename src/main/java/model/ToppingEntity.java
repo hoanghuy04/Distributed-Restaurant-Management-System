@@ -22,6 +22,9 @@ import java.util.Set;
 @Entity
 @Table(name = "toppings")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NamedQueries({
+        @NamedQuery(name = "ToppingEntity.findAll", query = "select t from ToppingEntity t")
+})
 public class ToppingEntity extends BaseEntity {
     @Id
     @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
