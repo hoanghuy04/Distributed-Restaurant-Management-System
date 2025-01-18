@@ -24,6 +24,9 @@ public class TableEntity {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Column(name ="note", columnDefinition = "nvarchar(50)")
+    private String note;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "table_status", nullable = false, columnDefinition = "nvarchar(50)")
     private TableStatusEnum tableStatus;

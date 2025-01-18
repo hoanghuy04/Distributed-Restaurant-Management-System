@@ -4,9 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import model.*;
+import model.enums.TableStatusEnum;
 import net.datafaker.Faker;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /*
  * @description: DataGenerator
@@ -41,7 +45,23 @@ public class DataGenerator {
 
     //Address
     private Address generateAddress() {
-        return null;
+        Address address = new Address();
+        address.setStreet(faker.address().streetAddress());
+        String[] districts = {"Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Hai Bà Trưng", "Đống Đa", "Cầu Giấy", "Hà Đông", "Long Biên"};
+        address.setDistrict(districts[rand.nextInt(districts.length)]);
+        String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
+        address.setWard(wards[rand.nextInt(wards.length)]);
+        String[] cities = {
+                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
+                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
+                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
+                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
+                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
+                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
+                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
+        };
+        address.setCity(cities[rand.nextInt(cities.length)]);
+        return address;
     }
 
     // EmployeEntity
@@ -64,19 +84,43 @@ public class DataGenerator {
         return null;
     }
 
+    private String generateVietnamesePhoneNumber() {
+        String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
+        String prefix = prefixes[new Random().nextInt(prefixes.length)];
+        String suffix = String.format("%07d", new Random().nextInt(10000000)); // 7 chữ số ngẫu nhiên
+        return prefix + suffix;
+    }
     // CustomerEntity
     private CustomerEntity getCustomerEntity() {
-        return null;
+        CustomerEntity customer = new CustomerEntity();
+        customer.setName(faker.name().fullName());
+        customer.setEmail(faker.internet().emailAddress());
+        customer.setPhone(generateVietnamesePhoneNumber());
+        LocalDateTime dayOfBirth = LocalDateTime.now().minusYears(18 + rand.nextInt(42));
+        customer.setDayOfBirth(dayOfBirth);
+        customer.setAddress(generateAddress());
+        customer.setRewardedPoint(rand.nextInt(3000));
+        customer.setCustomerLevel(customer.getLevelCustomer());
+        return customer;
     }
 
     // FloorEntity
-    private FloorEntity generateFloorEntity() {
-        return null;
+    private FloorEntity generateFloorEntity(int numberFloor, int capacityFloor) {
+        FloorEntity floor = new FloorEntity();
+        floor.setName("Tầng" + numberFloor);
+        floor.setCapacity(capacityFloor);
+        Set<TableEntity> tables = new HashSet<>();
+        floor.setTables(tables);
+        return floor;
     }
 
     //TableEntity
-    private TableEntity getTableEntity() {
-        return null;
+    private TableEntity getTableEntity(FloorEntity floor) {
+        TableEntity table = new TableEntity();
+        table.setCapacity(rand.nextInt(6) + 2);
+        table.setTableStatus(TableStatusEnum.AVAILABLE);
+        table.setFloor(floor);
+        return table;
     }
 
     //OrderEntity
@@ -95,6 +139,13 @@ public class DataGenerator {
             //new Entity
             tr.begin();
             //persit
+            tr.commit();
+        }
+
+        //Floor
+        for (int i = 1; i < 4; i++) {
+            FloorEntity f = generateFloorEntity(i,10);
+            tr.begin();
             tr.commit();
         }
     }
