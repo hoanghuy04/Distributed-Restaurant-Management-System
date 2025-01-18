@@ -26,7 +26,7 @@ import lombok.Getter;
         @NamedQuery(name = "OrderDetailEntity.findByOrderId", query = "SELECT o FROM OrderDetailEntity o WHERE o.order.orderId = :orderId"),
         @NamedQuery(
                 name = "OrderDetailEntity.findById",
-                query = "SELECT o FROM OrderDetailEntity o WHERE o.id.orderId = :orderId AND o.id.itemId = :itemId AND o.id.toppingId = :toppingId"
+                query = "SELECT o FROM OrderDetailEntity o WHERE o.order.orderId = :orderId AND o.item.itemId = :itemId AND o.topping.toppingId = :toppingId"
         )
 })
 public class OrderDetailEntity extends BaseEntity {
