@@ -22,17 +22,14 @@ import java.util.Optional;
  */
 public class IDGeneratorUtil {
     // Hàm generate ID
-    public static String generateIDWithCreatedDate(String prefix, String entityName, String idFieldName, String dateFieldName) {
+    public static String generateIDWithCreatedDate(String prefix, String entityName,
+                                                   String idFieldName, String dateFieldName, EntityManager em, LocalDateTime time) {
         // Lấy thời gian hiện tại
-        LocalDateTime currentDate = LocalDateTime.now();
-        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("ddMMyy"));
+        String formattedDate = time.format(DateTimeFormatter.ofPattern("ddMMyy"));
         String newID = null;
         String formattedSequence = null;
         int sequence = 1; // Bắt đầu sequence từ 1
 
-        // Sử dụng JPA EntityManager để truy vấn ID
-        ConnectDB.connect();
-        EntityManager em = ConnectDB.getEntityManager();
         try {
             String queryStr = String.format(
                     "SELECT e.%s FROM %s e WHERE YEAR(e.%s) = ?1 "
@@ -43,25 +40,24 @@ public class IDGeneratorUtil {
 
             // Thực hiện truy vấn để lấy ID gần nhất
             List<String> result = em.createNativeQuery(queryStr)
-                    .setParameter(1, currentDate.getYear())
-                    .setParameter(2, currentDate.getMonthValue())
-                    .setParameter(3, currentDate.getDayOfMonth())
+                    .setParameter(1, time.getYear())
+                    .setParameter(2, time.getMonthValue())
+                    .setParameter(3, time.getDayOfMonth())
                     .setMaxResults(1)
                     .getResultList();
 
             if (!result.isEmpty()) {
                 String id = result.get(0);
-                String orderDate = id.substring(1, 7); // Lấy phần ngày tháng trong ID
+                String orderDate = id.substring(prefix.length(), prefix.length() + 6); // Lấy phần ngày tháng trong ID
                 // So sánh ngày tháng trong ID với ngày hiện tại
                 if (orderDate.equals(formattedDate)) {
                     // Nếu cùng ngày, tăng sequence lên
-                    sequence = Integer.parseInt(id.substring(7));
+                    sequence = Integer.parseInt(id.substring(prefix.length() + 6));
                     formattedSequence = String.format("%04d", ++sequence);
                 }
-            } else {
-                // Nếu không có kết quả nào từ truy vấn, bắt đầu từ sequence 1
-                formattedSequence = String.format("%04d", sequence++);
             }
+            // Nếu không có kết quả nào từ truy vấn, bắt đầu từ sequence 1
+            formattedSequence = String.format("%04d", sequence++);
 
             newID = prefix + formattedDate + formattedSequence;
 
@@ -73,9 +69,7 @@ public class IDGeneratorUtil {
     }
 
     // Hàm sinh ra ID với prefix và số thứ tự (lớn nhất trong database + 1)
-    public static String generateSimpleID(String prefix, String tableName, String id) {
-        ConnectDB.connect();
-        EntityManager em = ConnectDB.getEntityManager();
+    public static String generateSimpleID(String prefix, String tableName, String id, EntityManager em) {
         int sequence = 1;
 
         try {
