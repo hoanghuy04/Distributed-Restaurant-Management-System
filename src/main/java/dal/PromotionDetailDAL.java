@@ -1,6 +1,8 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.OrderDetailEntity;
 import model.PromotionDetailEntity;
 import model.PromotionEntity;
@@ -8,6 +10,8 @@ import model.PromotionEntity;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity,String> {
     private EntityManager entityManager;
 
