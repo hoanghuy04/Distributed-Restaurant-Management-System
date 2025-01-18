@@ -23,6 +23,7 @@ import lombok.Getter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
+        @NamedQuery(name = "OrderDetailEntity.findByOrderId", query = "SELECT o FROM OrderDetailEntity o WHERE o.order.orderId = :orderId"),
         @NamedQuery(
                 name = "OrderDetailEntity.findById",
                 query = "SELECT o FROM OrderDetailEntity o WHERE o.id.orderId = :orderId AND o.id.itemId = :itemId AND o.id.toppingId = :toppingId"

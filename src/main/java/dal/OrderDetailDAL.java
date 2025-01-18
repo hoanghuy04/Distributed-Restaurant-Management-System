@@ -36,7 +36,12 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
 
     @Override
     public boolean deleteById(String s) {
-        return false;
+        return BaseDAL.executeTransaction(entityManager, () -> {
+            OrderDetailEntity entity = entityManager.find(OrderDetailEntity.class, s);
+            if (entity != null) {
+                entityManager.remove(entity);
+            }
+        });
     }
 
     @Override
@@ -62,4 +67,9 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
         }
     }
 
+    public List<OrderDetailEntity> findByOrderId(String orderId) {
+        return entityManager.createNamedQuery("OrderDetailEntity.findByOrderId", OrderDetailEntity.class)
+                .setParameter("orderId", orderId)
+                .getResultList();
+    }
 }
