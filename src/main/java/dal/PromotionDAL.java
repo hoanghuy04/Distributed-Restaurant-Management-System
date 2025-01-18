@@ -3,6 +3,7 @@ package dal;
 import jakarta.persistence.EntityManager;
 import model.OrderEntity;
 import model.PromotionEntity;
+import util.IDGeneratorUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,8 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
     @Override
     public boolean insert(PromotionEntity promotionEntity) {
+        promotionEntity.setPromotionId(IDGeneratorUtil.generateIDWithCreatedDate("P", "promotions", "promotion_id"
+                , "created_date", entityManager, promotionEntity.getCreatedDate()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(promotionEntity));
     }
 

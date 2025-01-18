@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import model.EmployeeEntity;
 import model.OrderDetailEntity;
 import model.PromotionEntity;
+import util.IDGeneratorUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,8 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
     private EntityManager entityManager;
     @Override
     public boolean insert(EmployeeEntity employeeEntity) {
+        employeeEntity.setEmployeeId(IDGeneratorUtil.generateIDWithCreatedDate("Emp", "employees", "employee_id"
+                , "created_date", entityManager, employeeEntity.getCreatedDate()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(employeeEntity));
     }
 

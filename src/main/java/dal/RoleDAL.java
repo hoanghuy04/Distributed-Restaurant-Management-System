@@ -3,6 +3,7 @@ package dal;
 import jakarta.persistence.EntityManager;
 import model.EmployeeEntity;
 import model.RoleEntity;
+import util.IDGeneratorUtil;
 
 import javax.management.relation.Role;
 import java.util.List;
@@ -13,6 +14,7 @@ public class RoleDAL implements BaseDAL<RoleEntity, String> {
 
     @Override
     public boolean insert(RoleEntity roleEntity) {
+        roleEntity.setRoleId(IDGeneratorUtil.generateSimpleID("R","roles","role_id", entityManager));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(roleEntity));
     }
 
