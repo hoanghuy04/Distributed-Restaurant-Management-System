@@ -1,20 +1,25 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.OrderEntity;
 import model.PromotionEntity;
 import util.IDGeneratorUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     private EntityManager entityManager;
 
     @Override
     public boolean insert(PromotionEntity promotionEntity) {
         promotionEntity.setPromotionId(IDGeneratorUtil.generateIDWithCreatedDate("P", "promotions", "promotion_id"
-                , "created_date", entityManager, promotionEntity.getCreatedDate()));
+                , "created_date", entityManager, LocalDateTime.now()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(promotionEntity));
     }
 

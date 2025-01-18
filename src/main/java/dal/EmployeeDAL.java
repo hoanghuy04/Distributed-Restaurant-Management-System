@@ -2,20 +2,26 @@ package dal;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.EmployeeEntity;
 import model.OrderDetailEntity;
 import model.PromotionEntity;
 import util.IDGeneratorUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
     private EntityManager entityManager;
     @Override
     public boolean insert(EmployeeEntity employeeEntity) {
         employeeEntity.setEmployeeId(IDGeneratorUtil.generateIDWithCreatedDate("Emp", "employees", "employee_id"
-                , "created_date", entityManager, employeeEntity.getCreatedDate()));
+                , "created_date", entityManager, LocalDateTime.now()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(employeeEntity));
     }
 
