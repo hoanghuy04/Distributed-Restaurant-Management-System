@@ -15,6 +15,9 @@ import model.enums.SizeEnum;
 @Entity
 @Table(name = "items_toppings")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NamedQueries({
+        @NamedQuery(name = "ItemToppingEntity.findAll", query = "select it from ItemToppingEntity it")
+})
 public class ItemToppingEntity {
     @Id
     @ManyToOne
