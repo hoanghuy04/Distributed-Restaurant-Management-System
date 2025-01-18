@@ -1,5 +1,6 @@
 package util.datafaker;
 
+import dal.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
@@ -18,6 +19,21 @@ public class DataGenerator {
 
     Faker faker = new Faker(new java.util.Locale("vi"));
     private final Random rand = new Random();
+    EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+    private final CategoryDAL categoryDAL = new CategoryDAL(em);
+    private final ItemDAL itemDAL = new ItemDAL(em);
+    private final ToppingDAL toppingDAL = new ToppingDAL(em);
+    private final ItemToppingDAL itemToppingDAL = new ItemToppingDAL(em);
+//    private final EmployeeDAL employeeDAL = new EmployeeDAL(em);
+    private final RoleDAL roleDAL = new RoleDAL();
+//    private final PromotionDAL promotionDAL = new PromotionDAL(em);
+//    private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
+//    private final CustomerDAL customerDAL = new CustomerDAL(em);
+//    private final FloorDAL floorDAL = new FloorDAL(em);
+//    private final TableDAL tableDAL = new TableDAL(em);
+//    private final OrderDAL orderDAL = new OrderDAL(em);
+    private final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
+
 
     // CategoryEntity
     private CategoryEntity generateCategoryEntity() {
