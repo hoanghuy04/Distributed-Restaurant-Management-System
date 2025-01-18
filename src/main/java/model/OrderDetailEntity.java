@@ -23,22 +23,29 @@ import lombok.Getter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "OrderDetailEntity.findAll", query = "SELECT o FROM OrderDetailEntity o"),
+        @NamedQuery(
+                name = "OrderDetailEntity.findById",
+                query = "SELECT o FROM OrderDetailEntity o WHERE o.id.orderId = :orderId AND o.id.itemId = :itemId AND o.id.toppingId = :toppingId"
+        )
 })
 public class OrderDetailEntity extends BaseEntity {
-    @Id
-    @EqualsAndHashCode.Include
-    @Column(name = "order_id", columnDefinition = "nvarchar(50)")
-    private String orderId;
 
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "item_id", columnDefinition = "nvarchar(50)")
-    private String itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     @Id
     @EqualsAndHashCode.Include
-    @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
-    private String toppingId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private OrderEntity order;
+
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topping_id", nullable = false)
+    private ToppingEntity topping;
 
     @Column(nullable = false)
     private int quantity;
@@ -52,20 +59,6 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("itemId")
-    @JoinColumn(name = "item_id", nullable = false)
-    private ItemEntity item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("orderId")
-    @JoinColumn(name = "order_id", nullable = false)
-    private OrderEntity order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("toppingId")
-    @JoinColumn(name = "topping_id", nullable = false)
-    private ToppingEntity topping;
 
     public void setLineTotal() {
         this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
