@@ -1,12 +1,14 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
 import model.CustomerEntity;
 import util.IDGeneratorUtil;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class CustomerDAL implements BaseDAL<CustomerEntity,String> {
     private EntityManager em;
 
