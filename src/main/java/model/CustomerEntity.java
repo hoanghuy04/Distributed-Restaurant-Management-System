@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.CustomerLevelEnum;
+import org.hibernate.Hibernate;
 import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,9 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "customers")
+@NamedQueries({
+        @NamedQuery(name = "CustomerEntity.findAll", query = "select c from CustomerEntity c")
+})
 public class CustomerEntity extends BaseEntity{
     @Id
     @Column(name = "customer_id", columnDefinition = "nvarchar(50)")
@@ -47,4 +51,36 @@ public class CustomerEntity extends BaseEntity{
     @ToString.Exclude
     private Set<OrderEntity> orders;
 
+    //Ghet m qua huy oi
+//    @PrePersist
+//    @PreUpdate
+//    public void calculateDerivedFields() {
+//        if (orders != null && Hibernate.isInitialized(orders)) {
+//            this.rewardedPoint = getRewardedPoint();
+//            this.customerLevel = getLevelCustomer();
+//        } else {
+//            this.rewardedPoint = 0;
+//            this.customerLevel = CustomerLevelEnum.NEW;
+//        }
+//    }
+
+    public int getRewardedPoint() {
+        if (orders == null || orders.isEmpty()) {
+            return 0;
+        }
+        return orders.stream()
+                .mapToInt(order -> (int) (order.getTotalPrice() / 100000))
+                .sum();
+    }
+
+    public CustomerLevelEnum getLevelCustomer() {
+        int rewardPoint = getRewardedPoint();
+        if (rewardPoint <= 500) {
+            return CustomerLevelEnum.NEW;
+        } else if (rewardPoint <= 2000) {
+            return CustomerLevelEnum.POTENTIAL;
+        } else {
+            return CustomerLevelEnum.VIP;
+        }
+    }
 }

@@ -12,6 +12,9 @@ import java.util.Set;
 @Entity
 @Table(name = "tables")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NamedQueries({
+        @NamedQuery(name = "TableEntity.findAll", query = "select t from TableEntity t")
+})
 public class TableEntity {
     @Id
     @Column(name = "table_id", columnDefinition = "nvarchar(50)")
