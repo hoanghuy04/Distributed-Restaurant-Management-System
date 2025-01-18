@@ -12,9 +12,12 @@ import java.util.Set;
 @Data
 @Table(name = "floors")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NamedQueries({
+        @NamedQuery(name = "FloorEntity.findAll", query = "select f from FloorEntity f")
+})
 public class FloorEntity {
     @Id
-    @Column(name = "floor_id", nullable = false)
+    @Column(name = "floor_id", nullable = false, columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
     private String floorId;
 
@@ -27,5 +30,6 @@ public class FloorEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "floor")
     private Set<TableEntity> tables;
+
 
 }
