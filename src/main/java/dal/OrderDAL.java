@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.OrderEntity;
+import util.IDGeneratorUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public class OrderDAL implements BaseDAL<OrderEntity, String>{
 
     @Override
     public boolean insert(OrderEntity orderEntity) {
+        orderEntity.setOrderId(IDGeneratorUtil.generateIDWithCreatedDate("O", "orders", "order_id"
+                , "reservation_time", entityManager, orderEntity.getReservationTime()));
+
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(orderEntity));
     }
 

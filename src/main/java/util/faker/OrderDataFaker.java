@@ -1,0 +1,15 @@
+/*
+ * @ (#) OrderFaker.java      1.0      1/18/2025
+ *
+ * Copyright (c) 2025 IUH. ALL rights reserved.
+ */
+package util.faker;
+
+/*
+ * @description:
+ * @author: Hoang Huy
+ * @date: 1/18/2025
+ * @version: 1.0
+ */
+public class OrderDataFaker {
+}
