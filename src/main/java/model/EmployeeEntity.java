@@ -31,8 +31,9 @@ public class EmployeeEntity extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Embedded
     @Column(name = "address", nullable = false)
-    private String address;
+    private Address address;
 
     @Column(name = "active", nullable = false)
     private boolean active;

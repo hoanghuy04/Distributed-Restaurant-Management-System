@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.TableStatusEnum;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
