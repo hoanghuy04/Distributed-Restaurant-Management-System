@@ -1,17 +1,18 @@
 package util.datafaker;
 
 import dal.*;
+import dal.connectDB.ConnectDB;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import lombok.Data;
 import model.*;
 import model.enums.*;
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 
 /*
  * @description: DataGenerator
@@ -19,88 +20,133 @@ import java.util.Random;
  * @date: 1/18/2025
  * @version: 1.0
  */
+@Data
 public class DataGenerator {
-
-    Faker faker = new Faker(new java.util.Locale("vi"));
+    private Faker faker = new Faker(new Locale("vi"));
     private final Random rand = new Random();
-    EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+    private final EntityManager em = ConnectDB.getEntityManager();
     private final CategoryDAL categoryDAL = new CategoryDAL(em);
     private final ItemDAL itemDAL = new ItemDAL(em);
     private final ToppingDAL toppingDAL = new ToppingDAL(em);
     private final ItemToppingDAL itemToppingDAL = new ItemToppingDAL(em);
     private final EmployeeDAL employeeDAL = new EmployeeDAL(em);
     private final RoleDAL roleDAL = new RoleDAL();
-    //    private final PromotionDAL promotionDAL = new PromotionDAL(em);
-//    private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
+    private final PromotionDAL promotionDAL = new PromotionDAL(em);
+    private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
     private final CustomerDAL customerDAL = new CustomerDAL(em);
-    //    private final FloorDAL floorDAL = new FloorDAL(em);
+    private final FloorDAL floorDAL = new FloorDAL(em);
     private final TableDAL tableDAL = new TableDAL(em);
     private final OrderDAL orderDAL = new OrderDAL(em);
     private final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
 
-
     // CategoryEntity
-    private CategoryEntity generateCategoryEntity() {
-        return null;
+    public CategoryEntity generateCategoryEntity(String name) {
+        String description = "Danh mục " + name + " - " + faker.lorem().sentence();
+        try {
+            return new CategoryEntity("", name, description, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // ItemEntity
-    private ItemEntity generateItemEntity() {
-        return null;
+    public ItemEntity generateItemEntity(CategoryEntity category) {
+        String name = "";
+        if (category.getName().trim().equalsIgnoreCase("Pizza")) {
+            name = "Pizza " + faker.food().ingredient();
+        } else if (category.getName().trim().equalsIgnoreCase("Mì Ý")) {
+            name = "Mì Ý " + faker.food().ingredient();
+        } else if (category.getName().trim().equalsIgnoreCase("Khai Vị")) {
+            name = "Khai Vị " + faker.food().dish();
+        } else if (category.getName().trim().equalsIgnoreCase("Đồ uống")) {
+            int drinkType = rand.nextInt(3);
+            switch (drinkType) {
+                case 0:
+                    name = "Beer " + faker.beer().name() + " " + faker.number().digits(2);
+                    break;
+                case 1:
+                    name = "Tea " + faker.tea().type() + " " + faker.number().digits(2);
+                    break;
+                case 2:
+                    name = "Coffee " + faker.coffee().blendName() + " " + faker.number().digits(2);
+                    break;
+            }
+        }
+
+        double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ?
+                rand.nextDouble() * 150 + 50 : rand.nextDouble() * 100 + 50;
+        int stockQuantity = rand.nextInt(100) + 1;
+        String description = faker.lorem().sentence();
+        String img = faker.internet().url();
+        SizeEnum size = category.getName().trim().equalsIgnoreCase("Pizza") ? SizeEnum.values()[rand.nextInt(SizeEnum.values().length)] : null;
+
+        try {
+            return new ItemEntity("", name, costPrice, stockQuantity,
+                    description, img, true, size, category, new HashSet<>());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     // ToppingEntity
-    private ToppingEntity generateToppingEntity() {
-        return null;
-    }
-
-    // ItemToppingEntity
-    private ItemToppingEntity generateItemToppingEntity() {
-        return null;
+    public ToppingEntity generateToppingEntity(boolean isDefault) {
+        String name = isDefault ? "DEFAULT_TOPPING" : "Đế " + faker.food().ingredient();
+        double costPrice = rand.nextDouble() * 50 + 10;
+        int stockQuantity = rand.nextInt(100) + 1;
+        String description = faker.lorem().sentence();
+        try {
+            return new ToppingEntity("", name, costPrice, stockQuantity, description,
+                    true, new HashSet<>());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //Address
-    private Address generateAddress() {
+    public Address generateAddress() {
         return null;
     }
 
     // EmployeEntity
-    private EmployeeEntity generateEmployeeEntity() {
+    public EmployeeEntity generateEmployeeEntity() {
         return null;
     }
 
     // RoleEntity
-    private RoleEntity generateRoleEntity() {
+    public RoleEntity generateRoleEntity() {
         return null;
     }
 
     // PromotionEntity
-    private PromotionEntity generatePromotionEntity() {
+    public PromotionEntity generatePromotionEntity() {
         return null;
     }
 
     // PromotionDetailEntity
-    private PromotionDetailEntity generatePromotionDetailEntity() {
+    public PromotionDetailEntity generatePromotionDetailEntity() {
         return null;
     }
 
     // CustomerEntity
-    private CustomerEntity getCustomerEntity() {
+    public CustomerEntity getCustomerEntity() {
         return null;
     }
 
     // FloorEntity
-    private FloorEntity generateFloorEntity() {
+    public FloorEntity generateFloorEntity() {
         return null;
     }
 
     //TableEntity
-    private TableEntity getTableEntity() {
+    public TableEntity getTableEntity() {
         return null;
     }
 
     //OrderEntity
-    private OrderEntity generateOrderEntity() {
+    public OrderEntity generateOrderEntity() {
         // Tạo đối tượng OrderEntity
         OrderEntity order = new OrderEntity();
 
@@ -161,7 +207,7 @@ public class DataGenerator {
             detail.setDiscount();
             detail.setDescription(faker.lorem().sentence());
 
-            if(item != null && topping != null) {
+            if (item != null && topping != null) {
                 if (orderDetails.add(detail)) {
                     orderDetailDAL.insert(detail);
                 }
@@ -178,36 +224,67 @@ public class DataGenerator {
     }
 
     public void generateAndPrintSampleData() {
-        EntityManager em = Persistence
-                .createEntityManagerFactory("mariadb")
-                .createEntityManager();
-
-        EntityTransaction tr = em.getTransaction();
-
-        for (int i = 0; i < 10; i++) {
-            //new Entity
-            tr.begin();
-            //persit
-            tr.commit();
+        //CategoryEntity
+        String[] categoryNames = {"Pizza", "Mì Ý", "Khai Vị", "Đồ uống"};
+        for (String name : categoryNames) {
+            categoryDAL.insert(generateCategoryEntity(name));
         }
+        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
+        categoryDAL.findAll().forEach(x -> System.out.println(x));
 
-        for (int i = 0; i < 10; i++) {
-            //new Entity
-            try {
-                tr.begin();
-                orderDAL.insert(generateOrderEntity());
-                tr.commit();
-            } catch (Exception e) {
-                tr.rollback();
-                e.printStackTrace();
+        //ToppingEntity
+        for (int i = 0; i < 6; i++) {
+            toppingDAL.insert(generateToppingEntity(i == 0));
+        }
+        System.out.println("---------------DANH MỤC TOPPING---------------");
+        toppingDAL.findAll().forEach(x -> System.out.println(x));
+
+        //ItemEntity & ItemToppingEntity
+        for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
+            for (int i = 0; i < 9; i++) {
+                ItemEntity itemEntity = generateItemEntity(categoryEntity);
+                itemDAL.insert(itemEntity);
+                List<ToppingEntity> allToppings = toppingDAL.findAll();
+
+                if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
+                    if (itemEntity.getSize() == SizeEnum.SMALL) {
+                        for (int j = 0; j < 2 && j < allToppings.size(); j++) {
+                            ToppingEntity topping = allToppings.get(j);
+                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    } else {
+                        for (ToppingEntity topping : allToppings) {
+                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    }
+                } else {
+                    ToppingEntity defaultTopping = allToppings.get(0);
+                    ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, defaultTopping);
+                    itemToppingDAL.insert(itemTopping);
+                }
             }
+            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
+            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
+
+        //OrderEntity
+//        for (int i = 0; i < 10; i++) {
+//            //new Entity
+//            try {
+//                tr.begin();
+//                orderDAL.insert(generateOrderEntity());
+//                tr.commit();
+//            } catch (Exception e) {
+//                tr.rollback();
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public static void main(String[] args) {
         DataGenerator gen = new DataGenerator();
         gen.generateAndPrintSampleData();
     }
-
-
 }
