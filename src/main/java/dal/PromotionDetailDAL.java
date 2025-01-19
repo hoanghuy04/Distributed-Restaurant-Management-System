@@ -55,4 +55,34 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity,String>
                 .setParameter("itemId", itemId)
                 .getResultList();
     }
+
+    public PromotionDetailEntity findByPromotionAndItem(String promotionId, String itemId) {
+        return entityManager.createQuery(
+                        "SELECT p FROM PromotionDetailEntity p WHERE p.promotion.promotionId = :promotionId AND p.item.itemId = :itemId",
+                        PromotionDetailEntity.class
+                )
+                .setParameter("promotionId", promotionId)
+                .setParameter("itemId", itemId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean deleteByPromotionAndItem(String promotionId, String itemId) {
+        PromotionDetailEntity promotionDetailEntity = entityManager.createQuery(
+                        "SELECT p FROM PromotionDetailEntity p WHERE p.promotion.promotionId = :promotionId AND p.item.itemId = :itemId",
+                        PromotionDetailEntity.class
+                )
+                .setParameter("promotionId", promotionId)
+                .setParameter("itemId", itemId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
+        if (promotionDetailEntity != null) {
+            return BaseDAL.executeTransaction(entityManager, () -> entityManager.remove(promotionDetailEntity));
+        }
+        return false;
+    }
+
 }

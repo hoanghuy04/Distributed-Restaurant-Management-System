@@ -10,6 +10,7 @@ import model.*;
 import model.enums.*;
 import net.datafaker.Faker;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -112,12 +113,39 @@ public class DataGenerator {
 
     //Address
     public Address generateAddress() {
-        return null;
+        Address address = new Address();
+        address.setStreet(faker.address().streetAddress());
+        String[] districts = {"Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Hai Bà Trưng", "Đống Đa", "Cầu Giấy", "Hà Đông", "Long Biên"};
+        address.setDistrict(districts[rand.nextInt(districts.length)]);
+        String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
+        address.setWard(wards[rand.nextInt(wards.length)]);
+        String[] cities = {
+                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
+                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
+                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
+                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
+                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
+                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
+                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
+        };
+        address.setCity(cities[rand.nextInt(cities.length)]);
+        return address;
     }
 
     // EmployeEntity
     public EmployeeEntity generateEmployeeEntity() {
-        return null;
+        EmployeeEntity employee = new EmployeeEntity();
+        employee.setPassword(faker.internet().password(8, 16));
+        employee.setFullname(faker.name().fullName());
+        employee.setPhoneNumber(generateVietnamesePhoneNumber());
+        employee.setEmail(faker.internet().emailAddress());
+        employee.setAddress(generateAddress());
+        employee.setActive(faker.bool().bool());
+        employee.setRole(generateRoleEntity());
+
+        List<RoleEntity> roles = roleDAL.findAll();
+        employee.setRole(roles.isEmpty() ? null : roles.get(rand.nextInt(roles.size())));
+        return employee;
     }
 
     // RoleEntity
@@ -127,12 +155,44 @@ public class DataGenerator {
 
     // PromotionEntity
     public PromotionEntity generatePromotionEntity() {
-        return null;
+        PromotionEntity promotion = new PromotionEntity();
+        promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
+        promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
+        LocalDate startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
+        LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
+        promotion.setStartedDate(startDate);
+        promotion.setEndedDate(endDate);
+        LocalDate today = LocalDate.now();
+        boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
+        promotion.setActive(isActive);
+        int minPrice = faker.number().numberBetween(5, 21) * 100_000;
+        promotion.setMinPrice(minPrice);
+
+        return promotion;
     }
 
     // PromotionDetailEntity
     public PromotionDetailEntity generatePromotionDetailEntity() {
-        return null;
+        PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
+
+        PromotionEntity promotion = generatePromotionEntity();
+        promotionDetail.setPromotion(promotion);
+
+        List<PromotionEntity> promotions = promotionDAL.findAll();
+        promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
+
+        List<ItemEntity> items = itemDAL.findAll();
+        promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
+
+        PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();
+        promotionDetail.setPromotionType(promotionTypes[faker.number().numberBetween(0, promotionTypes.length)]);
+
+        CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
+        promotionDetail.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
+
+        promotionDetail.setDescription("Áp dụng cho " + faker.commerce().productName());
+
+        return promotionDetail;
     }
 
     // CustomerEntity
@@ -226,6 +286,13 @@ public class DataGenerator {
 
         System.out.println(order);
         return order;
+    }
+
+    private String generateVietnamesePhoneNumber() {
+        String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
+        String prefix = prefixes[new Random().nextInt(prefixes.length)];
+        String suffix = String.format("%07d", new Random().nextInt(10000000)); // 7 chữ số ngẫu nhiên
+        return prefix + suffix;
     }
 
     public void generateAndPrintSampleData() {
