@@ -23,15 +23,16 @@ public class ConnectDB {
 
     public static void connect() {
         try {
-
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyDB");
-            em = emf.createEntityManager();
+            em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static EntityManager getEntityManager() {
+        if (em == null) {
+            connect();
+        }
         if (em.getTransaction().isActive()) {
             em.getTransaction().commit();
         }

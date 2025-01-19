@@ -18,6 +18,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.SizeEnum;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -25,7 +26,8 @@ import java.util.Set;
 @Table(name = "items")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-        @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i")
+        @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
+        @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
 })
 public class ItemEntity extends BaseEntity {
     @Id
@@ -50,13 +52,13 @@ public class ItemEntity extends BaseEntity {
 
     private final double VAT = 0.2;
 
-    @Column(name = "img", columnDefinition = "nvarchar(50)")
+    @Column(name = "img", columnDefinition = "nvarchar(5000)")
     private String img;
 
     @Column(name = "active", nullable = false)
     private boolean active;
 
-    @Column(name = "size", nullable = false, columnDefinition = "nvarchar(50)")
+    @Column(name = "size", columnDefinition = "nvarchar(50)")
     @Enumerated(EnumType.STRING)
     private SizeEnum size;
 
@@ -72,11 +74,11 @@ public class ItemEntity extends BaseEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "item")
-    private Set<ItemToppingEntity> itemToppings;
+    private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
-//    @ToString.Exclude
-//    @OneToMany(mappedBy = "item")
-//    private Set<PromotionDetailEntity> promotionDetails;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "item")
+    private Set<PromotionDetailEntity> promotionDetails;
 
     public ItemEntity() {
 
