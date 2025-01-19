@@ -4,17 +4,16 @@
  * Copyright (c) 2025 IUH. ALL rights reserved.
  */
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
-import model.*;
+import model.CategoryEntity;
+import model.ItemEntity;
+import model.ItemToppingEntity;
+import model.ToppingEntity;
 import model.enums.SizeEnum;
 import util.datafaker.DataGenerator;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /*
  * @description:
@@ -25,17 +24,9 @@ import java.util.function.Supplier;
 public class Runner {
     private static final Scanner sc = new Scanner(System.in);
     private static final DataGenerator generator = new DataGenerator();
-    private static List<CategoryEntity> categories;
-    private static List<ToppingEntity> toppings;
-    private static List<ItemEntity> items;
-    private static List<ItemToppingEntity> itemToppings;
 
     public static void main(String[] args) {
         generator.generateAndPrintSampleData();
-        categories = generator.getCategoryDAL().findAll();
-        toppings = generator.getToppingDAL().findAll();
-        items = generator.getItemDAL().findAll();
-        itemToppings = generator.getItemToppingDAL().findAll();
 
         boolean exit = false;
         while (!exit) {
@@ -93,8 +84,13 @@ public class Runner {
             case 1: {
                 System.out.print("Nhập tên danh mục: ");
                 String name = sc.nextLine().trim();
-                if(name.isEmpty() || name.isBlank()) {
+                if (name.isEmpty() || name.isBlank()) {
                     System.out.println("Tên danh mục không được để trống");
+                    break;
+                }
+
+                if (generator.getCategoryDAL().findByName(name).orElse(null) != null) {
+                    System.out.println("Tên danh mục bị trùng");
                     break;
                 }
 
@@ -114,8 +110,13 @@ public class Runner {
             case 2: {
                 System.out.print("Nhập tên topping: ");
                 String name = sc.nextLine().trim();
-                if(name.isEmpty() || name.isBlank()) {
+                if (name.isEmpty() || name.isBlank()) {
                     System.out.println("Tên topping không được để trống");
+                    break;
+                }
+
+                if (generator.getToppingDAL().findByName(name).orElse(null) != null) {
+                    System.out.println("Tên topping bị trùng");
                     break;
                 }
 
@@ -139,8 +140,13 @@ public class Runner {
                 System.out.print("Nhập tên sản phẩm: ");
                 String name = sc.nextLine().trim();
 
-                if(name.isEmpty() || name.isBlank()) {
+                if (name.isEmpty() || name.isBlank()) {
                     System.out.println("Tên sản phẩm không được để trống");
+                    break;
+                }
+
+                if (generator.getItemDAL().findByName(name).orElse(null) != null) {
+                    System.out.println("Tên sản phẩm bị trùng");
                     break;
                 }
 
@@ -185,6 +191,7 @@ public class Runner {
                     System.out.println("Không tìm thấy danh mục với ID: " + categoryId);
                     break;
                 }
+
                 try {
                     ItemEntity item = new ItemEntity("", name, costPrice, stockQuantity,
                             description, "", true, size, category, new HashSet<>());
@@ -262,16 +269,16 @@ public class Runner {
 
         switch (entityChoice) {
             case 1:
-                categories.forEach(System.out::println);
+                generator.getCategoryDAL().findAll().forEach(System.out::println);
                 break;
             case 2:
-                toppings.forEach(System.out::println);
+                generator.getToppingDAL().findAll().forEach(System.out::println);
                 break;
             case 3:
-                items.forEach(System.out::println);
+                generator.getItemDAL().findAll().forEach(System.out::println);
                 break;
             case 4:
-                itemToppings.forEach(System.out::println);
+                generator.getItemToppingDAL().findAll().forEach(System.out::println);
                 break;
             case 5:
                 System.out.println("Đang đọc danh sách EmployeeEntity...");
@@ -309,20 +316,187 @@ public class Runner {
         int entityChoice = getChoice();
 
         switch (entityChoice) {
-            case 1:
-                System.out.println("Đang cập nhật CategoryEntity...");
-                CategoryEntity categoryEntity = categories.get(categories.size() - 1);
-//                categoryEntity.setName();
+            case 1: {
+                System.out.print("Nhập ID danh mục cần cập nhật (Gợi ý: C0001): ");
+                String categoryId = sc.nextLine().trim();
+
+                CategoryEntity category = generator.getCategoryDAL().findById(categoryId).orElse(null);
+                if (category == null) {
+                    System.out.println("Không tìm thấy danh mục với ID: " + categoryId);
+                    break;
+                }
+
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Tên danh mục: " + category.getName());
+                System.out.println("Mô tả danh mục: " + category.getDescription());
+
+                System.out.print("Nhập tên danh mục mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newName = sc.nextLine().trim();
+                if (!newName.isEmpty()) {
+                    try {
+                        category.setName(newName);
+                    } catch (Exception e) {
+                        System.out.println("Lỗi: " + e.getMessage());
+                        break;
+                    }
+                }
+
+                System.out.print("Nhập mô tả danh mục mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newDescription = sc.nextLine().trim();
+                if (!newDescription.isEmpty()) {
+                    category.setDescription(newDescription);
+                }
+
+                String result = generator.getCategoryDAL().update(category) ? "Cập nhật danh mục thành công: " + category : "Cập nhật danh mục thất bại!";
+                System.out.println(result);
                 break;
-            case 2:
-                System.out.println("Đang cập nhật ToppingEntity...");
+            }
+            case 2: {
+                System.out.print("Nhập ID topping cần cập nhật (gợi ý: T0001): ");
+                String toppingId = sc.nextLine().trim();
+
+                ToppingEntity topping = generator.getToppingDAL().findById(toppingId).orElse(null);
+                if (topping == null) {
+                    System.out.println("Không tìm thấy topping với ID: " + toppingId);
+                    break;
+                }
+
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Tên topping: " + topping.getName());
+                System.out.println("Giá gốc: " + topping.getCostPrice());
+                System.out.println("Số lượng tồn kho: " + topping.getStockQuantity());
+                System.out.println("Mô tả topping: " + topping.getDescription());
+
+                System.out.print("Nhập tên topping mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newName = sc.nextLine().trim();
+                if (!newName.isEmpty()) {
+                    try {
+                        topping.setName(newName);
+                    } catch (Exception e) {
+                        System.out.println("Lỗi: " + e.getMessage());
+                        break;
+                    }
+                }
+
+                topping.setCostPrice(getDoubleInput("Nhập giá gốc mới", topping.getCostPrice()));
+                topping.setStockQuantity(getIntInput("Nhập số lượng tồn kho mới", topping.getStockQuantity()));
+
+                System.out.print("Nhập mô tả mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newDescription = sc.nextLine().trim();
+                if (!newDescription.isEmpty()) {
+                    topping.setDescription(newDescription);
+                }
+
+                boolean updated = generator.getToppingDAL().update(topping);
+                if (updated) {
+                    System.out.println("Cập nhật topping thành công: " + topping);
+                } else {
+                    System.out.println("Cập nhật topping thất bại!");
+                }
                 break;
-            case 3:
-                System.out.println("Đang cập nhật ItemEntity...");
+            }
+            case 3: {
+                System.out.print("Nhập ID sản phẩm cần cập nhật (gợi ý: I0001): ");
+                String itemId = sc.nextLine().trim();
+
+                ItemEntity item = generator.getItemDAL().findById(itemId).orElse(null);
+                if (item == null) {
+                    System.out.println("Không tìm thấy sản phẩm với ID: " + itemId);
+                    break;
+                }
+
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Tên sản phẩm: " + item.getName());
+                System.out.println("Giá gốc: " + item.getCostPrice());
+                System.out.println("Số lượng tồn kho: " + item.getStockQuantity());
+                System.out.println("Mô tả sản phẩm: " + item.getDescription());
+                System.out.println("Kích thước: " + (item.getSize() != null ? item.getSize() : "Không có"));
+
+                System.out.print("Nhập tên sản phẩm mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newName = sc.nextLine().trim();
+                if (!newName.isEmpty()) {
+                    try {
+                        item.setName(newName);
+                    } catch (Exception e) {
+                        System.out.println("Lỗi: " + e.getMessage());
+                        break;
+                    }
+                }
+
+                item.setCostPrice(getDoubleInput("Nhập giá gốc mới", item.getCostPrice()));
+                item.setStockQuantity(getIntInput("Nhập số lượng tồn kho mới", item.getStockQuantity()));
+
+                System.out.print("Nhập mô tả mới (hoặc nhấn Enter để giữ nguyên): ");
+                String newDescription = sc.nextLine().trim();
+                if (!newDescription.isEmpty()) {
+                    item.setDescription(newDescription);
+                }
+
+                System.out.println("Chọn kích thước sản phẩm mới (hoặc nhấn Enter để giữ nguyên):");
+                System.out.println("1. SMALL");
+                System.out.println("2. MEDIUM");
+                System.out.println("3. LARGE");
+                System.out.println("4. Không thay đổi kích thước");
+                System.out.print("Nhập lựa chọn (1-4): ");
+                String sizeChoice = sc.nextLine().trim();
+
+                switch (sizeChoice) {
+                    case "1":
+                        item.setSize(SizeEnum.SMALL);
+                        break;
+                    case "2":
+                        item.setSize(SizeEnum.MEDIUM);
+                        break;
+                    case "3":
+                        item.setSize(SizeEnum.LARGE);
+                        break;
+                    case "4":
+                        break;
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ! Kích thước không thay đổi.");
+                        break;
+                }
+
+                boolean updated = generator.getItemDAL().update(item);
+                if (updated) {
+                    System.out.println("Cập nhật sản phẩm thành công: " + item);
+                } else {
+                    System.out.println("Cập nhật sản phẩm thất bại!");
+                }
                 break;
-            case 4:
-                System.out.println("Đang cập nhật ItemToppingEntity...");
+            }
+            case 4: {
+                System.out.print("Nhập ID sản phẩm (gợi ý: I0001): ");
+                String itemId = sc.nextLine().trim();
+                ItemEntity item = generator.getItemDAL().findById(itemId).orElse(null);
+                if (item == null) {
+                    System.out.println("Không tìm thấy sản phẩm với ID: " + itemId);
+                    break;
+                }
+
+                System.out.print("Nhập ID topping (gợi ý T0001): ");
+                String toppingId = sc.nextLine().trim();
+                ToppingEntity topping = generator.getToppingDAL().findById(toppingId).orElse(null);
+                if (topping == null) {
+                    System.out.println("Không tìm thấy topping với ID: " + toppingId);
+                    break;
+                }
+
+                ItemToppingEntity itemTopping = generator.getItemToppingDAL().findByItemAndTopping(item, topping).orElse(null);
+                if (itemTopping == null) {
+                    System.out.println("Không tìm thấy ItemToppingEntity với sản phẩm và topping đã nhập.");
+                    break;
+                }
+
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Giá bán hiện tại: " + itemTopping.getSellingPrice());
+
+                itemTopping.setSellingPrice(getDoubleInput("Nhập giá bán mới: "));
+
+                String result = generator.getItemToppingDAL().update(itemTopping) ? "Cập nhật ItemTopping thành công: " + itemTopping : "Cập nhật ItemTopping thất bại!";
+                System.out.println(result);
                 break;
+            }
             case 5:
                 System.out.println("Đang cập nhật EmployeeEntity...");
                 break;
@@ -438,5 +612,36 @@ public class Runner {
             }
         }
     }
+
+    private static double getDoubleInput(String prompt, double currentValue) {
+        while (true) {
+            try {
+                System.out.print(prompt + " (Nhấn Enter để giữ nguyên): ");
+                String input = sc.nextLine().trim();
+                if (input.isEmpty()) {
+                    return currentValue;
+                }
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Vui lòng nhập một số hợp lệ.");
+            }
+        }
+    }
+
+    private static int getIntInput(String prompt, int currentValue) {
+        while (true) {
+            try {
+                System.out.print(prompt + " (Nhấn Enter để giữ nguyên): ");
+                String input = sc.nextLine().trim();
+                if (input.isEmpty()) {
+                    return currentValue;
+                }
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Vui lòng nhập một số nguyên hợp lệ.");
+            }
+        }
+    }
+
 
 }
