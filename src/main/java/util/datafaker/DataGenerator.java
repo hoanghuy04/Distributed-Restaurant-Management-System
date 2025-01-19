@@ -4,6 +4,8 @@ import dal.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.*;
 import model.enums.TableStatusEnum;
 import net.datafaker.Faker;
@@ -32,9 +34,9 @@ public class DataGenerator {
     private final RoleDAL roleDAL = new RoleDAL();
 //    private final PromotionDAL promotionDAL = new PromotionDAL(em);
 //    private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
-//    private final CustomerDAL customerDAL = new CustomerDAL(em);
-//    private final FloorDAL floorDAL = new FloorDAL(em);
-//    private final TableDAL tableDAL = new TableDAL(em);
+    private final CustomerDAL customerDAL = new CustomerDAL(em);
+    private final FloorDAL floorDAL = new FloorDAL(em);
+    private final TableDAL tableDAL = new TableDAL(em);
 //    private final OrderDAL orderDAL = new OrderDAL(em);
     private final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
 
@@ -160,10 +162,18 @@ public class DataGenerator {
 
         //Floor
         for (int i = 1; i < 4; i++) {
-            FloorEntity f = generateFloorEntity(i,10);
+            FloorEntity f = generateFloorEntity(i,15);
             tr.begin();
+            floorDAL.insert(f);
             tr.commit();
         }
+        //Floor Insert
+        floorDAL.findAll().forEach(x -> System.out.println(x));
+
+        //Table
+//        for (int i = 1; i < 4; i++) {
+//
+//        }
     }
 
     public static void main(String[] args) {

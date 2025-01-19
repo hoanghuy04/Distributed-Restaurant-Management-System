@@ -9,7 +9,7 @@ import util.IDGeneratorUtil;
 import java.util.List;
 import java.util.Optional;
 
-@NoArgsConstructor
+
 @AllArgsConstructor
 public class FloorDAL implements BaseDAL<FloorEntity,String> {
     private EntityManager em;
@@ -17,7 +17,6 @@ public class FloorDAL implements BaseDAL<FloorEntity,String> {
     @Override
     public boolean insert(FloorEntity floorEntity) {
         floorEntity.setFloorId(IDGeneratorUtil.generateSimpleID("F","floors","floor_id",em));
-
         return BaseDAL.executeTransaction(em,()->em.persist(floorEntity));
     }
 
