@@ -63,13 +63,13 @@ public class DataGenerator {
             int drinkType = rand.nextInt(3);
             switch (drinkType) {
                 case 0:
-                    name = "Beer " + faker.beer().name() + " " + faker.number().digits(2);
+                    name = "Beer " + faker.beer().name();
                     break;
                 case 1:
-                    name = "Tea " + faker.tea().type() + " " + faker.number().digits(2);
+                    name = "Tea " + faker.tea().type();
                     break;
                 case 2:
-                    name = "Coffee " + faker.coffee().blendName() + " " + faker.number().digits(2);
+                    name = "Coffee " + faker.coffee().blendName();
                     break;
             }
         }
@@ -90,10 +90,9 @@ public class DataGenerator {
         }
     }
 
-
     // ToppingEntity
     public ToppingEntity generateToppingEntity(boolean isDefault) {
-        String name = isDefault ? "DEFAULT_TOPPING" : "Đế " + faker.food().ingredient();
+        String name = isDefault ? "DEFAULT_TOPPING": faker.food().ingredient();
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
@@ -101,33 +100,14 @@ public class DataGenerator {
             return new ToppingEntity("", name, costPrice, stockQuantity, description,
                     true, new HashSet<>());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
     //ItemToppingEntity
-    public ItemToppingEntity generateItemToppingEntity(CategoryEntity categoryEntity, ItemEntity itemEntity) {
-        List<ToppingEntity> allToppings = toppingDAL.findAll();
-
-        if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
-            if (itemEntity.getSize() == SizeEnum.SMALL) {
-                for (int j = 0; j < 2 && j < allToppings.size(); j++) {
-                    ToppingEntity topping = allToppings.get(j);
-                    ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
-                    return itemTopping;
-                }
-            } else {
-                for (ToppingEntity topping : allToppings) {
-                    ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
-                    return itemTopping;
-                }
-            }
-        } else {
-            ToppingEntity defaultTopping = allToppings.get(0);
-            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, defaultTopping);
-            return itemTopping;
-        }
-        return null;
+    public ItemToppingEntity generateItemToppingEntity(ToppingEntity toppingEntity, ItemEntity itemEntity) {
+        return new ItemToppingEntity(itemEntity, toppingEntity);
     }
 
     //Address
@@ -266,10 +246,28 @@ public class DataGenerator {
 
         //ItemEntity & ItemToppingEntity
         for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
+            List<ToppingEntity> allToppings = toppingDAL.findAll();
             for (int i = 0; i < 9; i++) {
                 ItemEntity itemEntity = generateItemEntity(categoryEntity);
                 itemDAL.insert(itemEntity);
-                itemToppingDAL.insert(generateItemToppingEntity(categoryEntity, itemEntity));
+                if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
+                    if (itemEntity.getSize() == SizeEnum.SMALL) {
+                        for (int j = 0; j < 2 && j < allToppings.size(); j++) {
+                            ToppingEntity toppingEntity = allToppings.get(j);
+                            ItemToppingEntity itemTopping = generateItemToppingEntity(toppingEntity, itemEntity);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    } else {
+                        for (ToppingEntity topping : allToppings) {
+                            ItemToppingEntity itemTopping = generateItemToppingEntity(topping, itemEntity);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    }
+                } else {
+                    ToppingEntity defaultTopping = allToppings.get(0);
+                    ItemToppingEntity itemTopping = generateItemToppingEntity(defaultTopping, itemEntity);
+                    itemToppingDAL.insert(itemTopping);
+                }
             }
             System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
             itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
