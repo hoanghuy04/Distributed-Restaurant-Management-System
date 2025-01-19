@@ -1,17 +1,18 @@
 package util.datafaker;
 
 import dal.*;
+import dal.connectDB.ConnectDB;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import lombok.Data;
 import model.*;
-import model.enums.CustomerLevelEnum;
-import model.enums.PromotionTypeEnum;
+import model.enums.*;
 import net.datafaker.Faker;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
+
 
 /*
  * @description: DataGenerator
@@ -19,183 +20,271 @@ import java.util.Random;
  * @date: 1/18/2025
  * @version: 1.0
  */
+@Data
 public class DataGenerator {
-
-    Faker faker = new Faker(new java.util.Locale("vi"));
+    private Faker faker = new Faker(new Locale("vi"));
     private final Random rand = new Random();
-    EntityManager em = Persistence.createEntityManagerFactory("mariadb").createEntityManager();
+    private final EntityManager em = ConnectDB.getEntityManager();
     private final CategoryDAL categoryDAL = new CategoryDAL(em);
     private final ItemDAL itemDAL = new ItemDAL(em);
     private final ToppingDAL toppingDAL = new ToppingDAL(em);
     private final ItemToppingDAL itemToppingDAL = new ItemToppingDAL(em);
     private final EmployeeDAL employeeDAL = new EmployeeDAL(em);
-    private final RoleDAL roleDAL = new RoleDAL(em);
+    private final RoleDAL roleDAL = new RoleDAL();
     private final PromotionDAL promotionDAL = new PromotionDAL(em);
     private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
-//    private final CustomerDAL customerDAL = new CustomerDAL(em);
-//    private final FloorDAL floorDAL = new FloorDAL(em);
-//    private final TableDAL tableDAL = new TableDAL(em);
-//    private final OrderDAL orderDAL = new OrderDAL(em);
+    private final CustomerDAL customerDAL = new CustomerDAL(em);
+    private final FloorDAL floorDAL = new FloorDAL(em);
+    private final TableDAL tableDAL = new TableDAL(em);
+    private final OrderDAL orderDAL = new OrderDAL(em);
     private final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
 
-
     // CategoryEntity
-    private CategoryEntity generateCategoryEntity() {
-        return null;
+    public CategoryEntity generateCategoryEntity(String name) {
+        String description = "Danh mục " + name + " - " + faker.lorem().sentence();
+        try {
+            return new CategoryEntity("", name, description, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // ItemEntity
-    private ItemEntity generateItemEntity() {
-        return null;
+    public ItemEntity generateItemEntity(CategoryEntity category) {
+        String name = "";
+        if (category.getName().trim().equalsIgnoreCase("Pizza")) {
+            name = "Pizza " + faker.food().ingredient();
+        } else if (category.getName().trim().equalsIgnoreCase("Mì Ý")) {
+            name = "Mì Ý " + faker.food().ingredient();
+        } else if (category.getName().trim().equalsIgnoreCase("Khai Vị")) {
+            name = "Khai Vị " + faker.food().dish();
+        } else if (category.getName().trim().equalsIgnoreCase("Đồ uống")) {
+            int drinkType = rand.nextInt(3);
+            switch (drinkType) {
+                case 0:
+                    name = "Beer " + faker.beer().name() + " " + faker.number().digits(2);
+                    break;
+                case 1:
+                    name = "Tea " + faker.tea().type() + " " + faker.number().digits(2);
+                    break;
+                case 2:
+                    name = "Coffee " + faker.coffee().blendName() + " " + faker.number().digits(2);
+                    break;
+            }
+        }
+
+        double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ?
+                rand.nextDouble() * 150 + 50 : rand.nextDouble() * 100 + 50;
+        int stockQuantity = rand.nextInt(100) + 1;
+        String description = faker.lorem().sentence();
+        String img = faker.internet().url();
+        SizeEnum size = category.getName().trim().equalsIgnoreCase("Pizza") ? SizeEnum.values()[rand.nextInt(SizeEnum.values().length)] : null;
+
+        try {
+            return new ItemEntity("", name, costPrice, stockQuantity,
+                    description, img, true, size, category, new HashSet<>());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     // ToppingEntity
-    private ToppingEntity generateToppingEntity() {
-        return null;
-    }
-
-    // ItemToppingEntity
-    private ItemToppingEntity generateItemToppingEntity() {
-        return null;
+    public ToppingEntity generateToppingEntity(boolean isDefault) {
+        String name = isDefault ? "DEFAULT_TOPPING" : "Đế " + faker.food().ingredient();
+        double costPrice = rand.nextDouble() * 50 + 10;
+        int stockQuantity = rand.nextInt(100) + 1;
+        String description = faker.lorem().sentence();
+        try {
+            return new ToppingEntity("", name, costPrice, stockQuantity, description,
+                    true, new HashSet<>());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //Address
-    private Address generateAddress() {
-        Address address = new Address();
-        address.setStreet(faker.address().streetAddress());
-        String[] districts = {"Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Hai Bà Trưng", "Đống Đa", "Cầu Giấy", "Hà Đông", "Long Biên"};
-        address.setDistrict(districts[rand.nextInt(districts.length)]);
-        String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
-        address.setWard(wards[rand.nextInt(wards.length)]);
-        String[] cities = {
-                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
-                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
-                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
-                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
-                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
-                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
-                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
-        };
-        address.setCity(cities[rand.nextInt(cities.length)]);
-        return address;
+    public Address generateAddress() {
+        return null;
     }
 
     // EmployeEntity
-    private EmployeeEntity generateEmployeeEntity() {
-        EmployeeEntity employee = new EmployeeEntity();
-        employee.setPassword(faker.internet().password(8, 16));
-        employee.setFullname(faker.name().fullName());
-        employee.setPhoneNumber(generateVietnamesePhoneNumber());
-        employee.setEmail(faker.internet().emailAddress());
-        employee.setAddress(generateAddress());
-        employee.setActive(faker.bool().bool());
-        employee.setRole(generateRoleEntity());
-
-        List<RoleEntity> roles = roleDAL.findAll();
-        employee.setRole(roles.isEmpty() ? null : roles.get(rand.nextInt(roles.size())));
-        return employee;
+    public EmployeeEntity generateEmployeeEntity() {
+        return null;
     }
 
     // RoleEntity
-    private RoleEntity generateRoleEntity() {
-        RoleEntity role = new RoleEntity();
-        role.setRoleName(faker.job().title()); // Assign a random job title as the role name
-        return role;
+    public RoleEntity generateRoleEntity() {
+        return null;
     }
 
     // PromotionEntity
-    private PromotionEntity generatePromotionEntity() {
-        PromotionEntity promotion = new PromotionEntity();
-        promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
-        promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
-        LocalDate startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
-        LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
-        promotion.setStartedDate(startDate);
-        promotion.setEndedDate(endDate);
-        LocalDate today = LocalDate.now();
-        boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
-        promotion.setActive(isActive);
-        int minPrice = faker.number().numberBetween(5, 21) * 100_000;
-        promotion.setMinPrice(minPrice);
-
-        return promotion;
+    public PromotionEntity generatePromotionEntity() {
+        return null;
     }
 
     // PromotionDetailEntity
-    private PromotionDetailEntity generatePromotionDetailEntity() {
-        PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
-
-        PromotionEntity promotion = generatePromotionEntity();
-        promotionDetail.setPromotion(promotion);
-
-        List<PromotionEntity> promotions = promotionDAL.findAll();
-        promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
-
-        List<ItemEntity> items = itemDAL.findAll();
-        promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
-
-        PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();
-        promotionDetail.setPromotionType(promotionTypes[faker.number().numberBetween(0, promotionTypes.length)]);
-
-        CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
-        promotionDetail.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
-
-        promotionDetail.setDescription("Áp dụng cho " + faker.commerce().productName());
-
-        return promotionDetail;
+    public PromotionDetailEntity generatePromotionDetailEntity() {
+        return null;
     }
 
     // CustomerEntity
-    private CustomerEntity getCustomerEntity() {
+    public CustomerEntity getCustomerEntity() {
         return null;
     }
 
     // FloorEntity
-    private FloorEntity generateFloorEntity() {
+    public FloorEntity generateFloorEntity() {
         return null;
     }
 
     //TableEntity
-    private TableEntity getTableEntity() {
+    public TableEntity getTableEntity() {
         return null;
     }
 
     //OrderEntity
-    private OrderEntity generateOrderEntity() {
-        return null;
-    }
+    public OrderEntity generateOrderEntity() {
+        // Tạo đối tượng OrderEntity
+        OrderEntity order = new OrderEntity();
 
-    private String generateVietnamesePhoneNumber() {
-        String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
-        String prefix = prefixes[new Random().nextInt(prefixes.length)];
-        String suffix = String.format("%07d", new Random().nextInt(10000000)); // 7 chữ số ngẫu nhiên
-        return prefix + suffix;
+        // Gán giá trị bằng Random
+        order.setReservationTime(LocalDateTime.now().plusDays(rand.nextInt(30) + 1));
+        order.setExpectedCompletionTime(order.getReservationTime().plusHours(rand.nextInt(3) + 1));
+        order.setNumberOfCustomer(rand.nextInt(10) + 1);
+        order.setDeposit(rand.nextDouble() * 100);
+        order.setOrderStatus(OrderStatusEnum.SINGLE);
+        order.setOrderType(OrderTypeEnum.IMMEDIATE);
+        order.setPaymentMethod(PaymentMethodEnum.CASH);
+        order.setPaymentStatus(PaymentStatusEnum.PAID);
+        order.setReservationStatus(ReservationStatusEnum.RECEIVED);
+
+        // Lấy customer ngẫu nhiên
+        List<CustomerEntity> customers = customerDAL.findAll();
+        order.setCustomer(customers.isEmpty() ? null : customers.get(rand.nextInt(customers.size())));
+
+        // Lấy employee ngẫu nhiên
+        List<EmployeeEntity> employees = employeeDAL.findAll();
+        order.setEmployee(employees.isEmpty() ? null : employees.get(rand.nextInt(employees.size())));
+
+        // Lấy table ngẫu nhiên
+        List<TableEntity> tables = tableDAL.findAll();
+        order.setTable(tables.isEmpty() ? null : tables.get(rand.nextInt(tables.size())));
+
+        // Tạo danh sách OrderDetailEntity
+        HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
+        int numberOfItems = faker.number().numberBetween(1, 5);
+
+        List<ItemEntity> items = itemDAL.findAll();
+        List<ToppingEntity> toppings = toppingDAL.findAll();
+
+        for (int j = 0; j < numberOfItems; j++) {
+            // Tạo OrderDetailEntity
+            OrderDetailEntity detail = new OrderDetailEntity();
+            detail.setOrder(order);
+
+            // Lấy item và topping ngẫu nhiên
+            ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
+            ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
+
+            detail.setQuantity(rand.nextInt(5) + 1);
+
+            double itemPrice = 0;
+            if (item != null) {
+                itemPrice = detail.getItem().getSellingPrice();
+
+            }
+
+            double toppingPrice = 0;
+            if (topping != null) {
+                toppingPrice = detail.getTopping().getCostPrice();
+            }
+            double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
+
+            detail.setLineTotal();
+            detail.setDiscount();
+            detail.setDescription(faker.lorem().sentence());
+
+            if (item != null && topping != null) {
+                if (orderDetails.add(detail)) {
+                    orderDetailDAL.insert(detail);
+                }
+            }
+        }
+
+        order.setOrderDetails(orderDetails);
+        order.setTotalPrice();
+        order.setTotalDiscount();
+        order.setTotalPaid();
+
+        System.out.println(order);
+        return order;
     }
 
     public void generateAndPrintSampleData() {
-        EntityManager em = Persistence
-                .createEntityManagerFactory("mariadb")
-                .createEntityManager();
-
-        EntityTransaction tr = em.getTransaction();
-
-
-        for (int i = 0; i < 10; i++) {
-            //new Entity
-            tr.begin();
-            roleDAL.insert(generateRoleEntity());
-            employeeDAL.insert(generateEmployeeEntity());
-            promotionDAL.insert(generatePromotionEntity());
-            promotionDetailDAL.insert(generatePromotionDetailEntity());
-            tr.commit();
+        //CategoryEntity
+        String[] categoryNames = {"Pizza", "Mì Ý", "Khai Vị", "Đồ uống"};
+        for (String name : categoryNames) {
+            categoryDAL.insert(generateCategoryEntity(name));
         }
+        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
+        categoryDAL.findAll().forEach(x -> System.out.println(x));
+
+        //ToppingEntity
+        for (int i = 0; i < 6; i++) {
+            toppingDAL.insert(generateToppingEntity(i == 0));
+        }
+        System.out.println("---------------DANH MỤC TOPPING---------------");
+        toppingDAL.findAll().forEach(x -> System.out.println(x));
+
+        //ItemEntity & ItemToppingEntity
+        for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
+            for (int i = 0; i < 9; i++) {
+                ItemEntity itemEntity = generateItemEntity(categoryEntity);
+                itemDAL.insert(itemEntity);
+                List<ToppingEntity> allToppings = toppingDAL.findAll();
+
+                if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
+                    if (itemEntity.getSize() == SizeEnum.SMALL) {
+                        for (int j = 0; j < 2 && j < allToppings.size(); j++) {
+                            ToppingEntity topping = allToppings.get(j);
+                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    } else {
+                        for (ToppingEntity topping : allToppings) {
+                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                            itemToppingDAL.insert(itemTopping);
+                        }
+                    }
+                } else {
+                    ToppingEntity defaultTopping = allToppings.get(0);
+                    ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, defaultTopping);
+                    itemToppingDAL.insert(itemTopping);
+                }
+            }
+            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
+            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
+        }
+
+        //OrderEntity
+//        for (int i = 0; i < 10; i++) {
+//            //new Entity
+//            try {
+//                tr.begin();
+//                orderDAL.insert(generateOrderEntity());
+//                tr.commit();
+//            } catch (Exception e) {
+//                tr.rollback();
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public static void main(String[] args) {
-
         DataGenerator gen = new DataGenerator();
         gen.generateAndPrintSampleData();
     }
-
-
 }

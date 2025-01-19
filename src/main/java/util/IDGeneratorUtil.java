@@ -73,12 +73,17 @@ public class IDGeneratorUtil {
         int sequence = 1;
 
         try {
-            String sql = String.format("select max(cast(substring(e.%s, len(?1) + 1, 4) as int)) from %s e", id, tableName);
+            String sql = String.format("select e.%s from %s e", id, tableName);
 
             Query q = em.createNativeQuery(sql);
-            q.setParameter(1, prefix);
 
-            Integer maxSequence = (Integer) Optional.ofNullable(q.getSingleResult()).orElse(0);
+            List<String> idList = q.getResultList();
+
+            int maxSequence = idList.stream()
+                    .mapToInt(x -> Integer.parseInt(x.substring(prefix.length()))) // Lấy phần số sau prefix
+                    .max()
+                    .orElse(0);
+
             sequence = maxSequence + 1;
 
             return prefix + String.format("%04d", sequence);

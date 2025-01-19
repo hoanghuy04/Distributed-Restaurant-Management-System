@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -48,7 +49,7 @@ public class ToppingEntity extends BaseEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "topping")
-    private Set<ItemToppingEntity> itemToppings;
+    private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
     public ToppingEntity() {
 
