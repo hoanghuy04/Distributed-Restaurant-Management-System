@@ -2,7 +2,9 @@ package dal;
 
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import model.ItemEntity;
 import model.ItemToppingEntity;
+import model.ToppingEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,18 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, String>{
 
     @Override
     public List<ItemToppingEntity> findAll() {
-        return List.of();
+        return em.createNamedQuery("ItemToppingEntity.findAll", ItemToppingEntity.class).getResultList();
+    }
+
+    public Optional<ItemToppingEntity> findByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
+        try {
+            ItemToppingEntity result = em.createNamedQuery("ItemToppingEntity.findByItemAndTopping", ItemToppingEntity.class)
+                    .setParameter("item", itemEntity)
+                    .setParameter("topping", toppingEntity)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

@@ -31,6 +31,7 @@ public interface BaseDAL <T, ID>{
             transaction.commit();
             return true;
         }catch (Exception e) {
+            e.printStackTrace();
             transaction.rollback();
             return false;
         }
