@@ -14,6 +14,7 @@ import util.datafaker.DataGenerator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /*
  * @description:
@@ -347,6 +348,12 @@ public class Runner {
                     category.setDescription(newDescription);
                 }
 
+                System.out.print("Danh mục còn hoạt động? (true/false, nhấn Enter để giữ nguyên): ");
+                String newActive = sc.nextLine().trim();
+                if (!newActive.isEmpty()) {
+                    category.setActive(Boolean.parseBoolean(newActive));
+                }
+
                 String result = generator.getCategoryDAL().update(category) ? "Cập nhật danh mục thành công: " + category : "Cập nhật danh mục thất bại!";
                 System.out.println(result);
                 break;
@@ -387,12 +394,14 @@ public class Runner {
                     topping.setDescription(newDescription);
                 }
 
-                boolean updated = generator.getToppingDAL().update(topping);
-                if (updated) {
-                    System.out.println("Cập nhật topping thành công: " + topping);
-                } else {
-                    System.out.println("Cập nhật topping thất bại!");
+                System.out.print("Topping còn hoạt động? (true/false, nhấn Enter để giữ nguyên): ");
+                String newActive = sc.nextLine().trim();
+                if (!newActive.isEmpty()) {
+                    topping.setActive(Boolean.parseBoolean(newActive));
                 }
+
+                String result = generator.getToppingDAL().update(topping) ? "Cập nhật topping thành công: " + topping : "Cập nhật topping thất bại!";
+                System.out.println(result);
                 break;
             }
             case 3: {
@@ -457,12 +466,14 @@ public class Runner {
                         break;
                 }
 
-                boolean updated = generator.getItemDAL().update(item);
-                if (updated) {
-                    System.out.println("Cập nhật sản phẩm thành công: " + item);
-                } else {
-                    System.out.println("Cập nhật sản phẩm thất bại!");
+                System.out.print("Sản phẩm còn hoạt động? (true/false, nhấn Enter để giữ nguyên): ");
+                String newActive = sc.nextLine().trim();
+                if (!newActive.isEmpty()) {
+                    item.setActive(Boolean.parseBoolean(newActive));
                 }
+
+                String result = generator.getItemDAL().update(item) ? "Cập nhật sản phẩm thành công: " + item : "Cập nhật sản phẩm thất bại!";
+                System.out.println(result);
                 break;
             }
             case 4: {
@@ -533,18 +544,193 @@ public class Runner {
         int entityChoice = getChoice();
 
         switch (entityChoice) {
-            case 1:
-                System.out.println("Đang xóa CategoryEntity...");
+            case 1: {
+                System.out.print("Nhập ID Category cần xóa (Gợi ý: C0001): ");
+                String categoryId = sc.nextLine().trim();
+
+                CategoryEntity category = generator.getCategoryDAL().findById(categoryId).orElse(null);
+                if (category == null) {
+                    System.out.println("Không tìm thấy Category với ID: " + categoryId);
+                    break;
+                }
+                printDeleteOptions();
+                int deleteChoice = getChoice();
+                switch (deleteChoice) {
+                    case 1: {
+                        category.setActive(false);
+                        generator.getCategoryDAL().update(category);
+                        System.out.println("Xoá mềm Category thành công " + category);
+                        break;
+                    }
+                    case 2: {
+                        List<ItemEntity> itemsToDelete = generator.getItemDAL().findByCategory(category);
+                        itemsToDelete.forEach(item -> {
+                            System.out.println("Xóa Item: " + item.getItemId() + " - " + item.getName());
+
+                            generator.getItemToppingDAL().deleteByItemAndTopping(item, null);
+                            System.out.println("-> Xóa ItemTopping liên quan đến Item " + item.getItemId());
+
+                            generator.getPromotionDetailDAL().deleteByItemAndPromotion(item, null);
+                            System.out.println("-> Xóa PromotionDetail liên quan đến Item " + item.getItemId());
+
+                            generator.getOrderDetailDAL().deleteByItemAndTopping(item, null);
+                            System.out.println("-> Xóa OrderDetail liên quan đến Item " + item.getItemId());
+
+                            generator.getItemDAL().deleteById(item.getItemId());
+                            System.out.println("-> Xóa Item thành công: " + item.getItemId());
+                        });
+
+                        String result = generator.getCategoryDAL().deleteById(categoryId) ? "Xóa Category thành công: " + categoryId + " - " + category.getName() : "Xóa Category thất bại!";
+                        System.out.println(result);
+                        break;
+                    }
+                }
                 break;
-            case 2:
-                System.out.println("Đang xóa ToppingEntity...");
+            }
+            case 2: {
+                System.out.print("Nhập ID Topping cần xóa (Gợi ý: T0001): ");
+                String toppingId = sc.nextLine().trim();
+
+                ToppingEntity topping = generator.getToppingDAL().findById(toppingId).orElse(null);
+                if (topping == null) {
+                    System.out.println("Không tìm thấy Topping với ID: " + toppingId);
+                    break;
+                }
+
+                printDeleteOptions();
+                int deleteChoice = getChoice();
+
+                switch (deleteChoice) {
+                    case 1: {
+                        topping.setActive(false);
+                        generator.getToppingDAL().update(topping);
+                        System.out.println("Xóa mềm Topping thành công: " + topping);
+                        break;
+                    }
+                    case 2: {
+                        List<ItemToppingEntity> itemToppingsToDelete = generator.getItemToppingDAL().findAll()
+                                .stream()
+                                .filter(it -> it.getTopping().equals(topping))
+                                .collect(Collectors.toList());
+                        itemToppingsToDelete.forEach(itemTopping -> {
+                            generator.getItemToppingDAL().deleteByItemAndTopping(null, topping);
+                            System.out.println("-> Xóa ItemTopping: " + itemTopping);
+                        });
+
+                        generator.getOrderDetailDAL().deleteByItemAndTopping(null, topping);
+                        System.out.println("-> Xóa OrderDetail liên quan đến Topping: " + toppingId);
+
+                        boolean deleted = generator.getToppingDAL().deleteById(toppingId);
+                        System.out.println(deleted ? "Xóa cứng Topping thành công: " + toppingId : "Xóa Topping thất bại!");
+                        break;
+                    }
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ!");
+                        break;
+                }
                 break;
-            case 3:
-                System.out.println("Đang xóa ItemEntity...");
+            }
+            case 3: {
+                System.out.print("Nhập ID Item cần xóa (Gợi ý: I0001): ");
+                String itemId = sc.nextLine().trim();
+
+                ItemEntity item = generator.getItemDAL().findById(itemId).orElse(null);
+                if (item == null) {
+                    System.out.println("Không tìm thấy Item với ID: " + itemId);
+                    break;
+                }
+
+                printDeleteOptions();
+                int deleteChoice = getChoice();
+                switch (deleteChoice) {
+                    case 1: {
+                        item.setActive(false);
+                        generator.getItemDAL().update(item);
+                        System.out.println("Đã xóa mềm Item: " + item);
+                        break;
+                    }
+                    case 2: {
+                        generator.getItemToppingDAL().deleteByItemAndTopping(item, null);
+                        System.out.println("-> Xóa các ItemTopping liên quan đến Item: " + item.getItemId());
+
+                        generator.getPromotionDetailDAL().deleteByItemAndPromotion(item, null);
+                        System.out.println("-> Xóa các PromotionDetail liên quan đến Item: " + item.getItemId());
+
+                        generator.getOrderDetailDAL().deleteByItemAndTopping(item, null);
+                        System.out.println("-> Xóa các OrderDetail liên quan đến Item: " + item.getItemId());
+
+                        String result = generator.getItemDAL().deleteById(itemId)
+                                ? "Xóa thành công Item: " + item.getItemId() + " - " + item.getName()
+                                : "Xóa Item thất bại!";
+                        System.out.println(result);
+                        break;
+                    }
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ.");
+                        break;
+                }
                 break;
-            case 4:
-                System.out.println("Đang xóa ItemToppingEntity...");
+            }
+            case 4: {
+                System.out.println("Chọn cách xóa ItemTopping:");
+                System.out.println("1. Xóa theo Item");
+                System.out.println("2. Xóa theo Topping");
+                System.out.println("3. Xóa theo cả Item và Topping");
+                System.out.print("Lựa chọn: ");
+                int deleteOption = getChoice();
+
+                ItemEntity itemEntity = null;
+                ToppingEntity toppingEntity = null;
+
+                switch (deleteOption) {
+                    case 1:
+                        System.out.print("Nhập ID Item (gợi ý: I0001): ");
+                        String itemId = sc.nextLine().trim();
+                        itemEntity = generator.getItemDAL().findById(itemId).orElse(null);
+                        if (itemEntity == null) {
+                            System.out.println("Không tìm thấy Item với ID: " + itemId);
+                            return;
+                        }
+                        break;
+                    case 2:
+                        System.out.print("Nhập ID Topping (gợi ý: T0001): ");
+                        String toppingId = sc.nextLine().trim();
+                        toppingEntity = generator.getToppingDAL().findById(toppingId).orElse(null);
+                        if (toppingEntity == null) {
+                            System.out.println("Không tìm thấy Topping với ID: " + toppingId);
+                            return;
+                        }
+                        break;
+                    case 3:
+                        System.out.print("Nhập ID Item (gợi ý: I0001): ");
+                        itemId = sc.nextLine().trim();
+                        itemEntity = generator.getItemDAL().findById(itemId).orElse(null);
+                        if (itemEntity == null) {
+                            System.out.println("Không tìm thấy Item với ID: " + itemId);
+                            return;
+                        }
+
+                        System.out.print("Nhập ID Topping (gợi ý: T0001): ");
+                        toppingId = sc.nextLine().trim();
+                        toppingEntity = generator.getToppingDAL().findById(toppingId).orElse(null);
+                        if (toppingEntity == null) {
+                            System.out.println("Không tìm thấy Topping với ID: " + toppingId);
+                            return;
+                        }
+                        break;
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ!");
+                        return;
+                }
+
+                boolean result = generator.getItemToppingDAL().deleteByItemAndTopping(itemEntity, toppingEntity);
+                if (result) {
+                    System.out.println("Xóa ItemTopping thành công!");
+                } else {
+                    System.out.println("Xóa ItemTopping thất bại!");
+                }
                 break;
+            }
             case 5:
                 System.out.println("Đang xóa EmployeeEntity...");
                 break;
@@ -588,6 +774,13 @@ public class Runner {
         System.out.println("10. FloorEntity");
         System.out.println("11. TableEntity");
         System.out.println("12. OrderEntity");
+        System.out.print("Chọn: ");
+    }
+
+    private static void printDeleteOptions() {
+        System.out.println("Chọn phương thức xóa:");
+        System.out.println("1. Xóa mềm (set active = false)");
+        System.out.println("2. Xóa hoàn toàn (bao gồm các liên kết)");
         System.out.print("Chọn: ");
     }
 
