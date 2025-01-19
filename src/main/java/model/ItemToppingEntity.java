@@ -16,7 +16,9 @@ import model.enums.SizeEnum;
 @Table(name = "items_toppings")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
-        @NamedQuery(name = "ItemToppingEntity.findAll", query = "select it from ItemToppingEntity it")
+        @NamedQuery(name = "ItemToppingEntity.findAll", query = "select it from ItemToppingEntity it"),
+        @NamedQuery(name = "ItemToppingEntity.findByItemAndTopping",
+                query = "SELECT it FROM ItemToppingEntity it WHERE it.item = :item AND it.topping = :topping")
 })
 public class ItemToppingEntity {
     @Id
@@ -46,11 +48,11 @@ public class ItemToppingEntity {
 
     public void setSellingPrice() {
         double sizePrice = 0;
-        if(item.getSize() == SizeEnum.SMALL) {
+        if (item.getSize() == SizeEnum.SMALL) {
             sizePrice = 0;
         } else if (item.getSize() == SizeEnum.MEDIUM) {
             sizePrice = 20000;
-        } else if(item.getSize() == SizeEnum.LARGE) {
+        } else if (item.getSize() == SizeEnum.LARGE) {
             sizePrice = 40000;
         }
         this.sellingPrice = this.topping.getCostPrice() + sizePrice;
