@@ -62,17 +62,13 @@ public class OrderDetailEntity extends BaseEntity {
 
 
     public void setLineTotal() {
-        try {
-            this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
-                    .stream()
-                    .filter(x -> {
-                        return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
-                    })
-                    .mapToDouble(x -> x.getSellingPrice())
-                    .sum()) * quantity;
-        }catch (Exception e){
-            this.lineTotal = 0;
-        }
+        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
+                .stream()
+                .filter(x -> {
+                    return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
+                })
+                .mapToDouble(x -> x.getSellingPrice())
+                .sum()) * quantity;
     }
 
 

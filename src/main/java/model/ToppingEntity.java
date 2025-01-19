@@ -48,7 +48,7 @@ public class ToppingEntity extends BaseEntity {
     private boolean active;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "topping")
+    @OneToMany(mappedBy = "topping", fetch = FetchType.EAGER)
     private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
     public ToppingEntity() {
