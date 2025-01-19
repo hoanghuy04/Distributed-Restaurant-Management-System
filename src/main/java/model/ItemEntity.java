@@ -50,7 +50,7 @@ public class ItemEntity extends BaseEntity {
 
     private final double VAT = 0.2;
 
-    @Column(name = "img", columnDefinition = "nvarchar(50)")
+    @Column(name = "img", columnDefinition = "nvarchar(5000)")
     private String img;
 
     @Column(name = "active", nullable = false)
