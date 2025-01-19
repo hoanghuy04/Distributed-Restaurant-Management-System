@@ -174,47 +174,50 @@ public class DataGenerator {
         order.setTable(tables.isEmpty() ? null : tables.get(rand.nextInt(tables.size())));
 
         // Tạo danh sách OrderDetailEntity
-        HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
-        int numberOfItems = faker.number().numberBetween(1, 5);
+        try {
+            HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
+            int numberOfItems = faker.number().numberBetween(1, 5);
 
-        List<ItemEntity> items = itemDAL.findAll();
-        List<ToppingEntity> toppings = toppingDAL.findAll();
+            List<ItemEntity> items = itemDAL.findAll();
+            List<ToppingEntity> toppings = toppingDAL.findAll();
 
-        for (int j = 0; j < numberOfItems; j++) {
-            // Tạo OrderDetailEntity
-            OrderDetailEntity detail = new OrderDetailEntity();
-            detail.setOrder(order);
+            for (int j = 0; j < numberOfItems; j++) {
+                // Tạo OrderDetailEntity
+                OrderDetailEntity detail = new OrderDetailEntity();
+                detail.setOrder(order);
 
-            // Lấy item và topping ngẫu nhiên
-            ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
-            ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
+                // Lấy item và topping ngẫu nhiên
+                ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
+                ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
 
-            detail.setQuantity(rand.nextInt(5) + 1);
+                detail.setQuantity(rand.nextInt(5) + 1);
 
-            double itemPrice = 0;
-            if (item != null) {
+                detail.setItem(item);
+                detail.setTopping(topping);
+
+                double itemPrice = 0;
                 itemPrice = detail.getItem().getSellingPrice();
 
-            }
+                double toppingPrice = 0;
+                if (topping != null) {
+                    toppingPrice = detail.getTopping().getCostPrice();
+                }
+                double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
 
-            double toppingPrice = 0;
-            if (topping != null) {
-                toppingPrice = detail.getTopping().getCostPrice();
-            }
-            double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
+                detail.setLineTotal();
+                detail.setDiscount();
+                detail.setDescription(faker.lorem().sentence());
 
-            detail.setLineTotal();
-            detail.setDiscount();
-            detail.setDescription(faker.lorem().sentence());
-
-            if (item != null && topping != null) {
                 if (orderDetails.add(detail)) {
                     orderDetailDAL.insert(detail);
                 }
             }
-        }
 
-        order.setOrderDetails(orderDetails);
+            order.setOrderDetails(orderDetails);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         order.setTotalPrice();
         order.setTotalDiscount();
         order.setTotalPaid();
@@ -225,62 +228,61 @@ public class DataGenerator {
 
     public void generateAndPrintSampleData() {
         //CategoryEntity
-        String[] categoryNames = {"Pizza", "Mì Ý", "Khai Vị", "Đồ uống"};
-        for (String name : categoryNames) {
-            categoryDAL.insert(generateCategoryEntity(name));
+        {
+            String[] categoryNames = {"Pizza", "Mì Ý", "Khai Vị", "Đồ uống"};
+            for (String name : categoryNames) {
+                categoryDAL.insert(generateCategoryEntity(name));
+            }
+            System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
+            categoryDAL.findAll().forEach(x -> System.out.println(x));
         }
-        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
-        categoryDAL.findAll().forEach(x -> System.out.println(x));
 
         //ToppingEntity
-        for (int i = 0; i < 6; i++) {
-            toppingDAL.insert(generateToppingEntity(i == 0));
+        {
+            for (int i = 0; i < 6; i++) {
+                toppingDAL.insert(generateToppingEntity(i == 0));
+            }
+            System.out.println("---------------DANH MỤC TOPPING---------------");
+            toppingDAL.findAll().forEach(x -> System.out.println(x));
         }
-        System.out.println("---------------DANH MỤC TOPPING---------------");
-        toppingDAL.findAll().forEach(x -> System.out.println(x));
 
         //ItemEntity & ItemToppingEntity
-        for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
-            for (int i = 0; i < 9; i++) {
-                ItemEntity itemEntity = generateItemEntity(categoryEntity);
-                itemDAL.insert(itemEntity);
-                List<ToppingEntity> allToppings = toppingDAL.findAll();
+        {
+            for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
+                for (int i = 0; i < 9; i++) {
+                    ItemEntity itemEntity = generateItemEntity(categoryEntity);
+                    itemDAL.insert(itemEntity);
+                    List<ToppingEntity> allToppings = toppingDAL.findAll();
 
-                if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
-                    if (itemEntity.getSize() == SizeEnum.SMALL) {
-                        for (int j = 0; j < 2 && j < allToppings.size(); j++) {
-                            ToppingEntity topping = allToppings.get(j);
-                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
-                            itemToppingDAL.insert(itemTopping);
+                    if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
+                        if (itemEntity.getSize() == SizeEnum.SMALL) {
+                            for (int j = 0; j < 2 && j < allToppings.size(); j++) {
+                                ToppingEntity topping = allToppings.get(j);
+                                ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                                itemToppingDAL.insert(itemTopping);
+                            }
+                        } else {
+                            for (ToppingEntity topping : allToppings) {
+                                ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
+                                itemToppingDAL.insert(itemTopping);
+                            }
                         }
                     } else {
-                        for (ToppingEntity topping : allToppings) {
-                            ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, topping);
-                            itemToppingDAL.insert(itemTopping);
-                        }
+                        ToppingEntity defaultTopping = allToppings.get(0);
+                        ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, defaultTopping);
+                        itemToppingDAL.insert(itemTopping);
                     }
-                } else {
-                    ToppingEntity defaultTopping = allToppings.get(0);
-                    ItemToppingEntity itemTopping = new ItemToppingEntity(itemEntity, defaultTopping);
-                    itemToppingDAL.insert(itemTopping);
                 }
+                System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
+                itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
             }
-            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
-            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
 
         //OrderEntity
-//        for (int i = 0; i < 10; i++) {
-//            //new Entity
-//            try {
-//                tr.begin();
-//                orderDAL.insert(generateOrderEntity());
-//                tr.commit();
-//            } catch (Exception e) {
-//                tr.rollback();
-//                e.printStackTrace();
-//            }
-//        }
+        for (int i = 0; i < 10; i++) {
+            //new Entity
+            orderDAL.insert(generateOrderEntity());
+        }
     }
 
     public static void main(String[] args) {
