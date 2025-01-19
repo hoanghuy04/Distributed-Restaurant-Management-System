@@ -28,6 +28,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
         @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
+        @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
 })
 public class ItemEntity extends BaseEntity {
     @Id
