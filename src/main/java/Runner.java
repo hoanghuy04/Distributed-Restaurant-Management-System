@@ -10,6 +10,7 @@ import model.*;
 import model.enums.SizeEnum;
 import util.datafaker.DataGenerator;
 
+import javax.management.relation.Role;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -29,13 +30,20 @@ public class Runner {
     private static List<ToppingEntity> toppings;
     private static List<ItemEntity> items;
     private static List<ItemToppingEntity> itemToppings;
-
+    private static List<RoleEntity> roles;
+    private static List<EmployeeEntity> employees;
+    private static List<PromotionEntity> promotions;
+    private static List<PromotionDetailEntity> promotionDetails;
     public static void main(String[] args) {
         generator.generateAndPrintSampleData();
         categories = generator.getCategoryDAL().findAll();
         toppings = generator.getToppingDAL().findAll();
         items = generator.getItemDAL().findAll();
         itemToppings = generator.getItemToppingDAL().findAll();
+        roles = generator.getRoleDAL().findAll();
+        employees = generator.getEmployeeDAL().findAll();
+        promotions = generator.getPromotionDAL().findAll();
+        promotionDetails = generator.getPromotionDetailDAL().findAll();
 
         boolean exit = false;
         while (!exit) {
@@ -226,10 +234,52 @@ public class Runner {
                 break;
             }
             case 5:
-                System.out.println("Đang tạo mới EmployeeEntity...");
+                System.out.println("Nhập mật khẩu:");
+                String password = sc.nextLine();
+
+                System.out.println("Nhập họ tên:");
+                String fullname = sc.nextLine();
+
+                System.out.println("Nhập so điện thoại: ");
+                String phoneNumber = sc.nextLine();
+
+                System.out.println("Nhập email: ");
+                String email = sc.nextLine();
+
+                System.out.println("Nhập địa chỉ: ");
+
+                System.out.println("\tNhập phố: ");
+                String street = sc.nextLine();
+
+                System.out.println("\tNhập phường: ");
+                String ward = sc.nextLine();
+
+                System.out.println("\tNhập đường: ");
+                String district = sc.nextLine();
+
+                System.out.println("\tNhập thành phố: ");
+                String city = sc.nextLine();
+
+                Address address = new Address();
+
                 break;
             case 6:
-                System.out.println("Đang tạo mới RoleEntity...");
+                System.out.println("Nhập tên chức vụ:");
+                String roleName = sc.nextLine();
+                if(roleName.isEmpty() || roleName.length()==0) {
+                    System.out.println("Tên chức vụ không hợp lệ");
+                    break;
+                }
+                try {
+                    RoleEntity role = new RoleEntity();
+                    role.setRoleName(roleName);
+                    String result = generator.getRoleDAL().insert(role)
+                            ? "Thêm role thành công: " + role
+                            : "Thêm role thất bại!";
+                    System.out.println(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 7:
                 System.out.println("Đang tạo mới PromotionEntity...");

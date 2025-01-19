@@ -30,7 +30,7 @@ public class DataGenerator {
     private final ToppingDAL toppingDAL = new ToppingDAL(em);
     private final ItemToppingDAL itemToppingDAL = new ItemToppingDAL(em);
     private final EmployeeDAL employeeDAL = new EmployeeDAL(em);
-    private final RoleDAL roleDAL = new RoleDAL();
+    private final RoleDAL roleDAL = new RoleDAL(em);
     private final PromotionDAL promotionDAL = new PromotionDAL(em);
     private final PromotionDetailDAL promotionDetailDAL = new PromotionDetailDAL(em);
     private final CustomerDAL customerDAL = new CustomerDAL(em);
