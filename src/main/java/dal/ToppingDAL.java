@@ -20,7 +20,7 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
 
     @Override
     public boolean insert(ToppingEntity toppingEntity) {
-        toppingEntity.setToppingId(IDGeneratorUtil.generateSimpleID("T", "toppings", "topping", em));
+        toppingEntity.setToppingId(IDGeneratorUtil.generateSimpleID("T", "toppings", "topping_id", em));
         BaseDAL.executeTransaction(em, () -> em.persist(toppingEntity));
         return false;
     }
