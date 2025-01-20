@@ -4,10 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import model.ItemEntity;
-import model.OrderDetailEntity;
-import model.PromotionDetailEntity;
-import model.PromotionEntity;
+import model.*;
 
 import java.util.List;
 import java.util.Optional;
