@@ -15,7 +15,8 @@ import lombok.EqualsAndHashCode;
 @Table(name = "categories")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-        @NamedQuery(name = "CategoryEntity.findAll", query = "select c from CategoryEntity c")
+        @NamedQuery(name = "CategoryEntity.findAll", query = "select c from CategoryEntity c"),
+        @NamedQuery(name = "CategoryEntity.findByName", query = "select c from CategoryEntity c where c.name = :name")
 })
 public class CategoryEntity extends BaseEntity{
     @Id

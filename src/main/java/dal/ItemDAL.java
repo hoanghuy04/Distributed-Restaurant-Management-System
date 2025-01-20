@@ -1,6 +1,7 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import model.CategoryEntity;
 import model.ItemEntity;
@@ -52,5 +53,16 @@ public class ItemDAL implements  BaseDAL<ItemEntity, String>{
 
     public List<ItemEntity> findByCategory(CategoryEntity categoryEntity) {
         return em.createNamedQuery("ItemEntity.findByCategory", ItemEntity.class).setParameter("categoryId", categoryEntity.getCategoryId()).getResultList();
+    }
+
+    public Optional<ItemEntity> findByName(String name) {
+        try {
+            ItemEntity result = em.createNamedQuery("ItemEntity.findByName", ItemEntity.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

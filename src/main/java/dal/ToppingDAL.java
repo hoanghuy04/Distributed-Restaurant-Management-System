@@ -1,7 +1,9 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
+import model.ItemEntity;
 import model.ToppingEntity;
 import util.IDGeneratorUtil;
 
@@ -21,8 +23,7 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     @Override
     public boolean insert(ToppingEntity toppingEntity) {
         toppingEntity.setToppingId(IDGeneratorUtil.generateSimpleID("T", "toppings", "topping_id", em));
-        BaseDAL.executeTransaction(em, () -> em.persist(toppingEntity));
-        return false;
+        return BaseDAL.executeTransaction(em, () -> em.persist(toppingEntity));
     }
 
     @Override
@@ -48,5 +49,16 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     @Override
     public List<ToppingEntity> findAll() {
         return em.createNamedQuery("ToppingEntity.findAll", ToppingEntity.class).getResultList();
+    }
+
+    public Optional<ToppingEntity> findByName(String name) {
+        try {
+            ToppingEntity result = em.createNamedQuery("ToppingEntity.findByName", ToppingEntity.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
