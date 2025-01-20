@@ -6,9 +6,13 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import model.ItemEntity;
 import model.OrderDetailEntity;
+import model.PromotionEntity;
+import model.ToppingEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +75,25 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
         return entityManager.createNamedQuery("OrderDetailEntity.findByOrderId", OrderDetailEntity.class)
                 .setParameter("orderId", orderId)
                 .getResultList();
+    }
+
+    public boolean deleteByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
+        return BaseDAL.executeTransaction(entityManager, () -> {
+            StringBuilder jpql = new StringBuilder("delete from OrderDetailEntity it where 1=1");
+            if (itemEntity != null) {
+                jpql.append(" and it.item.itemId = :itemId");
+            }
+            if (toppingEntity != null) {
+                jpql.append(" and it.topping.toppingId = :toppingId");
+            }
+            Query query = entityManager.createQuery(jpql.toString());
+            if (itemEntity != null) {
+                query.setParameter("itemId", itemEntity.getItemId());
+            }
+            if (toppingEntity != null) {
+                query.setParameter("toppingId", toppingEntity.getToppingId());
+            }
+            query.executeUpdate();
+        });
     }
 }
