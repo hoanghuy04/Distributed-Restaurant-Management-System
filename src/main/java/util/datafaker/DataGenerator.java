@@ -174,8 +174,8 @@ public class DataGenerator {
     // FloorEntity
     public FloorEntity generateFloorEntity( int capacityFloor) {
         FloorEntity floor = new FloorEntity();
-        int numberOfFloors = floorDAL.findAll().size()+1;
-        floor.setName("Tầng " + numberOfFloors);
+        int numberOfFloor = floorDAL.findAll().size()+1;
+        floor.setName("Tầng " + numberOfFloor);
         floor.setCapacity(capacityFloor);
         Set<TableEntity> tables = new HashSet<>();
         floor.setTables(tables);
@@ -185,9 +185,12 @@ public class DataGenerator {
     //TableEntity
     public TableEntity generateTableEntity(FloorEntity floor) {
         TableEntity table = new TableEntity();
+        int numberOfTable = tableDAL.findAll().size()+1;
+        table.setName("Bàn " + numberOfTable);
         table.setCapacity(rand.nextInt(6) + 2);
         table.setTableStatus(TableStatusEnum.AVAILABLE);
         table.setFloor(floor);
+        floor.getTables().add(table);
         return table;
     }
 
@@ -331,17 +334,17 @@ public class DataGenerator {
         }
 
         //Floor
-        for (int i = 1; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             floorDAL.insert(generateFloorEntity(15));
         }
         //Table
         floorDAL.findAll().forEach(x -> {
-            for(int i = 0; i<3; ++i) {
+            for(int i = 0; i<10; ++i) {
                 tableDAL.insert(generateTableEntity(x));
             }
         });
         //Customer
-        for(int i = 0; i<5; ++i) {
+        for(int i = 0; i<10; ++i) {
             customerDAL.insert(generateCustomerEntity());
         }
     }

@@ -6,6 +6,7 @@
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Table;
 import model.*;
 import model.enums.CustomerLevelEnum;
 import model.enums.TableStatusEnum;
@@ -154,6 +155,7 @@ public class Runner {
 
                 if (generator.getCustomerDAL().insert(newCustomer)) {
                     System.out.println("Thêm khách hàng mới thành công!");
+                    System.out.println(newCustomer);
                 } else {
                     System.out.println("Thêm khách hàng mới thất bại!");
                 }
@@ -185,6 +187,7 @@ public class Runner {
 
                 if (generator.getFloorDAL().insert(newFloor)) {
                     System.out.println("Thêm tầng mới thành công!");
+                    System.out.println(newFloor);
                 } else {
                     System.out.println("Thêm tầng mới thất bại!");
                 }
@@ -204,20 +207,15 @@ public class Runner {
                     break;
                 }
 
-                System.out.print("Nhập trạng thái bàn (table status) - (AVAILABLE, OCCUPIED, RESERVED): ");
-                String statusInput = scanner.nextLine();
-                TableStatusEnum tableStatus = null;
-                try {
-                    tableStatus = TableStatusEnum.valueOf(statusInput.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Trạng thái bàn không hợp lệ. Vui lòng nhập một trong các giá trị: AVAILABLE, OCCUPIED, RESERVED.");
-                    break;
-                }
+                TableStatusEnum tableStatus = TableStatusEnum.AVAILABLE;
 
                 // Nhập thông tin tầng
+                FloorEntity temp = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getFloorId());
+                }
+
                 System.out.print("Nhập ID tầng (Floor ID) mà bàn sẽ được đặt: ");
-                generator.getFloorDAL().findAll().forEach(x -> System.out.print(x.getFloorId()+" ") );
-                System.out.println();
                 String floorId = scanner.nextLine();
                 FloorEntity floor = generator.getFloorDAL().findById(floorId).orElse(null);
                 if (floor == null) {
@@ -228,13 +226,15 @@ public class Runner {
                 // Tạo đối tượng TableEntity
                 TableEntity newTable = new TableEntity();
                 newTable.setCapacity(capacityTable);
-                newTable.setNote(null);
+                int numberOfTable = generator.getTableDAL().findAll().size()+1;
+                newTable.setName("Bàn " + numberOfTable);
                 newTable.setTableStatus(tableStatus);
                 newTable.setFloor(floor);
                 floor.getTables().add(newTable);
 
                 if (generator.getTableDAL().insert(newTable)) {
                     System.out.println("Thêm bàn mới thành công!");
+                    System.out.println(newTable);
                 } else {
                     System.out.println("Thêm bàn mới thất bại!");
                 }
@@ -334,6 +334,10 @@ public class Runner {
                 System.out.println("Đang cập nhật CustomerEntity...");
 
                 // Nhập Customer ID để tìm kiếm khách hàng
+                CustomerEntity temp = generator.getCustomerDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getCustomerId());
+                }
                 System.out.print("Nhập ID khách hàng (Customer ID): ");
                 String customerId = scanner.nextLine();
 
@@ -343,26 +347,26 @@ public class Runner {
                     CustomerEntity customer = optionalCustomer.get();
 
                     // Nhập thông tin mới
-                    System.out.print("Nhập tên khách hàng mới : ");
+                    System.out.print("Nhập tên khách hàng mới (nhấn Enter nếu không thay đổi): ");
                     String name = scanner.nextLine();
                     if (!name.isEmpty()) {
                         customer.setName(name);
                     }
 
-                    System.out.print("Nhập email mới (hoặc giữ nguyên nếu không thay đổi): ");
+                    System.out.print("Nhập email mới (nhấn Enter nếu không thay đổi): ");
                     String email = scanner.nextLine();
                     if (!email.isEmpty()) {
                         customer.setEmail(email);
                     }
 
-                    System.out.print("Nhập số điện thoại mới (hoặc giữ nguyên nếu không thay đổi): ");
+                    System.out.print("Nhập số điện thoại mới (nhấn Enter nếu không thay đổi): ");
                     String phone = scanner.nextLine();
                     if (!phone.isEmpty()) {
                         customer.setPhone(phone);
                     }
 
                     // Nhập ngày sinh mới (nếu có thay đổi)
-                    System.out.print("Nhập ngày sinh mới (yyyy-MM-dd) hoặc để trống nếu không thay đổi: ");
+                    System.out.print("Nhập ngày sinh mới (yyyy-MM-dd) hoặc nhấn Enter nếu không thay đổi: ");
                     String dobInput = scanner.nextLine();
                     if (!dobInput.isEmpty()) {
                         try {
@@ -373,7 +377,7 @@ public class Runner {
                     }
 
                     // Nhập thông tin địa chỉ mới
-                    System.out.print("Nhập địa chỉ mới (đường, phường, quận, thành phố) hoặc để trống nếu không thay đổi: ");
+                    System.out.print("Nhập địa chỉ mới (đường, phường, quận, thành phố) hoặc nhấn Enter nếu không thay đổi: ");
                     System.out.print(" - Đường (street): ");
                     String street = scanner.nextLine();
                     if (!street.isEmpty()) {
@@ -400,6 +404,7 @@ public class Runner {
 
                     if (generator.getCustomerDAL().update(customer)) {
                         System.out.println("Cập nhật khách hàng thành công!");
+                        System.out.println("Sau khi cập nhật: " +customer);
                     } else {
                         System.out.println("Cập nhật khách hàng thất bại!");
                     }
@@ -411,7 +416,10 @@ public class Runner {
                 System.out.println("Đang cập nhật FloorEntity...");
 
                 // Nhập Floor ID để tìm kiếm tầng
-                System.out.print("Nhập ID tầng (Floor ID): ");
+                FloorEntity temp1 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp1 != null) {
+                    System.out.println("Gợi ý ID: " + temp1.getFloorId());
+                }                System.out.print("Nhập ID tầng (Floor ID): ");
                 String floorId = scanner.nextLine();
 
                 // Tìm tầng bằng Floor ID
@@ -420,14 +428,14 @@ public class Runner {
                     FloorEntity floor = optionalFloor.get();
 
                     // Nhập tên tầng mới (hoặc giữ nguyên nếu không thay đổi)
-                    System.out.print("Nhập tên tầng mới (hoặc giữ nguyên nếu không thay đổi): ");
+                    System.out.print("Nhập tên tầng mới (nhấn Enter nếu không thay đổi): ");
                     String name = scanner.nextLine();
                     if (!name.isEmpty()) {
                         floor.setName(name);
                     }
 
                     // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
-                    System.out.print("Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi): ");
+                    System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
                     String capacityInput = scanner.nextLine();
                     if (!capacityInput.isEmpty()) {
                         try {
@@ -440,6 +448,7 @@ public class Runner {
 
                     if (generator.getFloorDAL().update(floor)) {
                         System.out.println("Cập nhật tầng thành công!");
+                        System.out.println("Sau khi cập nhật: " +floor);
                     } else {
                         System.out.println("Cập nhật tầng thất bại!");
                     }
@@ -452,7 +461,10 @@ public class Runner {
                 System.out.println("Đang cập nhật TableEntity...");
 
                 // Nhập Table ID để tìm kiếm bàn
-                System.out.print("Nhập ID bàn (Table ID): ");
+                TableEntity temp2 = generator.getTableDAL().findAll().stream().findFirst().orElse(null);
+                if (temp2 != null) {
+                    System.out.println("Gợi ý ID: " + temp2.getTableId());
+                }                System.out.print("Nhập ID bàn (Table ID): ");
                 String tableId = scanner.nextLine();
 
                 // Tìm bàn bằng Table ID
@@ -461,7 +473,7 @@ public class Runner {
                     TableEntity table = optionalTable.get();
 
                     // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
-                    System.out.print("Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi): ");
+                    System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
                     String capacityInput = scanner.nextLine();
                     if (!capacityInput.isEmpty()) {
                         try {
@@ -473,23 +485,31 @@ public class Runner {
                     }
 
                     // Nhập ghi chú mới (hoặc giữ nguyên nếu không thay đổi)
-                    System.out.print("Nhập ghi chú mới (hoặc giữ nguyên nếu không thay đổi): ");
-                    String note = scanner.nextLine();
-                    if (!note.isEmpty()) {
-                        table.setNote(note);
+                    System.out.print("Nhập tên bàn mới (nhấn Enter nếu không thay đổi): ");
+                    String name = scanner.nextLine();
+                    if (!name.isEmpty()) {
+                        table.setName(name);
                     }
 
                     // Nhập trạng thái bàn mới (AVAILABLE, OCCUPIED, RESERVED)
-                    System.out.print("Nhập trạng thái bàn mới (AVAILABLE, OCCUPIED, RESERVED): ");
-                    String statusInput = scanner.nextLine();
-                    try {
-                        table.setTableStatus(TableStatusEnum.valueOf(statusInput.toUpperCase()));
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Trạng thái bàn không hợp lệ.");
+                    System.out.print("Nhập trạng thái bàn mới    (AVAILABLE:1, OCCUPIED:2): ");
+                    int statusChoice = scanner.nextInt();
+                    switch (statusChoice) {
+                        case 1:
+                            table.setTableStatus(TableStatusEnum.AVAILABLE);
+                            break;
+                            case 2:
+                                table.setTableStatus(TableStatusEnum.OCCUPIED);
+                                break;
+                                default:
+                                    System.out.println("Lựa chọn không phù hợp! Không thay đổi status");
                     }
 
                     // Nhập ID tầng mới (nếu thay đổi)
-                    System.out.print("Nhập ID tầng mới (Floor ID) hoặc để trống nếu không thay đổi: ");
+                    FloorEntity temp3 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                    if (temp3 != null) {
+                        System.out.println("Gợi ý ID: " + temp3.getFloorId());
+                    }                    System.out.print("Nhập ID tầng mới (Floor ID) hoặc để trống nếu không thay đổi: ");
                     String newFloorId = scanner.nextLine();
                     if (!newFloorId.isEmpty()) {
                         FloorEntity newFloor = generator.getFloorDAL().findById(newFloorId).orElse(null);
@@ -503,6 +523,7 @@ public class Runner {
                     // Cập nhật thông tin vào cơ sở dữ liệu
                     if (generator.getTableDAL().update(table)) {
                         System.out.println("Cập nhật bàn thành công!");
+                        System.out.println("Sau khi cập nhật: " +table);
                     } else {
                         System.out.println("Cập nhật bàn thất bại!");
                     }

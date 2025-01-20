@@ -70,4 +70,12 @@ public class CustomerEntity extends BaseEntity{
             return CustomerLevelEnum.VIP;
         }
     }
+
+    public void setRewardedPoint() {
+        this.rewardedPoint = getRewardedPoint();
+    }
+
+    public void setCustomerLevel() {
+        this.customerLevel = getLevelCustomer();
+    }
 }
