@@ -32,10 +32,6 @@ public class PromotionDetailEntity {
     private ItemEntity item;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
-    private PromotionTypeEnum promotionType;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "customer_level", nullable = false, columnDefinition = "nvarchar(50)")
     private CustomerLevelEnum customerLevel;
 
