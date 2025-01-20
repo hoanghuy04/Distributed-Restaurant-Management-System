@@ -74,7 +74,7 @@ public class ItemEntity extends BaseEntity {
 
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
     @ToString.Exclude
