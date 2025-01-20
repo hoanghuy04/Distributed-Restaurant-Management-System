@@ -8,11 +8,16 @@ import jakarta.persistence.Persistence;
 import lombok.Data;
 import model.*;
 import model.enums.*;
+import model.enums.TableStatusEnum;
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 /*
  * @description: DataGenerator
@@ -125,7 +130,23 @@ public class DataGenerator {
 
     //Address
     public Address generateAddress() {
-        return null;
+        Address address = new Address();
+        address.setStreet(faker.address().streetAddress());
+        String[] districts = {"Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Hai Bà Trưng", "Đống Đa", "Cầu Giấy", "Hà Đông", "Long Biên"};
+        address.setDistrict(districts[rand.nextInt(districts.length)]);
+        String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
+        address.setWard(wards[rand.nextInt(wards.length)]);
+        String[] cities = {
+                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
+                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
+                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
+                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
+                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
+                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
+                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
+        };
+        address.setCity(cities[rand.nextInt(cities.length)]);
+        return address;
     }
 
     // EmployeEntity
@@ -148,19 +169,47 @@ public class DataGenerator {
         return null;
     }
 
+    public String generateVietnamesePhoneNumber() {
+        String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
+        String prefix = prefixes[new Random().nextInt(prefixes.length)];
+        String suffix = String.format("%07d", new Random().nextInt(10000000)); // 7 chữ số ngẫu nhiên
+        return prefix + suffix;
+    }
     // CustomerEntity
-    public CustomerEntity getCustomerEntity() {
-        return null;
+    public CustomerEntity generateCustomerEntity() {
+        CustomerEntity customer = new CustomerEntity();
+        customer.setName(faker.name().fullName());
+        customer.setEmail(faker.internet().emailAddress());
+        customer.setPhone(generateVietnamesePhoneNumber());
+        LocalDateTime dayOfBirth = LocalDateTime.now().minusYears(18 + rand.nextInt(42));
+        customer.setDayOfBirth(dayOfBirth);
+        customer.setAddress(generateAddress());
+        customer.setRewardedPoint(customer.getRewardedPoint());
+        customer.setCustomerLevel(customer.getLevelCustomer());
+        return customer;
     }
 
     // FloorEntity
-    public FloorEntity generateFloorEntity() {
-        return null;
+    public FloorEntity generateFloorEntity( int capacityFloor) {
+        FloorEntity floor = new FloorEntity();
+        int numberOfFloor = floorDAL.findAll().size()+1;
+        floor.setName("Tầng " + numberOfFloor);
+        floor.setCapacity(capacityFloor);
+        Set<TableEntity> tables = new HashSet<>();
+        floor.setTables(tables);
+        return floor;
     }
 
     //TableEntity
-    public TableEntity getTableEntity() {
-        return null;
+    public TableEntity generateTableEntity(FloorEntity floor) {
+        TableEntity table = new TableEntity();
+        int numberOfTable = tableDAL.findAll().size()+1;
+        table.setName("Bàn " + numberOfTable);
+        table.setCapacity(rand.nextInt(6) + 2);
+        table.setTableStatus(TableStatusEnum.AVAILABLE);
+        table.setFloor(floor);
+        floor.getTables().add(table);
+        return table;
     }
 
     //OrderEntity
@@ -301,6 +350,21 @@ public class DataGenerator {
         for (int i = 0; i < 10; i++) {
             //new Entity
             orderDAL.insert(generateOrderEntity());
+        }
+
+        //Floor
+        for (int i = 0; i < 3; i++) {
+            floorDAL.insert(generateFloorEntity(15));
+        }
+        //Table
+        floorDAL.findAll().forEach(x -> {
+            for(int i = 0; i<10; ++i) {
+                tableDAL.insert(generateTableEntity(x));
+            }
+        });
+        //Customer
+        for(int i = 0; i<10; ++i) {
+            customerDAL.insert(generateCustomerEntity());
         }
     }
 

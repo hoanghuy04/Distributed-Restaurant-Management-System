@@ -2,6 +2,7 @@ package dal;
 
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import model.CustomerEntity;
 import model.TableEntity;
 import util.IDGeneratorUtil;
 
@@ -25,7 +26,12 @@ public class TableDAL implements BaseDAL<TableEntity, String>{
 
     @Override
     public boolean deleteById(String s) {
-        return false;
+        return BaseDAL.executeTransaction(em, () -> {
+            TableEntity entity = em.find(TableEntity.class, s);
+            if (entity != null) {
+                em.remove(entity);
+            }
+        });
     }
 
     @Override

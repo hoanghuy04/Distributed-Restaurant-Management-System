@@ -39,9 +39,8 @@ public class Runner {
     private static final OrderDetailDAL orderDetailDAL = new OrderDetailDAL(em);
 
     public static void main(String[] args) {
-        generator.generateAndPrintSampleData();
-
         boolean exit = false;
+        generator.generateAndPrintSampleData();
         while (!exit) {
             printMenu();
             int choice = getChoice();
@@ -259,12 +258,137 @@ public class Runner {
                 break;
             case 9:
                 System.out.println("Đang tạo mới CustomerEntity...");
+                // Nhập thông tin từ người dùng
+                System.out.print("Nhập tên khách hàng: ");
+                String name = sc.nextLine().trim();
+
+                System.out.print("Nhập email khách hàng: ");
+                String email = sc.nextLine().trim();
+
+                System.out.print("Nhập số điện thoại khách hàng: ");
+                String phone = sc.nextLine().trim();
+
+                System.out.print("Nhập ngày sinh (định dạng yyyy-MM-dd): ");
+                String dobInput = sc.nextLine().trim();
+                LocalDateTime dayOfBirth = null;
+                try {
+                    dayOfBirth = LocalDateTime.parse(dobInput + "T00:00:00");
+                } catch (Exception e) {
+                    System.out.println("Ngày sinh không hợp lệ. Sử dụng giá trị mặc định là null.");
+                }
+
+                System.out.print("Nhập địa chỉ (đường, thành phố, quốc gia): ");
+                System.out.print(" - Đường: ");
+                String street = sc.nextLine().trim();
+                System.out.print(" - Phường/Xã: ");
+                String ward = sc.nextLine().trim();
+                System.out.print(" - Quận/Huyên: ");
+                String district = sc.nextLine().trim();
+                System.out.print(" - Thành phố: ");
+                String city = sc.nextLine().trim();
+
+
+                Address address = new Address();
+                address.setStreet(street);
+                address.setWard(ward);
+                address.setDistrict(district);
+                address.setCity(city);
+
+                // Tạo đối tượng CustomerEntity
+                CustomerEntity newCustomer = new CustomerEntity();
+                newCustomer.setName(name);
+                newCustomer.setEmail(email);
+                newCustomer.setPhone(phone);
+                newCustomer.setDayOfBirth(dayOfBirth);
+                newCustomer.setAddress(address);
+                newCustomer.setRewardedPoint(0); // Điểm thưởng ban đầu là 0
+                newCustomer.setCustomerLevel(CustomerLevelEnum.NEW); // Mức độ khách hàng mặc định là NEW
+
+                if (generator.getCustomerDAL().insert(newCustomer)) {
+                    System.out.println("Thêm khách hàng mới thành công!");
+                    System.out.println(newCustomer);
+                } else {
+                    System.out.println("Thêm khách hàng mới thất bại!");
+                }
                 break;
             case 10:
                 System.out.println("Đang tạo mới FloorEntity...");
+
+                // Nhập thông tin từ người dùng
+                System.out.print("Nhập tên tầng (Floor Name): ");
+                String floorName = sc.nextLine().trim();
+
+                System.out.print("Nhập sức chứa của tầng (Capacity): ");
+                int capacity = 0;
+                try {
+                    capacity = Integer.parseInt(sc.nextLine().trim());
+                    if (capacity <= 0) {
+                        System.out.println("Sức chứa phải là số nguyên dương. Vui lòng thử lại.");
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Sức chứa không hợp lệ. Vui lòng nhập một số nguyên.");
+                    break;
+                }
+
+                // Tạo đối tượng FloorEntity
+                FloorEntity newFloor = new FloorEntity();
+                newFloor.setName(floorName);
+                newFloor.setCapacity(capacity);
+
+                if (generator.getFloorDAL().insert(newFloor)) {
+                    System.out.println("Thêm tầng mới thành công!");
+                    System.out.println(newFloor);
+                } else {
+                    System.out.println("Thêm tầng mới thất bại!");
+                }
                 break;
             case 11:
                 System.out.println("Đang tạo mới TableEntity...");
+                System.out.print("Nhập sức chứa của bàn (Capacity): ");
+                int capacityTable = 0;
+                try {
+                    capacityTable = Integer.parseInt(sc.nextLine().trim());
+                    if (capacityTable <= 0) {
+                        System.out.println("Sức chứa phải là số nguyên dương. Vui lòng thử lại.");
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Sức chứa không hợp lệ. Vui lòng nhập một số nguyên.");
+                    break;
+                }
+
+                TableStatusEnum tableStatus = TableStatusEnum.AVAILABLE;
+
+                // Nhập thông tin tầng
+                FloorEntity temp = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getFloorId());
+                }
+
+                System.out.print("Nhập ID tầng (Floor ID) mà bàn sẽ được đặt: ");
+                String floorId = sc.nextLine().trim();
+                FloorEntity floor = generator.getFloorDAL().findById(floorId).orElse(null);
+                if (floor == null) {
+                    System.out.println("Không tìm thấy tầng với ID này.");
+                    break;
+                }
+
+                // Tạo đối tượng TableEntity
+                TableEntity newTable = new TableEntity();
+                newTable.setCapacity(capacityTable);
+                int numberOfTable = generator.getTableDAL().findAll().size() + 1;
+                newTable.setName("Bàn " + numberOfTable);
+                newTable.setTableStatus(tableStatus);
+                newTable.setFloor(floor);
+                floor.getTables().add(newTable);
+
+                if (generator.getTableDAL().insert(newTable)) {
+                    System.out.println("Thêm bàn mới thành công!");
+                    System.out.println(newTable);
+                } else {
+                    System.out.println("Thêm bàn mới thất bại!");
+                }
                 break;
             case 12: {
                 System.out.println("Đang tạo mới OrderEntity...");
@@ -275,7 +399,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập thời gian đặt chỗ (dd-MM-yyyy HH:mm):");
-                        reservationTime = LocalDateTime.parse(scanner.nextLine(), formatter);
+                        reservationTime = LocalDateTime.parse(sc.nextLine(), formatter);
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -286,7 +410,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập thời gian hoàn thành dự kiến (dd-MM-yyyy HH:mm):");
-                        expectedCompletionTime = LocalDateTime.parse(scanner.nextLine(), formatter);
+                        expectedCompletionTime = LocalDateTime.parse(sc.nextLine(), formatter);
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -295,18 +419,18 @@ public class Runner {
 
 
                 System.out.println("Nhập số lượng khách:");
-                int numberOfCustomer = scanner.nextInt();
+                int numberOfCustomer = sc.nextInt();
 
                 System.out.println("Nhập tiền đặt cọc:");
-                double deposit = scanner.nextDouble();
+                double deposit = sc.nextDouble();
 
-                scanner.nextLine(); // Xóa dòng trống
+                sc.nextLine(); // Xóa dòng trống
 
                 OrderStatusEnum orderStatus = null;
                 do {
                     try {
                         System.out.println("Nhập trạng thái đơn hàng (SINGLE, MERGE):");
-                        orderStatus = OrderStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                        orderStatus = OrderStatusEnum.valueOf(sc.nextLine().toUpperCase());
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -317,7 +441,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập loại đơn hàng (ADVANCE, IMMEDIATE):");
-                        orderType = OrderTypeEnum.valueOf(scanner.nextLine().toUpperCase());
+                        orderType = OrderTypeEnum.valueOf(sc.nextLine().toUpperCase());
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -328,7 +452,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập phương thức thanh toán (CASH, CREDIT_CARD, E_WALLET):");
-                        paymentMethod = PaymentMethodEnum.valueOf(scanner.nextLine().toUpperCase());
+                        paymentMethod = PaymentMethodEnum.valueOf(sc.nextLine().toUpperCase());
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -339,7 +463,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập trạng thái thanh toán (UNPAID, PAID):");
-                        paymentStatus = PaymentStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                        paymentStatus = PaymentStatusEnum.valueOf(sc.nextLine().toUpperCase());
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -350,7 +474,7 @@ public class Runner {
                 do {
                     try {
                         System.out.println("Nhập trạng thái đặt chỗ (PENDING, RECEIVED, CANCELLED):");
-                        reservationStatus = ReservationStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                        reservationStatus = ReservationStatusEnum.valueOf(sc.nextLine().toUpperCase());
                         flag = true;
                     } catch (Exception e) {
                         flag = false;
@@ -375,8 +499,8 @@ public class Runner {
 
                 // Nhập danh sách OrderDetailEntity
                 System.out.println("Nhập số lượng chi tiết đơn hàng:");
-                int detailCount = scanner.nextInt();
-                scanner.nextLine(); // Xóa dòng trống
+                int detailCount = sc.nextInt();
+                sc.nextLine(); // Xóa dòng trống
                 List<ItemEntity> items = itemDAL.findAll();
                 List<ToppingEntity> toppings = toppingDAL.findAll();
                 Set<OrderDetailEntity> orderDetails = new HashSet<>();
@@ -386,18 +510,18 @@ public class Runner {
                     System.out.println("Danh sách items: ");
                     items.forEach(x -> System.out.println(x.getItemId() + " " + x.getName()));
                     System.out.println("Nhập Item ID:");
-                    String itemId = scanner.nextLine();
+                    String itemId = sc.nextLine();
 
                     System.out.println("Danh sách toppings: ");
                     toppings.forEach(x -> System.out.println(x.getToppingId() + " " + x.getName()));
                     System.out.println("Nhập Topping ID:");
-                    String toppingId = scanner.nextLine();
+                    String toppingId = sc.nextLine();
 
                     System.out.println("Nhập số lượng:");
-                    int quantity = scanner.nextInt();
+                    int quantity = sc.nextInt();
 
                     System.out.println("Nhập mô tả:");
-                    String description = scanner.nextLine();
+                    String description = sc.nextLine();
 
                     // Khởi tạo OrderDetailEntity
                     OrderDetailEntity detail = new OrderDetailEntity();
@@ -485,7 +609,7 @@ public class Runner {
                     orders.forEach(order -> System.out.println(order.getOrderId()));
                 }
                 System.out.println("Nhập ID order cần xem chi tiết:");
-                String orderId = scanner.nextLine();
+                String orderId = sc.nextLine();
 
 // Tìm OrderEntity theo ID
                 OrderEntity selectedOrder = orders.stream()
@@ -755,12 +879,209 @@ public class Runner {
                 break;
             case 9:
                 System.out.println("Đang cập nhật CustomerEntity...");
+
+                // Nhập Customer ID để tìm kiếm khách hàng
+                CustomerEntity temp = generator.getCustomerDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getCustomerId());
+                }
+                System.out.print("Nhập ID khách hàng (Customer ID): ");
+                String customerId = sc.nextLine().trim();
+
+                // Tìm khách hàng bằng Customer ID
+                Optional<CustomerEntity> optionalCustomer = generator.getCustomerDAL().findById(customerId);
+                if (optionalCustomer.isPresent()) {
+                    CustomerEntity customer = optionalCustomer.get();
+
+                    // Nhập thông tin mới
+                    System.out.print("Nhập tên khách hàng mới (nhấn Enter nếu không thay đổi): ");
+                    String name = sc.nextLine().trim();
+                    if (!name.isEmpty()) {
+                        customer.setName(name);
+                    }
+
+                    System.out.print("Nhập email mới (nhấn Enter nếu không thay đổi): ");
+                    String email = sc.nextLine().trim();
+                    if (!email.isEmpty()) {
+                        customer.setEmail(email);
+                    }
+
+                    System.out.print("Nhập số điện thoại mới (nhấn Enter nếu không thay đổi): ");
+                    String phone = sc.nextLine().trim();
+                    if (!phone.isEmpty()) {
+                        customer.setPhone(phone);
+                    }
+
+                    // Nhập ngày sinh mới (nếu có thay đổi)
+                    System.out.print("Nhập ngày sinh mới (yyyy-MM-dd) hoặc nhấn Enter nếu không thay đổi: ");
+                    String dobInput = sc.nextLine().trim();
+                    if (!dobInput.isEmpty()) {
+                        try {
+                            customer.setDayOfBirth(LocalDateTime.parse(dobInput + "T00:00:00"));
+                        } catch (Exception e) {
+                            System.out.println("Ngày sinh không hợp lệ. Sử dụng giá trị mặc định.");
+                        }
+                    }
+
+                    // Nhập thông tin địa chỉ mới
+                    System.out.print("Nhập địa chỉ mới (đường, phường, quận, thành phố) hoặc nhấn Enter nếu không thay đổi: ");
+                    System.out.print(" - Đường (street): ");
+                    String street = sc.nextLine().trim();
+                    if (!street.isEmpty()) {
+                        customer.getAddress().setStreet(street);
+                    }
+
+                    System.out.print(" - Phường (ward): ");
+                    String ward = sc.nextLine().trim();
+                    if (!ward.isEmpty()) {
+                        customer.getAddress().setWard(ward);
+                    }
+
+                    System.out.print(" - Quận (district): ");
+                    String district = sc.nextLine().trim();
+                    if (!district.isEmpty()) {
+                        customer.getAddress().setDistrict(district);
+                    }
+
+                    System.out.print(" - Thành phố (city): ");
+                    String city = sc.nextLine().trim();
+                    if (!city.isEmpty()) {
+                        customer.getAddress().setCity(city);
+                    }
+
+                    if (generator.getCustomerDAL().update(customer)) {
+                        System.out.println("Cập nhật khách hàng thành công!");
+                        System.out.println("Sau khi cập nhật: " + customer);
+                    } else {
+                        System.out.println("Cập nhật khách hàng thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy khách hàng với ID này.");
+                }
                 break;
             case 10:
                 System.out.println("Đang cập nhật FloorEntity...");
+
+                // Nhập Floor ID để tìm kiếm tầng
+                FloorEntity temp1 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp1 != null) {
+                    System.out.println("Gợi ý ID: " + temp1.getFloorId());
+                }
+                System.out.print("Nhập ID tầng (Floor ID): ");
+                String floorId = sc.nextLine().trim();
+
+                // Tìm tầng bằng Floor ID
+                Optional<FloorEntity> optionalFloor = generator.getFloorDAL().findById(floorId);
+                if (optionalFloor.isPresent()) {
+                    FloorEntity floor = optionalFloor.get();
+
+                    // Nhập tên tầng mới (hoặc giữ nguyên nếu không thay đổi)
+                    System.out.print("Nhập tên tầng mới (nhấn Enter nếu không thay đổi): ");
+                    String name = sc.nextLine().trim();
+                    if (!name.isEmpty()) {
+                        floor.setName(name);
+                    }
+
+                    // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
+                    System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
+                    String capacityInput = sc.nextLine().trim();
+                    if (!capacityInput.isEmpty()) {
+                        try {
+                            int capacity = Integer.parseInt(capacityInput);
+                            floor.setCapacity(capacity);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Sức chứa không hợp lệ.");
+                        }
+                    }
+
+                    if (generator.getFloorDAL().update(floor)) {
+                        System.out.println("Cập nhật tầng thành công!");
+                        System.out.println("Sau khi cập nhật: " + floor);
+                    } else {
+                        System.out.println("Cập nhật tầng thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy tầng với ID này.");
+                }
                 break;
+
             case 11:
                 System.out.println("Đang cập nhật TableEntity...");
+
+                // Nhập Table ID để tìm kiếm bàn
+                TableEntity temp2 = generator.getTableDAL().findAll().stream().findFirst().orElse(null);
+                if (temp2 != null) {
+                    System.out.println("Gợi ý ID: " + temp2.getTableId());
+                }
+                System.out.print("Nhập ID bàn (Table ID): ");
+                String tableId = sc.nextLine().trim();
+
+                // Tìm bàn bằng Table ID
+                Optional<TableEntity> optionalTable = generator.getTableDAL().findById(tableId);
+                if (optionalTable.isPresent()) {
+                    TableEntity table = optionalTable.get();
+
+                    // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
+                    System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
+                    String capacityInput = sc.nextLine().trim();
+                    if (!capacityInput.isEmpty()) {
+                        try {
+                            int capacity = Integer.parseInt(capacityInput);
+                            table.setCapacity(capacity);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Sức chứa không hợp lệ.");
+                        }
+                    }
+
+                    // Nhập ghi chú mới (hoặc giữ nguyên nếu không thay đổi)
+                    System.out.print("Nhập tên bàn mới (nhấn Enter nếu không thay đổi): ");
+                    String name = sc.nextLine().trim();
+                    if (!name.isEmpty()) {
+                        table.setName(name);
+                    }
+
+                    // Nhập trạng thái bàn mới (AVAILABLE, OCCUPIED, RESERVED)
+                    System.out.print("Nhập trạng thái bàn mới    (AVAILABLE:1, OCCUPIED:2): ");
+                    int statusChoice = sc.nextInt();
+                    switch (statusChoice) {
+                        case 1:
+                            table.setTableStatus(TableStatusEnum.AVAILABLE);
+                            break;
+                        case 2:
+                            table.setTableStatus(TableStatusEnum.OCCUPIED);
+                            break;
+                        default:
+                            System.out.println("Lựa chọn không phù hợp! Không thay đổi status");
+                            break;
+                    }
+
+                    // Nhập ID tầng mới (nếu thay đổi)
+                    FloorEntity temp3 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                    if (temp3 != null) {
+                        System.out.println("Gợi ý ID: " + temp3.getFloorId());
+                    }
+                    System.out.print("Nhập ID tầng mới (Floor ID) hoặc để trống nếu không thay đổi: ");
+                    sc.nextLine();
+                    String newFloorId = sc.nextLine();
+                    if (!newFloorId.isEmpty()) {
+                        FloorEntity newFloor = generator.getFloorDAL().findById(newFloorId).orElse(null);
+                        if (newFloor != null) {
+                            table.setFloor(newFloor);
+                        } else {
+                            System.out.println("Không tìm thấy tầng với ID này.");
+                        }
+                    }
+
+                    // Cập nhật thông tin vào cơ sở dữ liệu
+                    if (generator.getTableDAL().update(table)) {
+                        System.out.println("Cập nhật bàn thành công!");
+                        System.out.println("Sau khi cập nhật: " + table);
+                    } else {
+                        System.out.println("Cập nhật bàn thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy bàn với ID này.");
+                }
                 break;
             case 12: {
                 List<OrderEntity> orders = orderDAL.findAll();
@@ -780,7 +1101,7 @@ public class Runner {
 
                 // Chọn OrderEntity cần cập nhật
                 System.out.println("Nhập Order ID cần cập nhật:");
-                String orderId = scanner.nextLine();
+                String orderId = sc.nextLine();
 
                 // Tìm OrderEntity theo ID
                 OrderEntity order = orders.stream()
@@ -799,7 +1120,7 @@ public class Runner {
                 boolean flag;
                 try {
                     System.out.println("Thời gian cũ " + order.getReservationTime() + " - Nhập thời gian đặt chỗ mới (dd-MM-yyyy HH:mm):");
-                    LocalDateTime reservationTime = LocalDateTime.parse(scanner.nextLine(), formatter);
+                    LocalDateTime reservationTime = LocalDateTime.parse(sc.nextLine(), formatter);
                     order.setReservationTime(reservationTime);
                     flag = true;
                 } catch (Exception e) {
@@ -809,7 +1130,7 @@ public class Runner {
 
                 try {
                     System.out.println("Thời gian cũ " + order.getExpectedCompletionTime() + " - Nhập thời gian hoàn thành dự kiến mới (dd-MM-yyyy HH:mm):");
-                    LocalDateTime expectedCompletionTime = LocalDateTime.parse(scanner.nextLine(), formatter);
+                    LocalDateTime expectedCompletionTime = LocalDateTime.parse(sc.nextLine(), formatter);
                     order.setExpectedCompletionTime(expectedCompletionTime);
                     flag = true;
                 } catch (Exception e) {
@@ -819,14 +1140,14 @@ public class Runner {
 
                 System.out.println("Nhập số lượng khách mới:");
                 try {
-                    order.setNumberOfCustomer(Integer.parseInt(scanner.nextLine()));
+                    order.setNumberOfCustomer(Integer.parseInt(sc.nextLine()));
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
                 }
 
                 System.out.println("Nhập tiền đặt cọc mới:");
                 try {
-                    order.setDeposit(Double.parseDouble(scanner.nextLine()));
+                    order.setDeposit(Double.parseDouble(sc.nextLine()));
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
                 }
@@ -834,7 +1155,7 @@ public class Runner {
                 OrderStatusEnum orderStatus;
                 try {
                     System.out.println("Nhập trạng thái đơn hàng mới (SINGLE, MERGE):");
-                    orderStatus = OrderStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                    orderStatus = OrderStatusEnum.valueOf(sc.nextLine().toUpperCase());
                     order.setOrderStatus(orderStatus);
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
@@ -843,7 +1164,7 @@ public class Runner {
                 OrderTypeEnum orderType;
                 try {
                     System.out.println("Nhập loại đơn hàng mới (ADVANCE, IMMEDIATE):");
-                    orderType = OrderTypeEnum.valueOf(scanner.nextLine().toUpperCase());
+                    orderType = OrderTypeEnum.valueOf(sc.nextLine().toUpperCase());
                     order.setOrderType(orderType);
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
@@ -852,7 +1173,7 @@ public class Runner {
                 PaymentMethodEnum paymentMethod;
                 try {
                     System.out.println("Nhập phương thức thanh toán mới (CASH, CREDIT_CARD, E_WALLET):");
-                    paymentMethod = PaymentMethodEnum.valueOf(scanner.nextLine().toUpperCase());
+                    paymentMethod = PaymentMethodEnum.valueOf(sc.nextLine().toUpperCase());
                     order.setPaymentMethod(paymentMethod);
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
@@ -861,7 +1182,7 @@ public class Runner {
                 PaymentStatusEnum paymentStatus;
                 try {
                     System.out.println("Nhập trạng thái thanh toán mới (UNPAID, PAID):");
-                    paymentStatus = PaymentStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                    paymentStatus = PaymentStatusEnum.valueOf(sc.nextLine().toUpperCase());
                     order.setPaymentStatus(paymentStatus);
                 } catch (Exception e) {
                     System.out.println("=> Không chỉnh sửa!");
@@ -870,7 +1191,7 @@ public class Runner {
                 ReservationStatusEnum reservationStatus;
                 try {
                     System.out.println("Nhập trạng thái đặt chỗ mới (PENDING, RECEIVED, CANCELLED):");
-                    reservationStatus = ReservationStatusEnum.valueOf(scanner.nextLine().toUpperCase());
+                    reservationStatus = ReservationStatusEnum.valueOf(sc.nextLine().toUpperCase());
                     order.setReservationStatus(reservationStatus);
                 } catch (Exception e) {
                     System.out.println("Trạng thái đặt chỗ không hợp lệ, vui lòng thử lại.");
@@ -1098,12 +1419,82 @@ public class Runner {
                 break;
             case 9:
                 System.out.println("Đang xóa CustomerEntity...");
+
+                // Nhập Customer ID để tìm và xóa khách hàng
+                CustomerEntity temp = generator.getCustomerDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getCustomerId());
+                }
+                System.out.print("Nhập ID khách hàng (Customer ID): ");
+                String customerId = sc.nextLine().trim();
+
+                // Tìm khách hàng bằng Customer ID
+                Optional<CustomerEntity> optionalCustomer = generator.getCustomerDAL().findById(customerId);
+                if (optionalCustomer.isPresent()) {
+                    // Xóa khách hàng
+                    if (generator.getCustomerDAL().deleteById(customerId)) {
+                        System.out.println("Xóa khách hàng thành công!");
+                    } else {
+                        System.out.println("Xóa khách hàng thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy khách hàng với ID này.");
+                }
                 break;
             case 10:
                 System.out.println("Đang xóa FloorEntity...");
+
+                // Nhập Floor ID để tìm và xóa tầng
+                FloorEntity temp1 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp1 != null) {
+                    System.out.println("Gợi ý ID: " + temp1.getFloorId());
+                }
+                System.out.print("Nhập ID tầng (Floor ID): ");
+                String floorId = sc.nextLine().trim();
+
+                // Tìm tầng bằng Floor ID
+                Optional<FloorEntity> optionalFloor = generator.getFloorDAL().findById(floorId);
+                if (optionalFloor.isPresent()) {
+                    // Xóa tầng
+                    FloorEntity floor = optionalFloor.get();
+                    if (!floor.getTables().isEmpty()) {
+                        floor.getTables().forEach(table -> {
+                            generator.getTableDAL().deleteById(table.getTableId());
+                        });
+                    }
+                    if (generator.getFloorDAL().deleteById(floorId)) {
+                        System.out.println("Xóa tầng thành công!");
+                    } else {
+                        System.out.println("Xóa tầng thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy tầng với ID này.");
+                }
                 break;
+
             case 11:
                 System.out.println("Đang xóa TableEntity...");
+
+                // Nhập Table ID để tìm và xóa bàn
+                TableEntity temp2 = generator.getTableDAL().findAll().stream().findFirst().orElse(null);
+                if (temp2 != null) {
+                    System.out.println("Gợi ý ID: " + temp2.getTableId());
+                }
+                System.out.print("Nhập ID bàn (Table ID): ");
+                String tableId = sc.nextLine().trim();
+
+                // Tìm bàn bằng Table ID
+                Optional<TableEntity> optionalTable = generator.getTableDAL().findById(tableId);
+                if (optionalTable.isPresent()) {
+                    // Xóa bàn
+                    if (generator.getTableDAL().deleteById(tableId)) {
+                        System.out.println("Xóa bàn thành công!");
+                    } else {
+                        System.out.println("Xóa bàn thất bại!");
+                    }
+                } else {
+                    System.out.println("Không tìm thấy bàn với ID này.");
+                }
                 break;
             case 12: {
                 List<OrderEntity> orders = orderDAL.findAll();
@@ -1121,7 +1512,7 @@ public class Runner {
                     orders.forEach(order -> System.out.println(order.getOrderId()));
                 }
                 System.out.println("Nhập ID order cần xem chi tiết và xóa:");
-                String orderId = scanner.nextLine();
+                String orderId = sc.nextLine();
 
 // Tìm OrderEntity theo ID
                 OrderEntity selectedOrder = orders.stream()
@@ -1172,7 +1563,7 @@ public class Runner {
                         System.out.println("Lỗi khi tải thông tin chi tiết đơn hàng: " + e.getMessage());
                     }
                     System.out.println("Cảnh báo: Bạn có thật sự muốn xóa (y/n)?");
-                    String choice = scanner.nextLine();
+                    String choice = sc.nextLine();
                     switch (choice) {
                         case "y":
                             orderDAL.deleteById(orderId);
