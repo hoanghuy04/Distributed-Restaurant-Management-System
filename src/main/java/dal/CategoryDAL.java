@@ -1,6 +1,7 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import model.CategoryEntity;
 import util.IDGeneratorUtil;
@@ -15,7 +16,7 @@ import java.util.Optional;
  * @version: 1.0
  */
 @AllArgsConstructor
-public class CategoryDAL implements BaseDAL<CategoryEntity, String>{
+public class CategoryDAL implements BaseDAL<CategoryEntity, String> {
     private EntityManager em;
 
     @Override
@@ -47,5 +48,16 @@ public class CategoryDAL implements BaseDAL<CategoryEntity, String>{
     @Override
     public List<CategoryEntity> findAll() {
         return em.createNamedQuery("CategoryEntity.findAll", CategoryEntity.class).getResultList();
+    }
+
+    public Optional<CategoryEntity> findByName(String name) {
+        try {
+            CategoryEntity result = em.createNamedQuery("CategoryEntity.findByName", CategoryEntity.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

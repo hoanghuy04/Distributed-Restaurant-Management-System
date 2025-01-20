@@ -1,11 +1,10 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import model.OrderDetailEntity;
-import model.PromotionDetailEntity;
-import model.PromotionEntity;
+import model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +53,25 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity,String>
         return entityManager.createNamedQuery("PromotionDetailEntity.findByItemId", PromotionDetailEntity.class)
                 .setParameter("itemId", itemId)
                 .getResultList();
+    }
+
+    public boolean deleteByItemAndPromotion(ItemEntity itemEntity,  PromotionEntity promotionEntity) {
+        return BaseDAL.executeTransaction(entityManager, () -> {
+            StringBuilder jpql = new StringBuilder("delete from PromotionDetailEntity it where 1=1");
+            if (itemEntity != null) {
+                jpql.append(" AND it.item.itemId = :itemId");
+            }
+            if (promotionEntity != null) {
+                jpql.append(" AND it.topping.toppingId = :toppingId");
+            }
+            Query query = entityManager.createQuery(jpql.toString());
+            if (itemEntity != null) {
+                query.setParameter("itemId", itemEntity.getItemId());
+            }
+            if (promotionEntity != null) {
+                query.setParameter("toppingId", promotionEntity.getPromotionId());
+            }
+            query.executeUpdate();
+        });
     }
 }
