@@ -77,14 +77,14 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity,String>
                 jpql.append(" AND it.item.itemId = :itemId");
             }
             if (promotionEntity != null) {
-                jpql.append(" AND it.topping.toppingId = :toppingId");
+                jpql.append(" AND it.promotion.promotionId = :promotionId");
             }
             Query query = entityManager.createQuery(jpql.toString());
             if (itemEntity != null) {
                 query.setParameter("itemId", itemEntity.getItemId());
             }
             if (promotionEntity != null) {
-                query.setParameter("toppingId", promotionEntity.getPromotionId());
+                query.setParameter("promotionId", promotionEntity.getPromotionId());
             }
             query.executeUpdate();
         });

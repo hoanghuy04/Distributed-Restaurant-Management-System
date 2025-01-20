@@ -75,16 +75,14 @@ public class DataGenerator {
             }
         }
 
-        double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ?
-                rand.nextDouble() * 150 + 50 : rand.nextDouble() * 100 + 50;
+        double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ? rand.nextDouble() * 150 + 50 : rand.nextDouble() * 100 + 50;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
         String img = faker.internet().url();
         SizeEnum size = category.getName().trim().equalsIgnoreCase("Pizza") ? SizeEnum.values()[rand.nextInt(SizeEnum.values().length)] : null;
 
         try {
-            return new ItemEntity("", name, costPrice, stockQuantity,
-                    description, img, true, size, category, new HashSet<>());
+            return new ItemEntity("", name, costPrice, stockQuantity, description, img, true, size, category, new HashSet<>());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -93,13 +91,12 @@ public class DataGenerator {
 
     // ToppingEntity
     public ToppingEntity generateToppingEntity(boolean isDefault) {
-        String name = isDefault ? "DEFAULT_TOPPING": faker.food().ingredient();
+        String name = isDefault ? "DEFAULT_TOPPING" : faker.food().ingredient();
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
         try {
-            return new ToppingEntity("", name, costPrice, stockQuantity, description,
-                    true, new HashSet<>());
+            return new ToppingEntity("", name, costPrice, stockQuantity, description, true, new HashSet<>());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -119,15 +116,7 @@ public class DataGenerator {
         address.setDistrict(districts[rand.nextInt(districts.length)]);
         String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
         address.setWard(wards[rand.nextInt(wards.length)]);
-        String[] cities = {
-                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
-                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
-                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
-                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
-                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
-                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
-                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
-        };
+        String[] cities = {"Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang", "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu", "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh", "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang", "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định", "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái", "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"};
         address.setCity(cities[rand.nextInt(cities.length)]);
         return address;
     }
@@ -141,7 +130,6 @@ public class DataGenerator {
         employee.setEmail(faker.internet().emailAddress());
         employee.setAddress(generateAddress());
         employee.setActive(faker.bool().bool());
-        employee.setRole(generateRoleEntity());
 
         List<RoleEntity> roles = roleDAL.findAll();
         employee.setRole(roles.isEmpty() ? null : roles.get(rand.nextInt(roles.size())));
@@ -150,7 +138,9 @@ public class DataGenerator {
 
     // RoleEntity
     public RoleEntity generateRoleEntity() {
-        return null;
+        RoleEntity role = new RoleEntity();
+        role.setRoleName(faker.job().title());
+        return role;
     }
 
     // PromotionEntity
@@ -162,6 +152,9 @@ public class DataGenerator {
         LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
         promotion.setStartedDate(startDate);
         promotion.setEndedDate(endDate);
+        PromotionTypeEnum[] promotionTypeEnums = PromotionTypeEnum.values();
+        promotion.setPromotionType(promotionTypeEnums[faker.number().numberBetween(0, promotionTypeEnums.length)]);
+
         LocalDate today = LocalDate.now();
         boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
         promotion.setActive(isActive);
@@ -175,20 +168,16 @@ public class DataGenerator {
     public PromotionDetailEntity generatePromotionDetailEntity() {
         PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
 
-        PromotionEntity promotion = generatePromotionEntity();
-        promotionDetail.setPromotion(promotion);
-
         List<PromotionEntity> promotions = promotionDAL.findAll();
         promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
 
         List<ItemEntity> items = itemDAL.findAll();
         promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
 
-        PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();
-        promotionDetail.setPromotionType(promotionTypes[faker.number().numberBetween(0, promotionTypes.length)]);
-
         CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
         promotionDetail.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
+
+
 
         promotionDetail.setDescription("Áp dụng cho " + faker.commerce().productName());
 
@@ -339,6 +328,25 @@ public class DataGenerator {
             System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
             itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
+
+        //Role entity
+        for (int i = 0; i < 4; i++) {
+            roleDAL.insert(generateRoleEntity());
+        }
+        //Employee entity
+        for (int i = 0; i < 10; i++) {
+            employeeDAL.insert(generateEmployeeEntity());
+        }
+        //promotion entity
+        for (int i = 0; i < 10; i++) {
+            promotionDAL.insert(generatePromotionEntity());
+        }
+
+        //promotion detail entity
+        for (int i = 0; i < 10; i++) {
+            promotionDetailDAL.insert(generatePromotionDetailEntity());
+        }
+
 
         //OrderEntity
 //        for (int i = 0; i < 10; i++) {
