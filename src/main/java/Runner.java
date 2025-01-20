@@ -390,7 +390,7 @@ public class Runner {
                         promotionType = PromotionTypeEnum.ITEM;
                         break;
                     case "2":
-                        promotionType = PromotionTypeEnum.ORDEN;
+                        promotionType = PromotionTypeEnum.ORDER;
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 hoặc 2.");
@@ -424,7 +424,7 @@ public class Runner {
                 String promotionDetailDescription = sc.nextLine();
 
                 try {
-                    PromotionDetailEntity promotionDetail = new PromotionDetailEntity(promotion, item, promotionType, customerLevelType,promotionDetailDescription);
+                    PromotionDetailEntity promotionDetail = new PromotionDetailEntity(promotion, item, promotionType, customerLevelType, promotionDetailDescription);
                     String result = generator.getPromotionDetailDAL().insert(promotionDetail)
                             ? "Thêm promotion detail thành công: " + promotionDetail
                             : "Thêm promotion detail thất bại!";
@@ -722,7 +722,6 @@ public class Runner {
                 }
 
 
-
                 break;
             case 8:
                 System.out.print("Nhập ID khuyến mãi của chi tiết khuến mãi: ");
@@ -732,7 +731,7 @@ public class Runner {
                 String pdItemId = sc.nextLine().trim();
 
                 // Tìm PromotionDetailEntity theo ID
-                PromotionDetailEntity promotionDetail =  generator.getPromotionDetailDAL().findByPromotionAndItem(pdPromotionId, pdItemId);
+                PromotionDetailEntity promotionDetail = generator.getPromotionDetailDAL().findByPromotionAndItem(pdPromotionId, pdItemId);
                 if (promotionDetail == null) {
                     System.out.println("Không tìm thấy khuyến mãi chi tiết với ID khuyến mãi: " + pdPromotionId + " ID vật phẩm: " + pdItemId);
                     return;
@@ -824,16 +823,106 @@ public class Runner {
                 System.out.println("Đang xóa ItemToppingEntity...");
                 break;
             case 5:
-                System.out.println("Đang xóa EmployeeEntity...");
+                System.out.print("Nhập ID nhân viên (gợi ý: ): ");
+                String employeeId = sc.nextLine().trim();
+                EmployeeEntity employeeToDelete = generator.getEmployeeDAL().findById(employeeId).orElse(null);
+                if (employeeToDelete == null) {
+                    System.out.println("Không tìm thấy chức vụ với ID: " + employeeId);
+                    return;
+                }
+
+
+                boolean roleDeleteresult = generator.getRoleDAL().deleteById(employeeToDelete.getRole().getRoleId());
+                boolean employeeDeleteResult = generator.getEmployeeDAL().deleteById(employeeId);
+
+                if (roleDeleteresult && employeeDeleteResult) {
+                    System.out.println("Xóa nhân viên thành công!");
+                } else {
+                    System.out.println("Xóa nhân viên thất bại!");
+                }
                 break;
+
             case 6:
-                System.out.println("Đang xóa RoleEntity...");
+                System.out.print("Nhập ID chức vụ (gợi ý: Emp1901250001): ");
+                String roleId = sc.nextLine().trim();
+                RoleEntity roleToDelete = generator.getRoleDAL().findById(roleId).orElse(null);
+                if (roleToDelete == null) {
+                    System.out.println("Không tìm thấy chức vụ với ID: " + roleId);
+                    return;
+                }
+
+                boolean result = generator.getRoleDAL().deleteById(roleId);
+
+                if (result) {
+                    System.out.println("Xóa chức vụ thành công!");
+                } else {
+                    System.out.println("Xóa chức vụ thất bại!");
+                }
                 break;
             case 7:
-                System.out.println("Đang xóa PromotionEntity...");
+                System.out.print("Nhập ID khuyến mãi của chi tiết khuyến mãi (gợi ý: ): ");
+                String promotionToDeleteId = sc.nextLine().trim();
+                PromotionEntity promotionEntity = generator.getPromotionDAL().findById(promotionToDeleteId).orElse(null);
+                if (promotionEntity == null) {
+                    System.out.println("Không tìm thấy  khuyến mãi với ID: " + promotionEntity);
+                    return;
+                }
+
+                promotionEntity.getPromotionDetails().forEach(promotionDetail -> {
+                    ItemEntity itemToDelete = promotionDetail.getItem();
+                    PromotionEntity promotionToDelete = promotionDetail.getPromotion();
+                    if(itemToDelete!=null) {
+                        generator.getItemDAL().deleteById(itemToDelete.getItemId());
+                    }
+
+                    if(promotionToDelete!=null) {
+                        generator.getPromotionDAL().deleteById(promotionToDelete.getPromotionId());
+                    }
+                    boolean promotionDetailDeleteresult = generator.getPromotionDetailDAL().deleteByItemAndPromotion(itemToDelete,promotionToDelete);
+
+                    if (promotionDetailDeleteresult) {
+//                        System.out.println("Xóa chi tiết khuyến mãi thành công!");
+                    } else {
+                        System.out.println("Xóa chi tiết khuyến mãi thất bại!");
+                    }
+                });
+                boolean promotionDetailDeleteresult = generator.getPromotionDAL().deleteById(promotionToDeleteId);
+
+                if (promotionDetailDeleteresult) {
+                    System.out.println("Xóa khuyến mãi thành công!");
+                } else {
+                    System.out.println("Xóa khuyến mãi thất bại!");
+                }
+
                 break;
             case 8:
-                System.out.println("Đang xóa PromotionDetailEntity...");
+                System.out.print("Nhập ID khuyến mãi của chi tiết khuyến mãi (gợi ý: ): ");
+                String pToDeleteId = sc.nextLine().trim();
+                System.out.print("Nhập ID món ăn của chi tiết khuến mãi (gợi ý: ): ");
+                String iToDeleteId = sc.nextLine().trim();
+
+                PromotionDetailEntity promotionDetailToDelete = generator.getPromotionDetailDAL().findByPromotionAndItem(pToDeleteId, iToDeleteId);
+                if (promotionDetailToDelete == null) {
+                    System.out.println("Không tìm thấy chi tiết khuyến mãi với ID khuyến mãi: " + pToDeleteId + " ID món ăn: " + iToDeleteId);
+                    return;
+                }
+
+                ItemEntity itemToDelete = promotionDetailToDelete.getItem();
+                PromotionEntity promotionToDelete = promotionDetailToDelete.getPromotion();
+                if(itemToDelete!=null) {
+                    generator.getItemDAL().deleteById(itemToDelete.getItemId());
+                }
+
+                if(promotionToDelete!=null) {
+                    generator.getPromotionDAL().deleteById(promotionToDelete.getPromotionId());
+                }
+                boolean promotionDetailDeleteResult = generator.getPromotionDetailDAL().deleteByItemAndPromotion(itemToDelete,promotionToDelete);
+
+                if (promotionDetailDeleteResult) {
+                    System.out.println("Xóa chi tiết khuyến mãi thành công!");
+                } else {
+                    System.out.println("Xóa chi tiết khuyến mãi thất bại!");
+                }
                 break;
             case 9:
                 System.out.println("Đang xóa CustomerEntity...");
