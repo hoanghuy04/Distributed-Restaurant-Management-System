@@ -69,7 +69,7 @@ public class Runner {
 
     private static int getChoice() {
         try {
-            return Integer.parseInt(scanner.nextLine());
+            return Integer.parseInt(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
             return -1;
         }
@@ -109,16 +109,16 @@ public class Runner {
                 System.out.println("Đang tạo mới CustomerEntity...");
                 // Nhập thông tin từ người dùng
                 System.out.print("Nhập tên khách hàng: ");
-                String name = scanner.nextLine();
+                String name = scanner.nextLine().trim();
 
                 System.out.print("Nhập email khách hàng: ");
-                String email = scanner.nextLine();
+                String email = scanner.nextLine().trim();
 
                 System.out.print("Nhập số điện thoại khách hàng: ");
-                String phone = scanner.nextLine();
+                String phone = scanner.nextLine().trim();
 
                 System.out.print("Nhập ngày sinh (định dạng yyyy-MM-dd): ");
-                String dobInput = scanner.nextLine();
+                String dobInput = scanner.nextLine().trim();
                 LocalDateTime dayOfBirth = null;
                 try {
                     dayOfBirth = LocalDateTime.parse(dobInput + "T00:00:00");
@@ -128,13 +128,13 @@ public class Runner {
 
                 System.out.print("Nhập địa chỉ (đường, thành phố, quốc gia): ");
                 System.out.print(" - Đường: ");
-                String street = scanner.nextLine();
+                String street = scanner.nextLine().trim();
                 System.out.print(" - Phường/Xã: ");
-                String ward = scanner.nextLine();
+                String ward = scanner.nextLine().trim();
                 System.out.print(" - Quận/Huyên: ");
-                String district = scanner.nextLine();
+                String district = scanner.nextLine().trim();
                 System.out.print(" - Thành phố: ");
-                String city = scanner.nextLine();
+                String city = scanner.nextLine().trim();
 
 
                 Address address = new Address();
@@ -165,12 +165,12 @@ public class Runner {
 
                 // Nhập thông tin từ người dùng
                 System.out.print("Nhập tên tầng (Floor Name): ");
-                String floorName = scanner.nextLine();
+                String floorName = scanner.nextLine().trim();
 
                 System.out.print("Nhập sức chứa của tầng (Capacity): ");
                 int capacity = 0;
                 try {
-                    capacity = Integer.parseInt(scanner.nextLine());
+                    capacity = Integer.parseInt(scanner.nextLine().trim());
                     if (capacity <= 0) {
                         System.out.println("Sức chứa phải là số nguyên dương. Vui lòng thử lại.");
                         break;
@@ -197,7 +197,7 @@ public class Runner {
                 System.out.print("Nhập sức chứa của bàn (Capacity): ");
                 int capacityTable = 0;
                 try {
-                    capacityTable = Integer.parseInt(scanner.nextLine());
+                    capacityTable = Integer.parseInt(scanner.nextLine().trim());
                     if (capacityTable <= 0) {
                         System.out.println("Sức chứa phải là số nguyên dương. Vui lòng thử lại.");
                         break;
@@ -216,7 +216,7 @@ public class Runner {
                 }
 
                 System.out.print("Nhập ID tầng (Floor ID) mà bàn sẽ được đặt: ");
-                String floorId = scanner.nextLine();
+                String floorId = scanner.nextLine().trim();
                 FloorEntity floor = generator.getFloorDAL().findById(floorId).orElse(null);
                 if (floor == null) {
                     System.out.println("Không tìm thấy tầng với ID này.");
@@ -226,7 +226,7 @@ public class Runner {
                 // Tạo đối tượng TableEntity
                 TableEntity newTable = new TableEntity();
                 newTable.setCapacity(capacityTable);
-                int numberOfTable = generator.getTableDAL().findAll().size()+1;
+                int numberOfTable = generator.getTableDAL().findAll().size() + 1;
                 newTable.setName("Bàn " + numberOfTable);
                 newTable.setTableStatus(tableStatus);
                 newTable.setFloor(floor);
@@ -339,7 +339,7 @@ public class Runner {
                     System.out.println("Gợi ý ID: " + temp.getCustomerId());
                 }
                 System.out.print("Nhập ID khách hàng (Customer ID): ");
-                String customerId = scanner.nextLine();
+                String customerId = scanner.nextLine().trim();
 
                 // Tìm khách hàng bằng Customer ID
                 Optional<CustomerEntity> optionalCustomer = generator.getCustomerDAL().findById(customerId);
@@ -348,26 +348,26 @@ public class Runner {
 
                     // Nhập thông tin mới
                     System.out.print("Nhập tên khách hàng mới (nhấn Enter nếu không thay đổi): ");
-                    String name = scanner.nextLine();
+                    String name = scanner.nextLine().trim();
                     if (!name.isEmpty()) {
                         customer.setName(name);
                     }
 
                     System.out.print("Nhập email mới (nhấn Enter nếu không thay đổi): ");
-                    String email = scanner.nextLine();
+                    String email = scanner.nextLine().trim();
                     if (!email.isEmpty()) {
                         customer.setEmail(email);
                     }
 
                     System.out.print("Nhập số điện thoại mới (nhấn Enter nếu không thay đổi): ");
-                    String phone = scanner.nextLine();
+                    String phone = scanner.nextLine().trim();
                     if (!phone.isEmpty()) {
                         customer.setPhone(phone);
                     }
 
                     // Nhập ngày sinh mới (nếu có thay đổi)
                     System.out.print("Nhập ngày sinh mới (yyyy-MM-dd) hoặc nhấn Enter nếu không thay đổi: ");
-                    String dobInput = scanner.nextLine();
+                    String dobInput = scanner.nextLine().trim();
                     if (!dobInput.isEmpty()) {
                         try {
                             customer.setDayOfBirth(LocalDateTime.parse(dobInput + "T00:00:00"));
@@ -379,32 +379,32 @@ public class Runner {
                     // Nhập thông tin địa chỉ mới
                     System.out.print("Nhập địa chỉ mới (đường, phường, quận, thành phố) hoặc nhấn Enter nếu không thay đổi: ");
                     System.out.print(" - Đường (street): ");
-                    String street = scanner.nextLine();
+                    String street = scanner.nextLine().trim();
                     if (!street.isEmpty()) {
                         customer.getAddress().setStreet(street);
                     }
 
                     System.out.print(" - Phường (ward): ");
-                    String ward = scanner.nextLine();
+                    String ward = scanner.nextLine().trim();
                     if (!ward.isEmpty()) {
                         customer.getAddress().setWard(ward);
                     }
 
                     System.out.print(" - Quận (district): ");
-                    String district = scanner.nextLine();
+                    String district = scanner.nextLine().trim();
                     if (!district.isEmpty()) {
                         customer.getAddress().setDistrict(district);
                     }
 
                     System.out.print(" - Thành phố (city): ");
-                    String city = scanner.nextLine();
+                    String city = scanner.nextLine().trim();
                     if (!city.isEmpty()) {
                         customer.getAddress().setCity(city);
                     }
 
                     if (generator.getCustomerDAL().update(customer)) {
                         System.out.println("Cập nhật khách hàng thành công!");
-                        System.out.println("Sau khi cập nhật: " +customer);
+                        System.out.println("Sau khi cập nhật: " + customer);
                     } else {
                         System.out.println("Cập nhật khách hàng thất bại!");
                     }
@@ -419,8 +419,9 @@ public class Runner {
                 FloorEntity temp1 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
                 if (temp1 != null) {
                     System.out.println("Gợi ý ID: " + temp1.getFloorId());
-                }                System.out.print("Nhập ID tầng (Floor ID): ");
-                String floorId = scanner.nextLine();
+                }
+                System.out.print("Nhập ID tầng (Floor ID): ");
+                String floorId = scanner.nextLine().trim();
 
                 // Tìm tầng bằng Floor ID
                 Optional<FloorEntity> optionalFloor = generator.getFloorDAL().findById(floorId);
@@ -429,14 +430,14 @@ public class Runner {
 
                     // Nhập tên tầng mới (hoặc giữ nguyên nếu không thay đổi)
                     System.out.print("Nhập tên tầng mới (nhấn Enter nếu không thay đổi): ");
-                    String name = scanner.nextLine();
+                    String name = scanner.nextLine().trim();
                     if (!name.isEmpty()) {
                         floor.setName(name);
                     }
 
                     // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
                     System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
-                    String capacityInput = scanner.nextLine();
+                    String capacityInput = scanner.nextLine().trim();
                     if (!capacityInput.isEmpty()) {
                         try {
                             int capacity = Integer.parseInt(capacityInput);
@@ -448,7 +449,7 @@ public class Runner {
 
                     if (generator.getFloorDAL().update(floor)) {
                         System.out.println("Cập nhật tầng thành công!");
-                        System.out.println("Sau khi cập nhật: " +floor);
+                        System.out.println("Sau khi cập nhật: " + floor);
                     } else {
                         System.out.println("Cập nhật tầng thất bại!");
                     }
@@ -464,8 +465,9 @@ public class Runner {
                 TableEntity temp2 = generator.getTableDAL().findAll().stream().findFirst().orElse(null);
                 if (temp2 != null) {
                     System.out.println("Gợi ý ID: " + temp2.getTableId());
-                }                System.out.print("Nhập ID bàn (Table ID): ");
-                String tableId = scanner.nextLine();
+                }
+                System.out.print("Nhập ID bàn (Table ID): ");
+                String tableId = scanner.nextLine().trim();
 
                 // Tìm bàn bằng Table ID
                 Optional<TableEntity> optionalTable = generator.getTableDAL().findById(tableId);
@@ -474,7 +476,7 @@ public class Runner {
 
                     // Nhập sức chứa mới (hoặc giữ nguyên nếu không thay đổi)
                     System.out.print("Nhập sức chứa mới (nhấn Enter nếu không thay đổi): ");
-                    String capacityInput = scanner.nextLine();
+                    String capacityInput = scanner.nextLine().trim();
                     if (!capacityInput.isEmpty()) {
                         try {
                             int capacity = Integer.parseInt(capacityInput);
@@ -486,7 +488,7 @@ public class Runner {
 
                     // Nhập ghi chú mới (hoặc giữ nguyên nếu không thay đổi)
                     System.out.print("Nhập tên bàn mới (nhấn Enter nếu không thay đổi): ");
-                    String name = scanner.nextLine();
+                    String name = scanner.nextLine().trim();
                     if (!name.isEmpty()) {
                         table.setName(name);
                     }
@@ -498,18 +500,21 @@ public class Runner {
                         case 1:
                             table.setTableStatus(TableStatusEnum.AVAILABLE);
                             break;
-                            case 2:
-                                table.setTableStatus(TableStatusEnum.OCCUPIED);
-                                break;
-                                default:
-                                    System.out.println("Lựa chọn không phù hợp! Không thay đổi status");
+                        case 2:
+                            table.setTableStatus(TableStatusEnum.OCCUPIED);
+                            break;
+                        default:
+                            System.out.println("Lựa chọn không phù hợp! Không thay đổi status");
+                            break;
                     }
 
                     // Nhập ID tầng mới (nếu thay đổi)
                     FloorEntity temp3 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
                     if (temp3 != null) {
                         System.out.println("Gợi ý ID: " + temp3.getFloorId());
-                    }                    System.out.print("Nhập ID tầng mới (Floor ID) hoặc để trống nếu không thay đổi: ");
+                    }
+                    System.out.print("Nhập ID tầng mới (Floor ID) hoặc để trống nếu không thay đổi: ");
+                    scanner.nextLine();
                     String newFloorId = scanner.nextLine();
                     if (!newFloorId.isEmpty()) {
                         FloorEntity newFloor = generator.getFloorDAL().findById(newFloorId).orElse(null);
@@ -523,7 +528,7 @@ public class Runner {
                     // Cập nhật thông tin vào cơ sở dữ liệu
                     if (generator.getTableDAL().update(table)) {
                         System.out.println("Cập nhật bàn thành công!");
-                        System.out.println("Sau khi cập nhật: " +table);
+                        System.out.println("Sau khi cập nhật: " + table);
                     } else {
                         System.out.println("Cập nhật bàn thất bại!");
                     }
@@ -575,8 +580,12 @@ public class Runner {
                 System.out.println("Đang xóa CustomerEntity...");
 
                 // Nhập Customer ID để tìm và xóa khách hàng
+                CustomerEntity temp = generator.getCustomerDAL().findAll().stream().findFirst().orElse(null);
+                if (temp != null) {
+                    System.out.println("Gợi ý ID: " + temp.getCustomerId());
+                }
                 System.out.print("Nhập ID khách hàng (Customer ID): ");
-                String customerId = scanner.nextLine();
+                String customerId = scanner.nextLine().trim();
 
                 // Tìm khách hàng bằng Customer ID
                 Optional<CustomerEntity> optionalCustomer = generator.getCustomerDAL().findById(customerId);
@@ -595,15 +604,19 @@ public class Runner {
                 System.out.println("Đang xóa FloorEntity...");
 
                 // Nhập Floor ID để tìm và xóa tầng
+                FloorEntity temp1 = generator.getFloorDAL().findAll().stream().findFirst().orElse(null);
+                if (temp1 != null) {
+                    System.out.println("Gợi ý ID: " + temp1.getFloorId());
+                }
                 System.out.print("Nhập ID tầng (Floor ID): ");
-                String floorId = scanner.nextLine();
+                String floorId = scanner.nextLine().trim();
 
                 // Tìm tầng bằng Floor ID
                 Optional<FloorEntity> optionalFloor = generator.getFloorDAL().findById(floorId);
                 if (optionalFloor.isPresent()) {
                     // Xóa tầng
                     FloorEntity floor = optionalFloor.get();
-                    if(!floor.getTables().isEmpty()) {
+                    if (!floor.getTables().isEmpty()) {
                         floor.getTables().forEach(table -> {
                             generator.getTableDAL().deleteById(table.getTableId());
                         });
@@ -622,8 +635,12 @@ public class Runner {
                 System.out.println("Đang xóa TableEntity...");
 
                 // Nhập Table ID để tìm và xóa bàn
+                TableEntity temp2 = generator.getTableDAL().findAll().stream().findFirst().orElse(null);
+                if (temp2 != null) {
+                    System.out.println("Gợi ý ID: " + temp2.getTableId());
+                }
                 System.out.print("Nhập ID bàn (Table ID): ");
-                String tableId = scanner.nextLine();
+                String tableId = scanner.nextLine().trim();
 
                 // Tìm bàn bằng Table ID
                 Optional<TableEntity> optionalTable = generator.getTableDAL().findById(tableId);
