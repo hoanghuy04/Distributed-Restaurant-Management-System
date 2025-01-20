@@ -74,6 +74,7 @@ public class OrderDetailEntity extends BaseEntity {
 
     public void setDiscount() {
 //        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
+        this.discount = 0;
     }
 
 }

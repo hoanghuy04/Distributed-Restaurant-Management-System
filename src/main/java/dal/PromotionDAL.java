@@ -1,13 +1,18 @@
 package dal;
 
 import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.OrderEntity;
 import model.PromotionEntity;
 import util.IDGeneratorUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     private EntityManager entityManager;
 

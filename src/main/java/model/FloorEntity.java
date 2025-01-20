@@ -28,7 +28,7 @@ public class FloorEntity {
     private int capacity;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "floor")
+    @OneToMany(mappedBy = "floor", cascade = CascadeType.REMOVE)
     private Set<TableEntity> tables;
 
 

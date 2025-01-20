@@ -73,12 +73,17 @@ public class IDGeneratorUtil {
         int sequence = 1;
 
         try {
-            String jpql = "SELECT MAX(CAST(SUBSTRING(e." + id + ", LENGTH(:prefix) + 1, 4) AS int)) FROM " + tableName + " e WHERE e." + id + " LIKE :prefix%";
+            String sql = String.format("select e.%s from %s e", id, tableName);
 
-            Query q = em.createQuery(jpql);
-            q.setParameter("prefix", prefix);
+            Query q = em.createNativeQuery(sql);
 
-            Integer maxSequence = (Integer) Optional.ofNullable(q.getSingleResult()).orElse(0);
+            List<String> idList = q.getResultList();
+
+            int maxSequence = idList.stream()
+                    .mapToInt(x -> Integer.parseInt(x.substring(prefix.length()))) // Lấy phần số sau prefix
+                    .max()
+                    .orElse(0);
+
             sequence = maxSequence + 1;
 
             return prefix + String.format("%04d", sequence);

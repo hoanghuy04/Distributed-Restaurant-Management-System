@@ -3,6 +3,7 @@ package dal;
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import model.CustomerEntity;
 import model.FloorEntity;
 import util.IDGeneratorUtil;
 
@@ -27,7 +28,12 @@ public class FloorDAL implements BaseDAL<FloorEntity,String> {
 
     @Override
     public boolean deleteById(String s) {
-        return false;
+        return BaseDAL.executeTransaction(em, () -> {
+            FloorEntity entity = em.find(FloorEntity.class, s);
+            if (entity != null) {
+                em.remove(entity);
+            }
+        });
     }
 
     @Override

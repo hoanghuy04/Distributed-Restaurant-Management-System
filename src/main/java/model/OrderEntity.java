@@ -140,6 +140,14 @@ public class OrderEntity extends BaseEntity {
         }
     }
 
+    public void setTotalPaid() {
+        if (orderDetails == null) {
+            this.totalPaid = 0;
+        } else {
+            this.totalPaid = totalPrice - totalDiscount - deposit;
+        }
+    }
+
     public boolean insertOrderDetail(OrderDetailEntity orderDetail) {
         Set<OrderDetailEntity> orderDetails = this.getOrderDetails();
 

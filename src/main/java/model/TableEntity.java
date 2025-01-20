@@ -36,7 +36,7 @@ public class TableEntity {
     @ToString.Exclude
     private FloorEntity floor;
 
-    @OneToMany(mappedBy = "table")
+    @OneToMany(mappedBy = "table", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
 }

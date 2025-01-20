@@ -47,22 +47,9 @@ public class CustomerEntity extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private CustomerLevelEnum customerLevel;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
-
-    //Ghet m qua huy oi
-//    @PrePersist
-//    @PreUpdate
-//    public void calculateDerivedFields() {
-//        if (orders != null && Hibernate.isInitialized(orders)) {
-//            this.rewardedPoint = getRewardedPoint();
-//            this.customerLevel = getLevelCustomer();
-//        } else {
-//            this.rewardedPoint = 0;
-//            this.customerLevel = CustomerLevelEnum.NEW;
-//        }
-//    }
 
     public int getRewardedPoint() {
         if (orders == null || orders.isEmpty()) {

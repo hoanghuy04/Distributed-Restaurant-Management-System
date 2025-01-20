@@ -2,6 +2,7 @@ package dal;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import lombok.AllArgsConstructor;
 import model.EmployeeEntity;
 import model.OrderDetailEntity;
 import model.PromotionEntity;
@@ -10,6 +11,7 @@ import util.IDGeneratorUtil;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
     private EntityManager entityManager;
     @Override
