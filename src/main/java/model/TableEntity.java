@@ -24,6 +24,9 @@ public class TableEntity {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Column(name ="name", columnDefinition = "nvarchar(50)")
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "table_status", nullable = false, columnDefinition = "nvarchar(50)")
     private TableStatusEnum tableStatus;
@@ -33,7 +36,7 @@ public class TableEntity {
     @ToString.Exclude
     private FloorEntity floor;
 
-    @OneToMany(mappedBy = "table")
+    @OneToMany(mappedBy = "table", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
 }
