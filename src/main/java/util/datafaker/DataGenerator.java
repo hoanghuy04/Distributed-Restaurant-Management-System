@@ -152,7 +152,13 @@ public class DataGenerator {
     public RoleEntity generateRoleEntity() {
         RoleEntity roleEntity = new RoleEntity();
         Random random = new Random();
-        List<String> roles = Arrays.asList("Manager", "Chef", "Waiter", "Bartender", "Dishwasher");
+
+        List<String> roles = new ArrayList<>(Arrays.asList("Manager", "Chef", "Waiter", "Bartender", "Dishwasher"));
+        List<String> currRoles = new ArrayList<>();
+        if (roleDAL.findAll().size() > 0) {
+            roleDAL.findAll().stream().forEach(role -> currRoles.add(role.getRoleName()));
+        }
+        roles.removeAll(currRoles);
         String randomRole = roles.get(random.nextInt(roles.size()));
         roleEntity.setRoleName(randomRole);
         return roleEntity;
@@ -192,15 +198,12 @@ public class DataGenerator {
         PromotionEntity promotion = generatePromotionEntity();
         promotionDetail.setPromotion(promotion);
 
-        List<PromotionEntity> promotions = promotionDAL.findAll();
+        List<PromotionEntity> promotions = promotionDAL.findAll().stream().filter(proTmp -> proTmp.getPromotionType() == PromotionTypeEnum.ITEM).toList();
         promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
-
         List<ItemEntity> currItemList = new ArrayList<>();
         promotionDetailDAL.findAll().stream().filter(detail -> detail.getPromotion() == promotion).forEach(detail -> currItemList.add(detail.getItem()));
-
         List<ItemEntity> items = itemDAL.findAll();
         items.removeAll(currItemList);
-
         promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
         return promotionDetail;
     }
