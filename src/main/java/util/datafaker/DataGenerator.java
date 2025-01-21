@@ -42,9 +42,6 @@ public class DataGenerator {
 
     // CategoryEntity
     public CategoryEntity generateCategoryEntity(String name) {
-        if(categoryDAL.findByName(name).orElse(null) != null) {
-            return null;
-        }
         String description = "Danh mục " + name + " - " + faker.lorem().sentence();
         try {
             return new CategoryEntity("", name, description, true);
@@ -58,9 +55,9 @@ public class DataGenerator {
     public ItemEntity generateItemEntity(CategoryEntity category) {
         String name = "";
         if (category.getName().trim().equalsIgnoreCase("Pizza")) {
-            name = "Pizza " + (rand.nextBoolean()?  faker.food().spice(): faker.food().ingredient());
+            name = "Pizza " + faker.food().ingredient();
         } else if (category.getName().trim().equalsIgnoreCase("Mì Ý")) {
-            name = "Mì Ý " + (rand.nextBoolean()?  faker.food().spice(): faker.food().ingredient());
+            name = "Mì Ý " + faker.food().ingredient();
         } else if (category.getName().trim().equalsIgnoreCase("Khai Vị")) {
             name = "Khai Vị " + faker.food().dish();
         } else if (category.getName().trim().equalsIgnoreCase("Đồ uống")) {
@@ -76,9 +73,6 @@ public class DataGenerator {
                     name = "Coffee " + faker.coffee().blendName();
                     break;
             }
-        }
-        if(itemDAL.findByName(name).orElse(null) != null) {
-            return null;
         }
 
         double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ?
@@ -97,16 +91,12 @@ public class DataGenerator {
         }
     }
 
-
     // ToppingEntity
     public ToppingEntity generateToppingEntity(boolean isDefault) {
-        String name = isDefault ? "DEFAULT_TOPPING": (rand.nextBoolean()? "Spice " + faker.food().spice(): "Ingredient " + faker.food().ingredient());
+        String name = isDefault ? "DEFAULT_TOPPING": faker.food().ingredient();
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
-        if(itemDAL.findByName(name).orElse(null) != null) {
-            return null;
-        }
         try {
             return new ToppingEntity("", name, costPrice, stockQuantity, description,
                     true, new HashSet<>());
@@ -118,9 +108,6 @@ public class DataGenerator {
 
     //ItemToppingEntity
     public ItemToppingEntity generateItemToppingEntity(ToppingEntity toppingEntity, ItemEntity itemEntity) {
-        if(itemToppingDAL.findByItemAndTopping(itemEntity, toppingEntity).orElse(null) != null) {
-            return null;
-        }
         return new ItemToppingEntity(itemEntity, toppingEntity);
     }
 
@@ -132,7 +119,15 @@ public class DataGenerator {
         address.setDistrict(districts[rand.nextInt(districts.length)]);
         String[] wards = {"Phường Trúc Bạch", "Phường Cửa Đông", "Phường Yên Phụ", "Phường Phan Chu Trinh", "Phường Ngọc Hà"};
         address.setWard(wards[rand.nextInt(wards.length)]);
-        String[] cities = {"Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang", "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu", "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh", "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang", "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định", "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái", "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"};
+        String[] cities = {
+                "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Bến Tre", "Nha Trang",
+                "Cần Thơ", "Hải Phòng", "Đồng Nai", "Bình Dương", "Vũng Tàu",
+                "Quy Nhơn", "Phan Thiết", "Huế", "Ninh Bình", "Quảng Ninh",
+                "Vĩnh Long", "Long An", "An Giang", "Sóc Trăng", "Tiền Giang",
+                "Kiên Giang", "Bắc Giang", "Lào Cai", "Thái Nguyên", "Nam Định",
+                "Hạ Long", "Tây Ninh", "Bà Rịa", "Bạc Liêu", "Móng Cái",
+                "Lâm Đồng", "Gia Lai", "Kon Tum", "Hòa Bình", "Quảng Nam", "Quảng Ngãi"
+        };
         address.setCity(cities[rand.nextInt(cities.length)]);
         return address;
     }
@@ -146,6 +141,7 @@ public class DataGenerator {
         employee.setEmail(faker.internet().emailAddress());
         employee.setAddress(generateAddress());
         employee.setActive(faker.bool().bool());
+        employee.setRole(generateRoleEntity());
 
         List<RoleEntity> roles = roleDAL.findAll();
         employee.setRole(roles.isEmpty() ? null : roles.get(rand.nextInt(roles.size())));
@@ -154,9 +150,12 @@ public class DataGenerator {
 
     // RoleEntity
     public RoleEntity generateRoleEntity() {
-        RoleEntity role = new RoleEntity();
-        role.setRoleName(faker.job().title());
-        return role;
+        RoleEntity roleEntity = new RoleEntity();
+        Random random = new Random();
+        List<String> roles = Arrays.asList("Manager", "Chef", "Waiter", "Bartender", "Dishwasher");
+        String randomRole = roles.get(random.nextInt(roles.size()));
+        roleEntity.setRoleName(randomRole);
+        return roleEntity;
     }
 
     // PromotionEntity
@@ -164,19 +163,25 @@ public class DataGenerator {
         PromotionEntity promotion = new PromotionEntity();
         promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
         promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
+
         LocalDate startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
         LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
         promotion.setStartedDate(startDate);
         promotion.setEndedDate(endDate);
-        PromotionTypeEnum[] promotionTypeEnums = PromotionTypeEnum.values();
-        promotion.setPromotionType(promotionTypeEnums[faker.number().numberBetween(0, promotionTypeEnums.length)]);
 
         LocalDate today = LocalDate.now();
         boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
+
+
+        PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();
+        promotion.setPromotionType(promotionTypes[faker.number().numberBetween(0, promotionTypes.length)]);
+
+        CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
+        promotion.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
+
         promotion.setActive(isActive);
         int minPrice = faker.number().numberBetween(5, 21) * 100_000;
         promotion.setMinPrice(minPrice);
-
         return promotion;
     }
 
@@ -184,25 +189,29 @@ public class DataGenerator {
     public PromotionDetailEntity generatePromotionDetailEntity() {
         PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
 
+        PromotionEntity promotion = generatePromotionEntity();
+        promotionDetail.setPromotion(promotion);
+
         List<PromotionEntity> promotions = promotionDAL.findAll();
         promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
 
         List<ItemEntity> items = itemDAL.findAll();
         promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
-
-        CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
-        promotionDetail.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
-
-
-
-        promotionDetail.setDescription("Áp dụng cho " + faker.commerce().productName());
-
         return promotionDetail;
     }
 
     // CustomerEntity
-    public CustomerEntity getCustomerEntity() {
-        return null;
+    public CustomerEntity  generateCustomerEntity() {
+        CustomerEntity customer = new CustomerEntity();
+        customer.setName(faker.name().fullName());
+        customer.setEmail(faker.internet().emailAddress());
+        customer.setPhone(generateVietnamesePhoneNumber());
+        LocalDateTime dayOfBirth = LocalDateTime.now().minusYears(18 + rand.nextInt(42));
+        customer.setDayOfBirth(dayOfBirth);
+        customer.setAddress(generateAddress());
+        customer.setRewardedPoint(customer.getRewardedPoint());
+        customer.setCustomerLevel(customer.getLevelCustomer());
+        return customer;
     }
 
     // FloorEntity
@@ -244,50 +253,45 @@ public class DataGenerator {
         order.setTable(tables.isEmpty() ? null : tables.get(rand.nextInt(tables.size())));
 
         // Tạo danh sách OrderDetailEntity
-        try {
-            HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
-            int numberOfItems = faker.number().numberBetween(1, 5);
+        HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
+        int numberOfItems = faker.number().numberBetween(1, 5);
 
-            List<ItemEntity> items = itemDAL.findAll();
-            List<ToppingEntity> toppings = toppingDAL.findAll();
+        List<ItemEntity> items = itemDAL.findAll();
+        List<ToppingEntity> toppings = toppingDAL.findAll();
 
-            for (int j = 0; j < numberOfItems; j++) {
-                // Tạo OrderDetailEntity
-                OrderDetailEntity detail = new OrderDetailEntity();
-                detail.setOrder(order);
+        for (int j = 0; j < numberOfItems; j++) {
+            // Tạo OrderDetailEntity
+            OrderDetailEntity detail = new OrderDetailEntity();
+            detail.setOrder(order);
 
-                // Lấy item và topping ngẫu nhiên
-                ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
-                ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
+            // Lấy item và topping ngẫu nhiên
+            ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
+            ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
 
-                detail.setQuantity(rand.nextInt(5) + 1);
+            detail.setQuantity(rand.nextInt(5) + 1);
+            detail.setItem(item);
+            detail.setTopping(topping);
 
-                detail.setItem(item);
-                detail.setTopping(topping);
-
-                double itemPrice = 0;
+            double itemPrice = 0;
+            if (item != null) {
                 itemPrice = detail.getItem().getSellingPrice();
 
-                double toppingPrice = 0;
-                if (topping != null) {
-                    toppingPrice = detail.getTopping().getCostPrice();
-                }
-                double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
-
-                detail.setLineTotal();
-                detail.setDiscount();
-                detail.setDescription(faker.lorem().sentence());
-
-                if (orderDetails.add(detail)) {
-                    orderDetailDAL.insert(detail);
-                }
             }
 
-            order.setOrderDetails(orderDetails);
+            double toppingPrice = 0;
+            if (topping != null) {
+                toppingPrice = detail.getTopping().getCostPrice();
+            }
+            double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            detail.setLineTotal();
+            detail.setDiscount();
+            detail.setDescription(faker.lorem().sentence());
+
+            orderDetails.add(detail);
         }
+
+        order.setOrderDetails(orderDetails);
         order.setTotalPrice();
         order.setTotalDiscount();
         order.setTotalPaid();
@@ -307,20 +311,14 @@ public class DataGenerator {
         //CategoryEntity
         String[] categoryNames = {"Pizza", "Mì Ý", "Khai Vị", "Đồ uống"};
         for (String name : categoryNames) {
-            CategoryEntity category = generateCategoryEntity(name);
-            if (category != null) {
-                categoryDAL.insert(category);
-            }
+            categoryDAL.insert(generateCategoryEntity(name));
         }
         System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
         categoryDAL.findAll().forEach(x -> System.out.println(x));
 
         //ToppingEntity
         for (int i = 0; i < 6; i++) {
-            ToppingEntity topping = generateToppingEntity(i == 0);
-            if (topping != null) {
-                toppingDAL.insert(topping);
-            }
+            toppingDAL.insert(generateToppingEntity(i == 0));
         }
         System.out.println("---------------DANH MỤC TOPPING---------------");
         toppingDAL.findAll().forEach(x -> System.out.println(x));
@@ -330,26 +328,24 @@ public class DataGenerator {
             List<ToppingEntity> allToppings = toppingDAL.findAll();
             for (int i = 0; i < 9; i++) {
                 ItemEntity itemEntity = generateItemEntity(categoryEntity);
-                if(itemEntity != null) {
-                    itemDAL.insert(itemEntity);
-                    if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
-                        if (itemEntity.getSize() == SizeEnum.SMALL) {
-                            for (int j = 0; j < 2 && j < allToppings.size(); j++) {
-                                ToppingEntity toppingEntity = allToppings.get(j);
-                                ItemToppingEntity itemTopping = generateItemToppingEntity(toppingEntity, itemEntity);
-                                itemToppingDAL.insert(itemTopping);
-                            }
-                        } else {
-                            for (ToppingEntity topping : allToppings) {
-                                ItemToppingEntity itemTopping = generateItemToppingEntity(topping, itemEntity);
-                                itemToppingDAL.insert(itemTopping);
-                            }
+                itemDAL.insert(itemEntity);
+                if (categoryEntity.getName().equalsIgnoreCase("Pizza")) {
+                    if (itemEntity.getSize() == SizeEnum.SMALL) {
+                        for (int j = 0; j < 2 && j < allToppings.size(); j++) {
+                            ToppingEntity toppingEntity = allToppings.get(j);
+                            ItemToppingEntity itemTopping = generateItemToppingEntity(toppingEntity, itemEntity);
+                            itemToppingDAL.insert(itemTopping);
                         }
                     } else {
-                        ToppingEntity defaultTopping = allToppings.get(0);
-                        ItemToppingEntity itemTopping = generateItemToppingEntity(defaultTopping, itemEntity);
-                        itemToppingDAL.insert(itemTopping);
+                        for (ToppingEntity topping : allToppings) {
+                            ItemToppingEntity itemTopping = generateItemToppingEntity(topping, itemEntity);
+                            itemToppingDAL.insert(itemTopping);
+                        }
                     }
+                } else {
+                    ToppingEntity defaultTopping = allToppings.get(0);
+                    ItemToppingEntity itemTopping = generateItemToppingEntity(defaultTopping, itemEntity);
+                    itemToppingDAL.insert(itemTopping);
                 }
             }
             System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
@@ -368,18 +364,21 @@ public class DataGenerator {
         for (int i = 0; i < 10; i++) {
             promotionDAL.insert(generatePromotionEntity());
         }
-
         //promotion detail entity
         for (int i = 0; i < 10; i++) {
             promotionDetailDAL.insert(generatePromotionDetailEntity());
         }
 
-
+        //Customer entity
+        for (int i = 0; i < 10; i++) {
+            customerDAL.insert(generateCustomerEntity());
+        }
         //OrderEntity
         for (int i = 0; i < 10; i++) {
             //new Entity
             orderDAL.insert(generateOrderEntity());
         }
+
     }
 
     public static void main(String[] args) {

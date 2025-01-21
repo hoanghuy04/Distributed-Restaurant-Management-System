@@ -30,11 +30,4 @@ public class PromotionDetailEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private ItemEntity item;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "customer_level", nullable = false, columnDefinition = "nvarchar(50)")
-    private CustomerLevelEnum customerLevel;
-
-    @Column(name = "description")
-    private String description;
 }

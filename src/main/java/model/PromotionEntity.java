@@ -3,6 +3,7 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 
 import java.time.LocalDate;
@@ -28,6 +29,10 @@ public class PromotionEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
     private PromotionTypeEnum promotionType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_level", nullable = false, columnDefinition = "nvarchar(50)")
+    private CustomerLevelEnum customerLevel;
 
     @Column(name = "description", nullable = false)
     private String description;

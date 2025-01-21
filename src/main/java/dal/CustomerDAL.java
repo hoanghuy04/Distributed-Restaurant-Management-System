@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import model.CustomerEntity;
 import util.IDGeneratorUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class CustomerDAL implements BaseDAL<CustomerEntity,String> {
 
     @Override
     public boolean insert(CustomerEntity customerEntity) {
-        customerEntity.setCustomerId(IDGeneratorUtil.generateIDWithCreatedDate("C","customers","customer_id","created_date",em, customerEntity.getCreatedDate()));
+        customerEntity.setCustomerId(IDGeneratorUtil.generateIDWithCreatedDate("C","customers","customer_id","created_date",em, LocalDateTime.now()));
         return BaseDAL.executeTransaction(em,()->em.persist(customerEntity));
     }
 
