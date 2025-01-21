@@ -93,7 +93,7 @@ public class DataGenerator {
 
     // ToppingEntity
     public ToppingEntity generateToppingEntity(boolean isDefault) {
-        String name = isDefault ? "DEFAULT_TOPPING": faker.food().ingredient();
+        String name = isDefault ? "DEFAULT_TOPPING" : faker.food().ingredient();
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
@@ -195,13 +195,18 @@ public class DataGenerator {
         List<PromotionEntity> promotions = promotionDAL.findAll();
         promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
 
+        List<ItemEntity> currItemList = new ArrayList<>();
+        promotionDetailDAL.findAll().stream().filter(detail -> detail.getPromotion() == promotion).forEach(detail -> currItemList.add(detail.getItem()));
+
         List<ItemEntity> items = itemDAL.findAll();
+        items.removeAll(currItemList);
+
         promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
         return promotionDetail;
     }
 
     // CustomerEntity
-    public CustomerEntity  generateCustomerEntity() {
+    public CustomerEntity generateCustomerEntity() {
         CustomerEntity customer = new CustomerEntity();
         customer.setName(faker.name().fullName());
         customer.setEmail(faker.internet().emailAddress());

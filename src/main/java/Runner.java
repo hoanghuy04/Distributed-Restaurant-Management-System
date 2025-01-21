@@ -1596,7 +1596,7 @@ public class Runner {
 
                 break;
             case 8:
-                PromotionDetailEntity promotionDetailEntity = generator.getPromotionDetailDAL().findAll().getFirst();
+                PromotionDetailEntity promotionDetailEntity = generator.getPromotionDetailDAL().findAll().stream().findFirst().orElse(null);
                 System.out.print("Nhập ID khuyến mãi của chi tiết khuyến mãi (Gợi ý:" + promotionDetailEntity.getPromotion().getPromotionId() +"):");
                 String pToDeleteId = sc.nextLine().trim();
                 System.out.print("Nhập ID món ăn của chi tiết khuyến mãi(Gợi ý:" + promotionDetailEntity.getItem().getItemId() +"):");
