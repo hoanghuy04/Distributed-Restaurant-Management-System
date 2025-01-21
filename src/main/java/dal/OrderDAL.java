@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.OrderEntity;
+import model.ToppingEntity;
 import util.IDGeneratorUtil;
 
 import java.util.List;
@@ -42,7 +43,12 @@ public class OrderDAL implements BaseDAL<OrderEntity, String>{
 
     @Override
     public boolean deleteById(String s) {
-        return false;
+        return BaseDAL.executeTransaction(entityManager, () -> {
+            OrderEntity orderEntity = entityManager.find(OrderEntity.class, s);
+            if (orderEntity != null) {
+                entityManager.remove(orderEntity);
+            }
+        });
     }
 
     @Override
