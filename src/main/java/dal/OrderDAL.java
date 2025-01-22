@@ -60,4 +60,6 @@ public class OrderDAL implements BaseDAL<OrderEntity, String>{
     public List<OrderEntity> findAll() {
         return entityManager.createNamedQuery("OrderEntity.findAll", OrderEntity.class).getResultList();
     }
+
+
 }

@@ -55,23 +55,37 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity,String>
                 .getResultList();
     }
 
-    public boolean deleteByItemAndPromotion(ItemEntity itemEntity,  PromotionEntity promotionEntity) {
+    public PromotionDetailEntity findByPromotionAndItem(String promotionId, String itemId) {
+        return entityManager.createQuery(
+                        "SELECT p FROM PromotionDetailEntity p WHERE p.promotion.promotionId = :promotionId AND p.item.itemId = :itemId",
+                        PromotionDetailEntity.class
+                )
+                .setParameter("promotionId", promotionId)
+                .setParameter("itemId", itemId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean deleteByItemAndPromotion(ItemEntity itemEntity, PromotionEntity promotionEntity) {
         return BaseDAL.executeTransaction(entityManager, () -> {
             StringBuilder jpql = new StringBuilder("delete from PromotionDetailEntity it where 1=1");
             if (itemEntity != null) {
                 jpql.append(" AND it.item.itemId = :itemId");
             }
             if (promotionEntity != null) {
-                jpql.append(" AND it.topping.toppingId = :toppingId");
+                jpql.append(" AND it.promotion.promotionId = :promotionId");
             }
             Query query = entityManager.createQuery(jpql.toString());
             if (itemEntity != null) {
                 query.setParameter("itemId", itemEntity.getItemId());
             }
             if (promotionEntity != null) {
-                query.setParameter("toppingId", promotionEntity.getPromotionId());
+                query.setParameter("promotionId", promotionEntity.getPromotionId());
             }
             query.executeUpdate();
         });
     }
+
+
 }

@@ -2,7 +2,7 @@ package model.enums;
 
 public enum PromotionTypeEnum {
     ITEM ("Giảm món"),
-    ORDEN ("Giảm đơn");
+    ORDER ("Giảm đơn");
 
     private String promotionType;
 

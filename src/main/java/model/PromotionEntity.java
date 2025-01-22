@@ -3,6 +3,9 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import model.enums.CustomerLevelEnum;
+import model.enums.PromotionTypeEnum;
+import util.CustomerLevelConverter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +26,14 @@ public class PromotionEntity extends BaseEntity {
     @EqualsAndHashCode.Include
     @Column(name = "promotion_id", columnDefinition = "nvarchar(50)")
     private String promotionId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "promotion_type", nullable = false, columnDefinition = "nvarchar(50)")
+    private PromotionTypeEnum promotionType;
+
+    @Column(name = "customer_levels", nullable = false)
+    @Convert(converter = CustomerLevelConverter.class)
+    private List<CustomerLevelEnum> customerLevels;
 
     @Column(name = "description", nullable = false)
     private String description;

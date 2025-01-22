@@ -19,7 +19,7 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     @Override
     public boolean insert(PromotionEntity promotionEntity) {
         promotionEntity.setPromotionId(IDGeneratorUtil.generateIDWithCreatedDate("P", "promotions", "promotion_id"
-                , "created_date", entityManager, promotionEntity.getCreatedDate()));
+                , "created_date", entityManager, LocalDateTime.now()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(promotionEntity));
     }
 

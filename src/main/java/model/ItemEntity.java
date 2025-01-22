@@ -36,7 +36,7 @@ public class ItemEntity extends BaseEntity {
     @EqualsAndHashCode.Include
     private String itemId;
 
-    @Column(name = "name", nullable = false, unique = true, columnDefinition = "nvarchar(255)")
+    @Column(name = "name", nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column(name = "cost_price", nullable = false)
@@ -53,7 +53,7 @@ public class ItemEntity extends BaseEntity {
 
     private final double VAT = 0.2;
 
-    @Column(name = "img", columnDefinition = "nvarchar(5000)")
+    @Column(name = "img", columnDefinition = "nvarchar(3000)")
     private String img;
 
     @Column(name = "active", nullable = false)
