@@ -44,6 +44,7 @@ public class OrderDetailEntity extends BaseEntity {
     private OrderEntity order;
 
     @Id
+    @EqualsAndHashCode.Include
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topping_id", nullable = false)
     private ToppingEntity topping;

@@ -10,14 +10,18 @@ import dal.OrderDetailDAL;
 import dal.ToppingDAL;
 import dal.connectDB.ConnectDB;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import model.CategoryEntity;
 import model.*;
 import model.enums.*;
+import org.hibernate.Transaction;
 import util.datafaker.DataGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -244,18 +248,218 @@ public class Runner {
 
                 break;
             }
-            case 5:
-                System.out.println("Đang tạo mới EmployeeEntity...");
+            case 5: {
+                System.out.println("Nhập mật khẩu:");
+                String password = sc.nextLine();
+
+                System.out.println("Nhập họ tên:");
+                String fullname = sc.nextLine();
+
+                System.out.println("Nhập so điện thoại: ");
+                String phoneNumber = sc.nextLine();
+
+                System.out.println("Nhập email: ");
+                String email = sc.nextLine();
+
+                System.out.println("Nhập địa chỉ: ");
+
+                System.out.println("\tNhập phố: ");
+                String street = sc.nextLine();
+
+                System.out.println("\tNhập phường: ");
+                String ward = sc.nextLine();
+
+                System.out.println("\tNhập đường: ");
+                String district = sc.nextLine();
+
+                System.out.println("\tNhập thành phố: ");
+                String city = sc.nextLine();
+
+                Address address = new Address();
+                address.setCity(city);
+                address.setStreet(street);
+                address.setDistrict(district);
+                address.setWard(ward);
+
+                System.out.println("Nhập trạng thái( 0=False; 1=True ): ");
+                String choice = sc.nextLine().trim();
+                boolean active = true;
+
+                switch (choice) {
+                    case "0":
+                        active = false;
+                        break;
+                    case "1":
+                        active = true;
+                        break;
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập 0 hoặc 1.");
+                        break;
+                }
+
+                System.out.print("Nhập ID chức vụ(gợi ý: R0001): ");
+                String roleId = sc.nextLine().trim().toUpperCase();
+                RoleEntity role = generator.getRoleDAL().findById(roleId).orElse(null);
+                if (role == null) {
+                    System.out.println("Không tìm thấy chức vu với ID: " + roleId);
+                    break;
+                }
+
+                try {
+                    EmployeeEntity employee = new EmployeeEntity("", password, fullname, phoneNumber, email,
+                            address, active, role);
+
+                    String result = generator.getEmployeeDAL().insert(employee)
+                            ? "Thêm nhân viên thành công: " + employee
+                            : "Thêm nhân viên thất bại!";
+                    System.out.println(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 6:
-                System.out.println("Đang tạo mới RoleEntity...");
+            }
+            case 6: {
+                System.out.println("Nhập tên chức vụ:");
+                String roleName = sc.nextLine();
+                if (roleName.isEmpty() || roleName.length() == 0) {
+                    System.out.println("Tên chức vụ không hợp lệ");
+                    break;
+                }
+                try {
+                    RoleEntity role_tmp = new RoleEntity();
+                    role_tmp.setRoleName(roleName);
+                    String result = generator.getRoleDAL().insert(role_tmp)
+                            ? "Thêm chức vụ thành công: " + role_tmp
+                            : "Thêm chức vụ thất bại!";
+                    System.out.println(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 7:
-                System.out.println("Đang tạo mới PromotionEntity...");
+            }
+            case 7: {
+                {
+                    System.out.println("Nhập mô ta:");
+                    String description = sc.nextLine();
+                    double discountPercentage = getDoubleInput("Nhập phần trăm giảm giá:");
+                    LocalDate startedDate = getDateInput("Nhập ngày bắt đầu: ", LocalDate.now());
+                    LocalDate endedDate = getDateInput("Nhập ngày kết thúc: ", LocalDate.now());
+                    double minPrice = getDoubleInput("Nhập tiền tối thiểu để áp dụng: ");
+                    LocalDate today = LocalDate.now();
+
+                    System.out.println("Chọn loại khuyến mãi:");
+                    System.out.println("1. ITEM");
+                    System.out.println("2. ORDER");
+
+                    System.out.print("Nhập lựa chọn (1 hoặc 2): ");
+                    String promotionTypeChoice = sc.nextLine().trim();
+                    PromotionTypeEnum promotionType = null;
+
+                    switch (promotionTypeChoice) {
+                        case "1":
+                            promotionType = PromotionTypeEnum.ITEM;
+                            break;
+                        case "2":
+                            promotionType = PromotionTypeEnum.ORDER;
+                            break;
+                        default:
+                            System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 hoặc 2.");
+                            break;
+                    }
+
+                    List<CustomerLevelEnum> customerLevels = new ArrayList<>();
+                    int numOfCustomerLevel = getIntInput("Nhập số lượng cấp bậc khách hàng: ");
+                    for (int i = 0;
+                         i < numOfCustomerLevel;
+                         i++) {
+                        System.out.println("Chọn cấp độ khách hàng:");
+                        System.out.println("1. NEW");
+                        System.out.println("2. POTENTIAL");
+                        System.out.println("3. VIP");
+
+                        System.out.print("Nhập lựa chọn (1 -> 3): ");
+                        String customerLevelChoice = sc.nextLine().trim();
+                        CustomerLevelEnum customerLevelType = null;
+
+                        switch (customerLevelChoice) {
+                            case "1":
+                                customerLevelType = CustomerLevelEnum.NEW;
+                                break;
+                            case "2":
+                                customerLevelType = CustomerLevelEnum.POTENTIAL;
+                                break;
+                            case "3":
+                                customerLevelType = CustomerLevelEnum.VIP;
+                                break;
+                            default:
+                                System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 -> 3.");
+                                break;
+                        }
+                        customerLevels.add(customerLevelType);
+                    }
+
+                    boolean promotionActive = true;
+                    System.out.println("Nhập trạng thái( 0=False; 1=True; Enter = true ): ");
+                    String choice_1 = sc.nextLine().trim();
+
+                    switch (choice_1) {
+                        case "0":
+                            promotionActive = false;
+                            break;
+                        case "1":
+                            promotionActive = true;
+                            break;
+                        default:
+                            System.out.println("Trạng thái: True");
+                            break;
+                    }
+                    try {
+                        PromotionEntity promotion = new PromotionEntity("", promotionType, customerLevels, description, discountPercentage, startedDate, endedDate, promotionActive, minPrice, null, null);
+                        String result = generator.getPromotionDAL().insert(promotion)
+                                ? "Thêm promotion thành công: " + promotion
+                                : "Thêm promotion thất bại!";
+                        System.out.println(result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
-            case 8:
-                System.out.println("Đang tạo mới PromotionDetailEntity...");
+            }
+            case 8: {
+                {
+                    PromotionEntity promotionSuggestion = generator.getPromotionDAL().findAll().stream().filter(promotionEntity -> promotionEntity.getPromotionType() == PromotionTypeEnum.ITEM).findFirst().orElse(null);
+                    if (promotionSuggestion == null) {
+                        System.out.println("Không tìm thấy khuyến mãi món");
+                        break;
+                    }
+                    System.out.print("Nhập ID khuyến mãi(chỉ có thể tạo với khuyến mãi món) : ");
+                    String promotionId = sc.nextLine().trim().toUpperCase();
+                    PromotionEntity promotion = generator.getPromotionDAL().findById(promotionId).orElse(null);
+                    if (promotion == null) {
+                        System.out.println("Không tìm thấy khuyến mãi với ID: " + promotionId);
+                        break;
+                    }
+
+                    System.out.print("Nhập ID món ăn: ");
+                    String itemId = sc.nextLine().trim().toUpperCase();
+                    ItemEntity item = generator.getItemDAL().findById(itemId).orElse(null);
+                    if (item == null) {
+                        System.out.println("Không tìm thấy món ăn với ID: " + itemId);
+                        break;
+                    }
+
+                    try {
+                        PromotionDetailEntity promotionDetail = new PromotionDetailEntity(promotion, item);
+                        String result = generator.getPromotionDetailDAL().insert(promotionDetail)
+                                ? "Thêm promotion detail thành công: " + promotionDetail
+                                : "Thêm promotion detail thất bại!";
+                        System.out.println(result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
+            }
             case 9:
                 System.out.println("Đang tạo mới CustomerEntity...");
                 // Nhập thông tin từ người dùng
@@ -573,16 +777,16 @@ public class Runner {
                 generator.getItemToppingDAL().findAll().forEach(System.out::println);
                 break;
             case 5:
-                System.out.println("Đang đọc danh sách EmployeeEntity...");
+                generator.getEmployeeDAL().findAll().forEach(System.out::println);
                 break;
             case 6:
-                System.out.println("Đang đọc danh sách RoleEntity...");
+                generator.getRoleDAL().findAll().forEach(System.out::println);
                 break;
             case 7:
-                System.out.println("Đang đọc danh sách PromotionEntity...");
+                generator.getPromotionDAL().findAll().forEach(System.out::println);
                 break;
             case 8:
-                System.out.println("Đang đọc danh sách PromotionDetailEntity...");
+                generator.getPromotionDetailDAL().findAll().forEach(System.out::println);
                 break;
             case 9:
                 System.out.println("Đang đọc danh sách CustomerEntity...");
@@ -865,18 +1069,284 @@ public class Runner {
                 System.out.println(result);
                 break;
             }
-            case 5:
-                System.out.println("Đang cập nhật EmployeeEntity...");
+            case 5: {
+                EmployeeEntity employeeSuggestion = generator.getEmployeeDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID nhân viên cần cập nhật (Gợi ý: " + employeeSuggestion.getEmployeeId() + "): ");
+                String employeeId = sc.nextLine().trim();
+                EmployeeEntity employee = generator.getEmployeeDAL().findById(employeeId).orElse(null);
+                if (employee == null) {
+                    System.out.println("Không tìm thấy nhân viên với ID: " + employeeId);
+                    return;
+                }
+
+                // Hiển thị thông tin hiện tại
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Họ tên: " + employee.getFullname());
+                System.out.println("Số điện thoại: " + employee.getPhoneNumber());
+                System.out.println("Email: " + employee.getEmail());
+                System.out.println("Địa chỉ: " + employee.getAddress());
+                System.out.println("Trạng thái hoạt động: " + (employee.isActive() ? "Hoạt động" : "Không hoạt động"));
+                System.out.println("Chức vụ (Role): " + employee.getRole().getRoleName());
+
+                System.out.print("Nhập họ tên mới (nhấn Enter để giữ nguyên): ");
+                String newFullname = sc.nextLine().trim();
+                if (!newFullname.isEmpty()) {
+                    employee.setFullname(newFullname);
+                }
+
+                System.out.print("Nhập số điện thoại mới (nhấn Enter để giữ nguyên): ");
+                String newPhoneNumber = sc.nextLine().trim();
+                if (!newPhoneNumber.isEmpty()) {
+                    employee.setPhoneNumber(newPhoneNumber);
+                }
+
+                System.out.print("Nhập email mới (nhấn Enter để giữ nguyên): ");
+                String newEmail = sc.nextLine().trim();
+                if (!newEmail.isEmpty()) {
+                    employee.setEmail(newEmail);
+                }
+
+                System.out.print("Nhập địa chỉ mới (nhấn Enter để giữ nguyên): ");
+                String newAddress = sc.nextLine().trim();
+                if (!newAddress.isEmpty()) {
+                    System.out.println("Nhập địa chỉ: ");
+                    System.out.println("\tNhập phố: ");
+                    String street = sc.nextLine();
+
+                    System.out.println("\tNhập phường: ");
+                    String ward = sc.nextLine();
+
+                    System.out.println("\tNhập đường: ");
+                    String district = sc.nextLine();
+
+                    System.out.println("\tNhập thành phố: ");
+                    String city = sc.nextLine();
+
+                    Address address = new Address();
+
+                    address.setCity(city);
+                    address.setStreet(street);
+                    address.setDistrict(district);
+                    address.setWard(ward);
+                    employee.setAddress(address);
+                }
+
+                // Cập nhật trạng thái hoạt động
+                System.out.print("Nhân viên còn hoạt động? (true/false, nhấn Enter để giữ nguyên): ");
+                String newActive = sc.nextLine().trim();
+                if (!newActive.isEmpty()) {
+                    employee.setActive(Boolean.parseBoolean(newActive));
+                }
+
+                // Cập nhật quyền (Role)
+                System.out.print("Nhập ID chức vụ mới (nhấn Enter để giữ nguyên): ");
+                String newRoleId = sc.nextLine().trim();
+                if (!newRoleId.isEmpty()) {
+                    RoleEntity newRole = generator.getRoleDAL().findById(newRoleId).orElse(null);
+                    if (newRole != null) {
+                        employee.setRole(newRole);
+                    } else {
+                        System.out.println("Không tìm thấy chức vụ với ID: " + newRoleId);
+                    }
+                }
+
+                // Lưu thông tin cập nhật
+                boolean updated = generator.getEmployeeDAL().update(employee);
+                if (updated) {
+                    System.out.println("Cập nhật thông tin nhân viên thành công: " + employee);
+                } else {
+                    System.out.println("Cập nhật thông tin nhân viên thất bại!");
+                }
                 break;
-            case 6:
-                System.out.println("Đang cập nhật RoleEntity...");
+            }
+            case 6: {
+                RoleEntity roleSuggestion = generator.getRoleDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID chức vụ cần cập nhật (gợi ý:" + roleSuggestion.getRoleId() + "): ");
+                String roleId = sc.nextLine().trim();
+                RoleEntity role = generator.getRoleDAL().findById(roleId).orElse(null);
+                if (role == null) {
+                    System.out.println("Không tìm thấy chức vụ với ID: " + roleId);
+                    break;
+                }
+                System.out.print("Nhập tên chức vụ mới (nhấn Enter nếu muốn giữ nguyên): ");
+                String roleName = sc.nextLine().trim();
+                if (!roleName.isEmpty()) {
+                    role.setRoleName(roleName);
+                }
+
+                boolean roleUpdated = generator.getRoleDAL().update(role);
+                if (roleUpdated) {
+                    System.out.println("Cập nhật chức vụ thành công: " + role);
+                } else {
+                    System.out.println("Cập nhật chức vụ thất bại!");
+                }
                 break;
-            case 7:
-                System.out.println("Đang cập nhật PromotionEntity...");
+            }
+            case 7: {
+                PromotionEntity promotionSuggestion = generator.getPromotionDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID khuyến mãi cần cập nhật (Gợi ý:" + promotionSuggestion.getPromotionId() + "): ");
+                String promotionId = sc.nextLine().trim();
+                PromotionEntity promotion = generator.getPromotionDAL().findById(promotionId).orElse(null);
+                if (promotion == null) {
+                    System.out.println("Không tìm thấy khuyến mãi với ID: " + promotionId);
+                    return;
+                }
+
+                // Hiển thị thông tin hiện tại
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Loại khuyến mãi: " + promotion.getPromotionType());
+                System.out.println("Cấp độ khách hàng: " + promotion.getCustomerLevels());
+                System.out.println("Mô tả: " + promotion.getDescription());
+                System.out.println("Phần trăm giảm giá: " + promotion.getDiscountPercentage());
+                System.out.println("Ngày bắt đầu: " + promotion.getStartedDate());
+                System.out.println("Ngày kết thúc: " + promotion.getEndedDate());
+                System.out.println("Trạng thái hoạt động: " + (promotion.isActive() ? "Hoạt động" : "Không hoạt động"));
+                System.out.println("Giá tối thiểu: " + promotion.getMinPrice());
+
+                // Cập nhật mô tả
+                System.out.print("Nhập mô tả mới (nhấn Enter để giữ nguyên): ");
+                String newDescription = sc.nextLine().trim();
+                if (!newDescription.isEmpty()) {
+                    promotion.setDescription(newDescription);
+                }
+
+                // Cập nhật phần trăm giảm giá
+                System.out.print("Nhập phần trăm giảm giá mới (nhấn Enter để giữ nguyên): ");
+                String newDiscount = sc.nextLine().trim();
+                if (!newDiscount.isEmpty()) {
+                    try {
+                        promotion.setDiscountPercentage(Double.parseDouble(newDiscount));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Phần trăm giảm giá không hợp lệ. Giữ nguyên giá trị cũ.");
+                    }
+                }
+
+                // Cập nhật ngày bắt đầu
+                LocalDate newStartDate = getDateInput("Nhập ngày bắt đầu mới (nhấn Enter để giữ nguyên):", promotion.getStartedDate());
+                if (newStartDate != null) {
+                    promotion.setStartedDate(newStartDate);
+                }
+
+                // Cập nhật ngày kết thúc
+                LocalDate newEndDate = getDateInput("Nhập ngày kết thúc mới (nhấn Enter để giữ nguyên): ", promotion.getEndedDate());
+                if (newEndDate != null) {
+                    promotion.setEndedDate(newEndDate);
+                }
+
+                // Cập nhật trạng thái hoạt động
+                System.out.print("Khuyến mãi còn hoạt động? (true/false, nhấn Enter để giữ nguyên): ");
+                String newPromotionActive = sc.nextLine().trim();
+                if (!newPromotionActive.isEmpty()) {
+                    promotion.setActive(Boolean.parseBoolean(newPromotionActive));
+                }
+
+                // Cập nhật cấp độ khách hàng
+                List<CustomerLevelEnum> customerLevels = new ArrayList<>();
+                int numOfCustomerLevel;
+                System.out.print("Nhập số lượng cấp bậc khách hàng(Nhấn enter để giữ nguyên): ");
+                while (true) {
+                    try {
+                        if(sc.nextLine().trim().isEmpty()) {
+                            break;
+                        }
+                        numOfCustomerLevel =  Integer.parseInt(sc.nextLine().trim());
+                        for (int i = 0;
+                             i < numOfCustomerLevel;
+                             i++) {
+                            System.out.println("Chọn cấp độ khách hàng:");
+                            System.out.println("1. NEW");
+                            System.out.println("2. POTENTIAL");
+                            System.out.println("3. VIP");
+
+                            System.out.print("Nhập lựa chọn (1 -> 3): ");
+                            String customerLevelChoice = sc.nextLine().trim();
+                            CustomerLevelEnum customerLevelType = null;
+
+                            switch (customerLevelChoice) {
+                                case "1":
+                                    customerLevelType = CustomerLevelEnum.NEW;
+                                    break;
+                                case "2":
+                                    customerLevelType = CustomerLevelEnum.POTENTIAL;
+                                    break;
+                                case "3":
+                                    customerLevelType = CustomerLevelEnum.VIP;
+                                    break;
+                                default:
+                                    System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 -> 3.");
+                                    break;
+                            }
+                            customerLevels.add(customerLevelType);
+                        }
+                        promotion.setCustomerLevels(customerLevels);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Vui lòng nhập một số nguyên hợp lệ.");
+                    }
+                }
+
+
+                // Cập nhật giá tối thiểu
+                System.out.print("Nhập giá tối thiểu mới (nhấn Enter để giữ nguyên): ");
+                String newMinPrice = sc.nextLine().trim();
+                if (!newMinPrice.isEmpty()) {
+                    try {
+                        promotion.setMinPrice(Double.parseDouble(newMinPrice));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Giá tối thiểu không hợp lệ. Giữ nguyên giá trị cũ.");
+                    }
+                }
+
+                // Lưu thông tin cập nhật
+                boolean promotionUpdated = generator.getPromotionDAL().update(promotion);
+                if (promotionUpdated) {
+                    System.out.println("Cập nhật thông tin khuyến mãi thành công: " + promotion);
+                } else {
+                    System.out.println("Cập nhật thông tin khuyến mãi thất bại!");
+                }
                 break;
-            case 8:
-                System.out.println("Đang cập nhật PromotionDetailEntity...");
+            }
+            case 8: {
+                PromotionDetailEntity promotionDetailEntity = generator.getPromotionDetailDAL().findAll().stream().findFirst().get();
+
+                System.out.print("Nhập ID khuyến mãi của chi tiết khuyến mãi (Gợi ý:" + promotionDetailEntity.getPromotion().getPromotionId() + "):");
+                String pdPromotionId = sc.nextLine().trim();
+
+                System.out.print("Nhập ID món ăn của chi tiết khuyến mãi(Gợi ý:" + promotionDetailEntity.getItem().getItemId() + "):");
+                String pdItemId = sc.nextLine().trim();
+
+                // Tìm PromotionDetailEntity theo ID
+                PromotionDetailEntity promotionDetail = generator.getPromotionDetailDAL().findByPromotionAndItem(pdPromotionId, pdItemId);
+                if (promotionDetail == null) {
+                    System.out.println("Không tìm thấy khuyến mãi chi tiết với ID khuyến mãi: " + pdPromotionId + " ID vật phẩm: " + pdItemId);
+                    return;
+                }
+
+                // Hiển thị thông tin hiện tại
+                System.out.println("Thông tin hiện tại:");
+                System.out.println("Mã khuyến mãi: " + promotionDetail.getPromotion().getPromotionId());
+                System.out.println("Mã món: " + promotionDetail.getItem().getItemId());
+                // Lưu thông tin cập nhật
+                System.out.println("Nhập mã món ăn mới: ");
+                String newItemId = sc.nextLine().trim();
+                ItemEntity newItem = generator.getItemDAL().findById(newItemId).orElse(null);
+                if (newItem != null) {
+                    PromotionDetailEntity promotionDetailEntityNew = new PromotionDetailEntity();
+                    promotionDetailEntityNew.setPromotion(promotionDetail.getPromotion());
+                    promotionDetailEntityNew.setItem(newItem);
+
+                    boolean pdDeleteOld = generator.getPromotionDetailDAL().deleteByItemAndPromotion(promotionDetail.getItem(), promotionDetail.getPromotion());
+                    boolean pdAddNew = generator.getPromotionDetailDAL().insert(promotionDetailEntityNew);
+                    if (pdDeleteOld && pdAddNew) {
+                        System.out.println("Cập nhật thông tin khuyến mãi chi tiết thành công: " + promotionDetail);
+                    } else {
+                        System.out.println("Cập nhật thông tin khuyến mãi chi tiết thất bại!");
+                    }
+                } else {
+                    System.out.println("Id rỗng");
+                }
+
                 break;
+            }
             case 9:
                 System.out.println("Đang cập nhật CustomerEntity...");
 
@@ -1405,18 +1875,118 @@ public class Runner {
                 }
                 break;
             }
-            case 5:
-                System.out.println("Đang xóa EmployeeEntity...");
+            case 5: {
+                EmployeeEntity empSuggestion = generator.getEmployeeDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID nhân viên (gợi ý: " + empSuggestion.getEmployeeId() + "): ");
+                String employeeId = sc.nextLine().trim();
+
+                EmployeeEntity employeeToDelete = generator.getEmployeeDAL().findById(employeeId).orElse(null);
+                if (employeeToDelete == null) {
+                    System.out.println("Không tìm thấy nhân viên với ID: " + employeeId);
+                    return;
+                }
+                generator.getOrderDAL().findAll().stream().filter(ord -> ord.getEmployee().getEmployeeId().equals(employeeId))
+                        .forEach(ord -> generator.getOrderDAL().deleteById(ord.getOrderId()));
+
+                employeeToDelete.setRole(null);
+                boolean employeeDeleteResult = generator.getEmployeeDAL().deleteById(employeeId);
+                if (employeeDeleteResult) {
+                    System.out.println("Xóa nhân viên thành công!");
+                } else {
+                    System.out.println("Xóa nhân viên thất bại!");
+                }
                 break;
-            case 6:
-                System.out.println("Đang xóa RoleEntity...");
+            }
+            case 6: {
+                RoleEntity roleSuggestion = generator.getRoleDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID chức vụ (gợi ý: " + roleSuggestion.getRoleId() + "): ");
+                String roleId = sc.nextLine().trim();
+                RoleEntity roleToDelete = generator.getRoleDAL().findById(roleId).orElse(null);
+                if (roleToDelete == null) {
+                    System.out.println("Không tìm thấy chức vụ với ID: " + roleId);
+                    return;
+                }
+
+
+                List<OrderEntity> orderEntities = generator.getOrderDAL().findAll();
+                List<EmployeeEntity> employees = em.createQuery(
+                                "SELECT e FROM EmployeeEntity e WHERE e.role.roleId = :roleId", EmployeeEntity.class)
+                        .setParameter("roleId", roleId)
+                        .getResultList();
+
+                for (EmployeeEntity employee : employees) {
+                    orderEntities.stream().filter(ord -> ord.getEmployee().getEmployeeId().equals(employee.getEmployeeId()))
+                            .forEach(ord -> generator.getOrderDAL().deleteById(ord.getOrderId()));
+                }
+
+                generator.getEmployeeDAL().deleteEmployeesByRole(roleId);
+                boolean result = generator.getRoleDAL().deleteById(roleId);
+                if (result) {
+                    System.out.println("Xóa chức vụ thành công!");
+                } else {
+                    System.out.println("Xóa chức vụ thất bại!");
+
+                }
                 break;
-            case 7:
-                System.out.println("Đang xóa PromotionEntity...");
+            }
+            case 7: {
+                PromotionEntity promotionSuggestion = generator.getPromotionDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID khuyến mãi cần xoá (Gợi ý:" + promotionSuggestion.getPromotionId() + "): ");
+                String promotionToDeleteId = sc.nextLine().trim();
+                PromotionEntity promotionEntity = generator.getPromotionDAL().findById(promotionToDeleteId).orElse(null);
+                if (promotionEntity == null) {
+                    System.out.println("Không tìm thấy  khuyến mãi với ID: " + promotionEntity);
+                    return;
+                }
+
+                if (promotionEntity.getPromotionDetails() != null) {
+                    promotionEntity.getPromotionDetails().forEach(promotionDetail -> {
+                        ItemEntity itemToDelete = promotionDetail.getItem();
+                        PromotionEntity promotionToDelete = promotionDetail.getPromotion();
+                        boolean promotionDetailDeleteresult = generator.getPromotionDetailDAL().deleteByItemAndPromotion(itemToDelete, promotionToDelete);
+
+                        if (promotionDetailDeleteresult) {
+                        } else {
+                            System.out.println("Xóa chi tiết khuyến mãi thất bại!");
+                        }
+                    });
+                }
+
+                boolean promotionDetailDeleteresult = generator.getPromotionDAL().deleteById(promotionToDeleteId);
+
+                if (promotionDetailDeleteresult) {
+                    System.out.println("Xóa khuyến mãi thành công!");
+                } else {
+                    System.out.println("Xóa khuyến mãi thất bại!");
+                }
+
                 break;
-            case 8:
-                System.out.println("Đang xóa PromotionDetailEntity...");
+            }
+            case 8: {
+                PromotionDetailEntity promotionDetailEntity = generator.getPromotionDetailDAL().findAll().stream().findFirst().orElse(null);
+                System.out.print("Nhập ID khuyến mãi của chi tiết khuyến mãi (Gợi ý:" + promotionDetailEntity.getPromotion().getPromotionId() + "):");
+                String pToDeleteId = sc.nextLine().trim();
+                System.out.print("Nhập ID món ăn của chi tiết khuyến mãi(Gợi ý:" + promotionDetailEntity.getItem().getItemId() + "):");
+                String iToDeleteId = sc.nextLine().trim();
+
+                PromotionDetailEntity promotionDetailToDelete = generator.getPromotionDetailDAL().findByPromotionAndItem(pToDeleteId, iToDeleteId);
+                if (promotionDetailToDelete == null) {
+                    System.out.println("Không tìm thấy chi tiết khuyến mãi với ID khuyến mãi: " + pToDeleteId + " ID món ăn: " + iToDeleteId);
+                    return;
+                }
+
+                ItemEntity itemToDelete = promotionDetailToDelete.getItem();
+                PromotionEntity promotionToDelete = promotionDetailToDelete.getPromotion();
+                boolean promotionDetailDeleteResult = generator.getPromotionDetailDAL().deleteByItemAndPromotion(itemToDelete, promotionToDelete);
+
+                if (promotionDetailDeleteResult) {
+                    System.out.println("Xóa chi tiết khuyến mãi thành công!");
+
+                } else {
+                    System.out.println("Xóa chi tiết khuyến mãi thất bại!");
+                }
                 break;
+            }
             case 9:
                 System.out.println("Đang xóa CustomerEntity...");
 
@@ -1614,6 +2184,24 @@ public class Runner {
                 System.out.println("Vui lòng nhập một số hợp lệ.");
             }
         }
+    }
+
+    public static LocalDate getDateInput(String prompt, LocalDate defaultDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = defaultDate;
+
+        while (date == null) {
+            System.out.print(prompt + " (định dạng dd/MM/yyyy): ");
+            String input = sc.nextLine();
+            if (input.isEmpty()) return date;
+            try {
+                date = LocalDate.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Ngày nhập không hợp lệ. Vui lòng thử lại.");
+            }
+        }
+
+        return date;
     }
 
     private static int getIntInput(String prompt) {

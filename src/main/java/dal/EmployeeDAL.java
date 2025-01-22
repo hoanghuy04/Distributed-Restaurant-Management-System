@@ -3,21 +3,27 @@ package dal;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import model.EmployeeEntity;
 import model.OrderDetailEntity;
+import model.OrderEntity;
 import model.PromotionEntity;
+import org.hibernate.query.Order;
 import util.IDGeneratorUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
     private EntityManager entityManager;
     @Override
     public boolean insert(EmployeeEntity employeeEntity) {
         employeeEntity.setEmployeeId(IDGeneratorUtil.generateIDWithCreatedDate("Emp", "employees", "employee_id"
-                , "created_date", entityManager, employeeEntity.getCreatedDate()));
+                , "created_date", entityManager, LocalDateTime.now()));
         return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(employeeEntity));
     }
 
@@ -55,6 +61,25 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
             return Optional.empty();
         }
     }
+
+    public boolean deleteEmployeesByRole(String roleId) {
+
+        return BaseDAL.executeTransaction(entityManager, () -> {
+            // Tìm tất cả các Employee có roleId tương ứng
+            List<EmployeeEntity> employees = entityManager.createQuery(
+                            "SELECT e FROM EmployeeEntity e WHERE e.role.roleId = :roleId", EmployeeEntity.class)
+                    .setParameter("roleId", roleId)
+                    .getResultList();
+
+
+
+            // Xóa từng Employee tìm thấy
+            for (EmployeeEntity employee : employees) {
+                entityManager.remove(employee);
+            }
+        });
+    }
+
 
     public Optional<EmployeeEntity> findByPhoneNumber(String phoneNumber) {
         try {
