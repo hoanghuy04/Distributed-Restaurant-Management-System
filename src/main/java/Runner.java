@@ -368,29 +368,35 @@ public class Runner {
                             break;
                     }
 
+                    List<CustomerLevelEnum> customerLevels = new ArrayList<>();
+                    int numOfCustomerLevel = getIntInput("Nhập số lượng cấp bậc khách hàng: ");
+                    for (int i = 0;
+                         i < numOfCustomerLevel;
+                         i++) {
+                        System.out.println("Chọn cấp độ khách hàng:");
+                        System.out.println("1. NEW");
+                        System.out.println("2. POTENTIAL");
+                        System.out.println("3. VIP");
 
-                    System.out.println("Chọn cấp độ khách hàng:");
-                    System.out.println("1. NEW");
-                    System.out.println("2. POTENTIAL");
-                    System.out.println("3. VIP");
+                        System.out.print("Nhập lựa chọn (1 -> 3): ");
+                        String customerLevelChoice = sc.nextLine().trim();
+                        CustomerLevelEnum customerLevelType = null;
 
-                    System.out.print("Nhập lựa chọn (1 -> 3): ");
-                    String customerLevelChoice = sc.nextLine().trim();
-                    CustomerLevelEnum customerLevelType = null;
-
-                    switch (customerLevelChoice) {
-                        case "1":
-                            customerLevelType = CustomerLevelEnum.NEW;
-                            break;
-                        case "2":
-                            customerLevelType = CustomerLevelEnum.POTENTIAL;
-                            break;
-                        case "3":
-                            customerLevelType = CustomerLevelEnum.VIP;
-                            break;
-                        default:
-                            System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 -> 3.");
-                            break;
+                        switch (customerLevelChoice) {
+                            case "1":
+                                customerLevelType = CustomerLevelEnum.NEW;
+                                break;
+                            case "2":
+                                customerLevelType = CustomerLevelEnum.POTENTIAL;
+                                break;
+                            case "3":
+                                customerLevelType = CustomerLevelEnum.VIP;
+                                break;
+                            default:
+                                System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 -> 3.");
+                                break;
+                        }
+                        customerLevels.add(customerLevelType);
                     }
 
                     boolean promotionActive = true;
@@ -409,7 +415,7 @@ public class Runner {
                             break;
                     }
                     try {
-                        PromotionEntity promotion = new PromotionEntity("", promotionType, customerLevelType, description, discountPercentage, startedDate, endedDate, promotionActive, minPrice, null, null);
+                        PromotionEntity promotion = new PromotionEntity("", promotionType, customerLevels, description, discountPercentage, startedDate, endedDate, promotionActive, minPrice, null, null);
                         String result = generator.getPromotionDAL().insert(promotion)
                                 ? "Thêm promotion thành công: " + promotion
                                 : "Thêm promotion thất bại!";
@@ -422,8 +428,8 @@ public class Runner {
             }
             case 8: {
                 {
-                    PromotionEntity promotionSuggestion =  generator.getPromotionDAL().findAll().stream().filter(promotionEntity -> promotionEntity.getPromotionType() == PromotionTypeEnum.ITEM).findFirst().orElse(null);
-                    if(promotionSuggestion == null) {
+                    PromotionEntity promotionSuggestion = generator.getPromotionDAL().findAll().stream().filter(promotionEntity -> promotionEntity.getPromotionType() == PromotionTypeEnum.ITEM).findFirst().orElse(null);
+                    if (promotionSuggestion == null) {
                         System.out.println("Không tìm thấy khuyến mãi món");
                         break;
                     }
@@ -1065,7 +1071,7 @@ public class Runner {
                 // Hiển thị thông tin hiện tại
                 System.out.println("Thông tin hiện tại:");
                 System.out.println("Loại khuyến mãi: " + promotion.getPromotionType());
-                System.out.println("Cấp độ khách hàng: " + promotion.getCustomerLevel().getCustomerLevel());
+                System.out.println("Cấp độ khách hàng: " + promotion.getCustomerLevels());
                 System.out.println("Mô tả: " + promotion.getDescription());
                 System.out.println("Phần trăm giảm giá: " + promotion.getDiscountPercentage());
                 System.out.println("Ngày bắt đầu: " + promotion.getStartedDate());
@@ -1111,17 +1117,49 @@ public class Runner {
                 }
 
                 // Cập nhật cấp độ khách hàng
-                System.out.println("Chọn cấp độ khách hàng (0 - Khách hàng mới, 1 - Khách hàng tiềm năng, 2 - Khách hàng thân thiết): ");
-                System.out.print("Nhập lựa chọn: ");
-                String levelInput = sc.nextLine().trim();
-                if (!levelInput.isEmpty()) {
+                List<CustomerLevelEnum> customerLevels = new ArrayList<>();
+                int numOfCustomerLevel;
+                System.out.print("Nhập số lượng cấp bậc khách hàng(Nhấn enter để giữ nguyên): ");
+                while (true) {
                     try {
-                        CustomerLevelEnum customerLevelEnum = CustomerLevelEnum.values()[Integer.parseInt(levelInput)];
-                        promotion.setCustomerLevel(customerLevelEnum);
-                    } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Lựa chọn cấp độ khách hàng không hợp lệ. Giữ nguyên giá trị cũ.");
+                        if(sc.nextLine().trim().isEmpty()) {
+                            break;
+                        }
+                        numOfCustomerLevel =  Integer.parseInt(sc.nextLine().trim());
+                        for (int i = 0;
+                             i < numOfCustomerLevel;
+                             i++) {
+                            System.out.println("Chọn cấp độ khách hàng:");
+                            System.out.println("1. NEW");
+                            System.out.println("2. POTENTIAL");
+                            System.out.println("3. VIP");
+
+                            System.out.print("Nhập lựa chọn (1 -> 3): ");
+                            String customerLevelChoice = sc.nextLine().trim();
+                            CustomerLevelEnum customerLevelType = null;
+
+                            switch (customerLevelChoice) {
+                                case "1":
+                                    customerLevelType = CustomerLevelEnum.NEW;
+                                    break;
+                                case "2":
+                                    customerLevelType = CustomerLevelEnum.POTENTIAL;
+                                    break;
+                                case "3":
+                                    customerLevelType = CustomerLevelEnum.VIP;
+                                    break;
+                                default:
+                                    System.out.println("Lựa chọn không hợp lệ! Vui lòng nhập từ 1 -> 3.");
+                                    break;
+                            }
+                            customerLevels.add(customerLevelType);
+                        }
+                        promotion.setCustomerLevels(customerLevels);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Vui lòng nhập một số nguyên hợp lệ.");
                     }
                 }
+
 
                 // Cập nhật giá tối thiểu
                 System.out.print("Nhập giá tối thiểu mới (nhấn Enter để giữ nguyên): ");
@@ -1549,7 +1587,7 @@ public class Runner {
                 }
 
 
-                List<OrderEntity> orderEntities =  generator.getOrderDAL().findAll();
+                List<OrderEntity> orderEntities = generator.getOrderDAL().findAll();
                 List<EmployeeEntity> employees = em.createQuery(
                                 "SELECT e FROM EmployeeEntity e WHERE e.role.roleId = :roleId", EmployeeEntity.class)
                         .setParameter("roleId", roleId)

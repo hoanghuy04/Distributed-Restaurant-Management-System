@@ -183,7 +183,19 @@ public class DataGenerator {
         promotion.setPromotionType(promotionTypes[faker.number().numberBetween(0, promotionTypes.length)]);
 
         CustomerLevelEnum[] customerLevels = CustomerLevelEnum.values();
-        promotion.setCustomerLevel(customerLevels[faker.number().numberBetween(0, customerLevels.length)]);
+        List<CustomerLevelEnum> shuffledLevels = new ArrayList<>();
+        Collections.addAll(shuffledLevels, customerLevels);
+
+        // Shuffle the list to ensure randomness
+        Collections.shuffle(shuffledLevels, new Random());
+
+        // Generate a random number between 1 and 3
+        int count = new Random().nextInt(3) + 1;
+
+        // Return the first `count` elements of the shuffled list
+        List<CustomerLevelEnum> customerLevelList =  shuffledLevels.subList(0, count);
+
+        promotion.setCustomerLevels(customerLevelList);
 
         promotion.setActive(isActive);
         int minPrice = faker.number().numberBetween(5, 21) * 100_000;
