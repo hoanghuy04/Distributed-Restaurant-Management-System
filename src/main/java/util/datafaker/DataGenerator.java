@@ -13,6 +13,7 @@ import net.datafaker.Faker;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -221,7 +222,6 @@ public class DataGenerator {
         return promotion;
     }
 
-    // PromotionDetailEntity
     public PromotionDetailEntity generatePromotionDetailEntity() {
         PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
 
@@ -317,26 +317,24 @@ public class DataGenerator {
         order.setTable(tables.isEmpty() ? null : tables.get(rand.nextInt(tables.size())));
 
         // Tạo danh sách OrderDetailEntity
-        try {
-            HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
-            int numberOfItems = faker.number().numberBetween(1, 5);
+        HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
+        int numberOfItems = faker.number().numberBetween(1, 5);
 
-            List<ItemEntity> items = itemDAL.findAll();
-            List<ToppingEntity> toppings = toppingDAL.findAll();
+        List<ItemEntity> items = itemDAL.findAll();
+        List<ToppingEntity> toppings = toppingDAL.findAll();
 
-            for (int j = 0; j < numberOfItems; j++) {
-                // Tạo OrderDetailEntity
-                OrderDetailEntity detail = new OrderDetailEntity();
-                detail.setOrder(order);
+        for (int j = 0; j < numberOfItems; j++) {
+            // Tạo OrderDetailEntity
+            OrderDetailEntity detail = new OrderDetailEntity();
+            detail.setOrder(order);
 
-                // Lấy item và topping ngẫu nhiên
-                ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
-                ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
+            // Lấy item và topping ngẫu nhiên
+            ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
+            ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
 
-                detail.setQuantity(rand.nextInt(5) + 1);
-
-                detail.setItem(item);
-                detail.setTopping(topping);
+            detail.setQuantity(rand.nextInt(5) + 1);
+            detail.setItem(item);
+            detail.setTopping(topping);
 
             double itemPrice = 0;
             if (item != null) {
@@ -350,28 +348,20 @@ public class DataGenerator {
             }
             double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
 
-                detail.setLineTotal();
-                detail.setDiscount();
-                detail.setDescription(faker.lorem().sentence());
+            detail.setLineTotal();
+            detail.setDiscount();
+            detail.setDescription(faker.lorem().sentence());
 
-                if (orderDetails.add(detail)) {
-                    orderDetailDAL.insert(detail);
-                }
-            }
-
-            order.setOrderDetails(orderDetails);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            orderDetails.add(detail);
         }
+
+        order.setOrderDetails(orderDetails);
         order.setTotalPrice();
         order.setTotalDiscount();
         order.setTotalPaid();
 
-        System.out.println(order);
         return order;
     }
-
     private String generateVietnamesePhoneNumber() {
         String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
         String prefix = prefixes[new Random().nextInt(prefixes.length)];
@@ -388,8 +378,6 @@ public class DataGenerator {
                 categoryDAL.insert(category);
             }
         }
-        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
-        categoryDAL.findAll().forEach(x -> System.out.println(x));
 
         //ToppingEntity
         for (int i = 0; i < 6; i++) {
@@ -398,8 +386,6 @@ public class DataGenerator {
                 toppingDAL.insert(topping);
             }
         }
-        System.out.println("---------------DANH MỤC TOPPING---------------");
-        toppingDAL.findAll().forEach(x -> System.out.println(x));
 
         //ItemEntity & ItemToppingEntity
         for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
@@ -428,8 +414,6 @@ public class DataGenerator {
                     }
                 }
             }
-            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
-            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
 
         //Employee entity
@@ -452,12 +436,6 @@ public class DataGenerator {
             customerDAL.insert(generateCustomerEntity());
         }
 
-        //OrderEntity
-        for (int i = 0; i < 10; i++) {
-            //new Entity
-            orderDAL.insert(generateOrderEntity());
-        }
-
         //Floor
         for (int i = 0; i < 3; i++) {
             floorDAL.insert(generateFloorEntity(15));
@@ -471,6 +449,12 @@ public class DataGenerator {
         //Customer
         for(int i = 0; i<10; ++i) {
             customerDAL.insert(generateCustomerEntity());
+        }
+
+        //OrderEntity
+        for (int i = 0; i < 10; i++) {
+            //new Entity
+            orderDAL.insert(generateOrderEntity());
         }
     }
 
