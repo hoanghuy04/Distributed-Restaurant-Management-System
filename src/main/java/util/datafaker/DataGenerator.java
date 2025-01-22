@@ -333,15 +333,11 @@ public class DataGenerator {
         for (String name : categoryNames) {
             categoryDAL.insert(generateCategoryEntity(name));
         }
-        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
-        categoryDAL.findAll().forEach(x -> System.out.println(x));
 
         //ToppingEntity
         for (int i = 0; i < 6; i++) {
             toppingDAL.insert(generateToppingEntity(i == 0));
         }
-        System.out.println("---------------DANH MỤC TOPPING---------------");
-        toppingDAL.findAll().forEach(x -> System.out.println(x));
 
         //ItemEntity & ItemToppingEntity
         for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
@@ -368,22 +364,23 @@ public class DataGenerator {
                     itemToppingDAL.insert(itemTopping);
                 }
             }
-            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
-            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
 
         //Role entity
         for (int i = 0; i < 4; i++) {
             roleDAL.insert(generateRoleEntity());
         }
+
         //Employee entity
         for (int i = 0; i < 10; i++) {
             employeeDAL.insert(generateEmployeeEntity());
         }
+
         //promotion entity
         for (int i = 0; i < 10; i++) {
             promotionDAL.insert(generatePromotionEntity());
         }
+
         //promotion detail entity
         for (int i = 0; i < 10; i++) {
             promotionDetailDAL.insert(generatePromotionDetailEntity());
@@ -393,6 +390,7 @@ public class DataGenerator {
         for (int i = 0; i < 10; i++) {
             customerDAL.insert(generateCustomerEntity());
         }
+
         //OrderEntity
         for (int i = 0; i < 10; i++) {
             //new Entity
