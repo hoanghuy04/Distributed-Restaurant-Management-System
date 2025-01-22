@@ -13,6 +13,7 @@ import net.datafaker.Faker;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /*
@@ -203,20 +204,32 @@ public class DataGenerator {
         return promotion;
     }
 
-    // PromotionDetailEntity
     public PromotionDetailEntity generatePromotionDetailEntity() {
         PromotionDetailEntity promotionDetail = new PromotionDetailEntity();
 
-        PromotionEntity promotion = generatePromotionEntity();
-        promotionDetail.setPromotion(promotion);
+        List<PromotionEntity> itemPromotions = promotionDAL.findAll().stream()
+                .filter(promo -> promo.getPromotionType() == PromotionTypeEnum.ITEM)
+                .toList();
 
-        List<PromotionEntity> promotions = promotionDAL.findAll().stream().filter(proTmp -> proTmp.getPromotionType() == PromotionTypeEnum.ITEM).toList();
-        promotionDetail.setPromotion(promotions.isEmpty() ? null : promotions.get(rand.nextInt(promotions.size())));
-        List<ItemEntity> currItemList = new ArrayList<>();
-        promotionDetailDAL.findAll().stream().filter(detail -> detail.getPromotion() == promotion).forEach(detail -> currItemList.add(detail.getItem()));
-        List<ItemEntity> items = itemDAL.findAll();
-        items.removeAll(currItemList);
-        promotionDetail.setItem(items.isEmpty() ? null : items.get(rand.nextInt(items.size())));
+        if (itemPromotions.isEmpty()) {
+            return promotionDetail;
+        }
+
+        PromotionEntity selectedPromotion = itemPromotions.get(rand.nextInt(itemPromotions.size()));
+        promotionDetail.setPromotion(selectedPromotion);
+
+        Set<ItemEntity> existingItems = promotionDetailDAL.findAll().stream()
+                .filter(detail -> detail.getPromotion().equals(selectedPromotion))
+                .map(PromotionDetailEntity::getItem)
+                .collect(Collectors.toSet());
+
+        List<ItemEntity> availableItems = itemDAL.findAll().stream()
+                .filter(item -> !existingItems.contains(item))
+                .toList();
+        if (!availableItems.isEmpty()) {
+            promotionDetail.setItem(availableItems.get(rand.nextInt(availableItems.size())));
+        }
+
         return promotionDetail;
     }
 
