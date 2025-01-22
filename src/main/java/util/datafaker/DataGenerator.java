@@ -316,26 +316,24 @@ public class DataGenerator {
         order.setTable(tables.isEmpty() ? null : tables.get(rand.nextInt(tables.size())));
 
         // Tạo danh sách OrderDetailEntity
-        try {
-            HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
-            int numberOfItems = faker.number().numberBetween(1, 5);
+        HashSet<OrderDetailEntity> orderDetails = new HashSet<>();
+        int numberOfItems = faker.number().numberBetween(1, 5);
 
-            List<ItemEntity> items = itemDAL.findAll();
-            List<ToppingEntity> toppings = toppingDAL.findAll();
+        List<ItemEntity> items = itemDAL.findAll();
+        List<ToppingEntity> toppings = toppingDAL.findAll();
 
-            for (int j = 0; j < numberOfItems; j++) {
-                // Tạo OrderDetailEntity
-                OrderDetailEntity detail = new OrderDetailEntity();
-                detail.setOrder(order);
+        for (int j = 0; j < numberOfItems; j++) {
+            // Tạo OrderDetailEntity
+            OrderDetailEntity detail = new OrderDetailEntity();
+            detail.setOrder(order);
 
-                // Lấy item và topping ngẫu nhiên
-                ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
-                ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
+            // Lấy item và topping ngẫu nhiên
+            ItemEntity item = items.isEmpty() ? null : items.get(rand.nextInt(items.size()));
+            ToppingEntity topping = toppings.isEmpty() ? null : toppings.get(rand.nextInt(toppings.size()));
 
-                detail.setQuantity(rand.nextInt(5) + 1);
-
-                detail.setItem(item);
-                detail.setTopping(topping);
+            detail.setQuantity(rand.nextInt(5) + 1);
+            detail.setItem(item);
+            detail.setTopping(topping);
 
             double itemPrice = 0;
             if (item != null) {
@@ -349,20 +347,14 @@ public class DataGenerator {
             }
             double lineTotal = (itemPrice + toppingPrice) * detail.getQuantity();
 
-                detail.setLineTotal();
-                detail.setDiscount();
-                detail.setDescription(faker.lorem().sentence());
+            detail.setLineTotal();
+            detail.setDiscount();
+            detail.setDescription(faker.lorem().sentence());
 
-                if (orderDetails.add(detail)) {
-                    orderDetailDAL.insert(detail);
-                }
-            }
-
-            order.setOrderDetails(orderDetails);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            orderDetails.add(detail);
         }
+
+        order.setOrderDetails(orderDetails);
         order.setTotalPrice();
         order.setTotalDiscount();
         order.setTotalPaid();
@@ -370,7 +362,6 @@ public class DataGenerator {
         System.out.println(order);
         return order;
     }
-
     private String generateVietnamesePhoneNumber() {
         String[] prefixes = {"03", "07", "08", "09", "056", "058", "070", "079", "077", "076", "078"};
         String prefix = prefixes[new Random().nextInt(prefixes.length)];
