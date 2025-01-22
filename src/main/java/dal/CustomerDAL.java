@@ -3,6 +3,7 @@ package dal;
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import model.CustomerEntity;
+import model.OrderDetailEntity;
 import util.IDGeneratorUtil;
 
 import java.time.LocalDateTime;
@@ -26,7 +27,12 @@ public class CustomerDAL implements BaseDAL<CustomerEntity,String> {
 
     @Override
     public boolean deleteById(String s) {
-        return false;
+        return BaseDAL.executeTransaction(em, () -> {
+            CustomerEntity entity = em.find(CustomerEntity.class, s);
+            if (entity != null) {
+                em.remove(entity);
+            }
+        });
     }
 
     @Override
