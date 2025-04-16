@@ -306,7 +306,7 @@ public class DataGenerator {
         // Lấy customer ngẫu nhiên
         List<CustomerEntity> customers = customerDAL.findAll();
         order.setCustomer(customers.isEmpty() ? null : customers.get(rand.nextInt(customers.size())));
-        
+
 
         // Lấy employee ngẫu nhiên
         List<EmployeeEntity> employees = employeeDAL.findAll();
@@ -415,7 +415,7 @@ public class DataGenerator {
                 }
             }
         }
-        
+
         //Role entity
         roleDAL.insert(new RoleEntity("R0001", "MANAGER", LocalDate.now()));
         roleDAL.insert(new RoleEntity("R0002", "MANAGER", LocalDate.now()));

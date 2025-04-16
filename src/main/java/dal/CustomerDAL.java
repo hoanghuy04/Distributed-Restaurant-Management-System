@@ -64,57 +64,61 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
     }
 
     @Override
-    public Optional<CustomerEntity> findById(String id) {
-        return Optional.ofNullable(em.find(CustomerEntity.class, id));
+    public CustomerEntity findById(String id) {
+        return em.find(CustomerEntity.class, id);
     }
 
     @Override
     public List<CustomerEntity> findAll() {
-        return em.createNamedQuery("CustomerEntity.findAll", CustomerEntity.class).getResultList();
+        return em.createQuery("from CustomerEntity c", CustomerEntity.class).getResultList();
     }
 
     public CustomerEntity findByPhone(String phoneNumber) {
-        try {
-            return em.createNamedQuery("CustomerEntity.findByPhone", CustomerEntity.class)
-                    .setParameter("phoneNumber", phoneNumber)
-                    .getSingleResult();
-        } catch (Exception e) {
-            return null;
-        }
+        return em.createQuery("select c from CustomerEntity c " +
+                "where c.phone = :phoneNumber", CustomerEntity.class)
+                .setParameter("phoneNumber", phoneNumber)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
 
     public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB, String address) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM customers WHERE 1=1 ");
+        StringBuilder queryBuilder = new StringBuilder("SELECT c FROM CustomerEntity c WHERE 1=1 ");
         List<Object> parameters = new ArrayList<>();
 
         if (name != null && !name.isEmpty()) {
-            queryBuilder.append("AND name LIKE ? ");
-            parameters.add("%" + name + "%");
+            queryBuilder.append("AND c.name LIKE :name ");
         }
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            queryBuilder.append("AND phone_number LIKE ? ");
-            parameters.add("%" + phoneNumber + "%");
+            queryBuilder.append("AND c.phone LIKE :phoneNumber ");
         }
         if (email != null && !email.isEmpty()) {
-            queryBuilder.append("AND email LIKE ? ");
-            parameters.add("%" + email + "%");
+            queryBuilder.append("AND c.email LIKE :email ");
         }
         if (dOB != null) {
-            queryBuilder.append("AND date_of_birth = ? ");
-            parameters.add(dOB);
+            queryBuilder.append("AND c.dateOfBirth = :dOB ");
         }
         if (address != null && !address.isEmpty()) {
-            queryBuilder.append("AND address LIKE ? ");
-            parameters.add("%" + address + "%");
+            queryBuilder.append("AND c.address LIKE :address ");
         }
 
-        Query query = em.createNativeQuery(queryBuilder.toString(), CustomerEntity.class);
+        Query query = em.createQuery(queryBuilder.toString(), CustomerEntity.class);
 
-        // Thiết lập tham số cho truy vấn
-        for (int i = 0; i < parameters.size(); i++) {
-            query.setParameter(i + 1, parameters.get(i));
+        if (name != null && !name.isEmpty()) {
+            query.setParameter("name", "%" + name + "%");
         }
-
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            query.setParameter("phoneNumber", "%" + phoneNumber + "%");
+        }
+        if (email != null && !email.isEmpty()) {
+            query.setParameter("email", "%" + email + "%");
+        }
+        if (dOB != null) {
+            query.setParameter("dOB", dOB);
+        }
+        if (address != null && !address.isEmpty()) {
+            query.setParameter("address", "%" + address + "%");
+        }
         return query.getResultList();
     }
 }

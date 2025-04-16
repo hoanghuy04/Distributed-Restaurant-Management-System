@@ -53,49 +53,44 @@ public class FloorDAL implements BaseDAL<FloorEntity, String> {
     }
 
     @Override
-    public Optional<FloorEntity> findById(String id) {
-        return Optional.ofNullable(em.find(FloorEntity.class, id));
+    public FloorEntity findById(String id) {
+        return em.find(FloorEntity.class, id);
     }
 
     @Override
     public List<FloorEntity> findAll() {
-        return em.createNamedQuery("FloorEntity.findAll", FloorEntity.class).getResultList();
+        return em.createQuery("from FloorEntity", FloorEntity.class).getResultList();
     }
     
     public FloorEntity findByName(String name) {
-        String sql = "select f.* from floors f where f.name = ?1";
-        Query q = em.createNativeQuery(sql, FloorEntity.class);
-        q.setParameter(1, name);
-        try {
-            return (FloorEntity) q.getSingleResult();
-        } catch (Exception e) {
-            return null;
-        }
+        return em.createQuery("select f from FloorEntity f " +
+                " where f.name = :name", FloorEntity.class)
+                .setParameter("name", name)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
-    
+
     public List<FloorEntity> getTablesWithKeyword(Integer capacity, String name) {
-        List<FloorEntity> floors = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM floors WHERE 1=1");
-        List<Object> parameters = new ArrayList<>();
+        StringBuilder jpql = new StringBuilder("SELECT f FROM FloorEntity f WHERE 1=1");
 
         if (capacity != null) {
-            queryBuilder.append(" AND capacity = ?");
-            parameters.add(capacity);
+            jpql.append(" AND f.capacity = :capacity");
         }
         if (name != null && !name.trim().isEmpty()) {
-            queryBuilder.append(" AND name LIKE ?");
-            parameters.add("%" + name + "%");
+            jpql.append(" AND f.name LIKE :name");
         }
 
-        Query query = em.createNativeQuery(queryBuilder.toString(), FloorEntity.class);
+        Query query = em.createQuery(jpql.toString(), FloorEntity.class);
 
-        for (int i = 0; i < parameters.size(); i++) {
-            query.setParameter(i + 1, parameters.get(i));
+        if (capacity != null) {
+            query.setParameter("capacity", capacity);
+        }
+        if (name != null && !name.trim().isEmpty()) {
+            query.setParameter("name", "%" + name + "%");
         }
 
-        floors = query.getResultList();
-
-        return floors;
-    }    
+        return query.getResultList();
+    }
     
 }

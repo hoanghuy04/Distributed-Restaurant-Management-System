@@ -21,7 +21,7 @@ public interface BaseDAL <T, ID>{
     boolean insert(T t);
     boolean update(T t);
     boolean deleteById(ID id);
-    Optional<T> findById(ID id);
+    T findById(ID id);
     List<T> findAll();
     static boolean executeTransaction(EntityManager entityManager, Runnable runnable) {
         EntityTransaction transaction = entityManager.getTransaction();
