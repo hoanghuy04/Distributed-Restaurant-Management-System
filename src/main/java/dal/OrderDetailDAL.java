@@ -60,8 +60,8 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
     }
 
     @Override
-    public Optional<OrderDetailEntity> findById(OrderDetailId id) {
-        return Optional.ofNullable(em.find(OrderDetailEntity.class, id));
+    public OrderDetailEntity findById(OrderDetailId id) {
+        return em.find(OrderDetailEntity.class, id);
     }
 
     @Override

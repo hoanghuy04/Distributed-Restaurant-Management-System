@@ -62,8 +62,8 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     }
 
     @Override
-    public Optional<PromotionEntity> findById(String id) {
-        return Optional.ofNullable(em.find(PromotionEntity.class, id));
+    public PromotionEntity findById(String id) {
+        return em.find(PromotionEntity.class, id);
     }
 
     @Override

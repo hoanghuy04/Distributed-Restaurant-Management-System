@@ -55,8 +55,8 @@ public class RoleDAL implements BaseDAL<RoleEntity, String>{
     }
 
     @Override
-    public Optional<RoleEntity> findById(String id) {
-        return Optional.ofNullable(em.find(RoleEntity.class, id));
+    public RoleEntity findById(String id) {
+        return em.find(RoleEntity.class, id);
     }
 
     @Override

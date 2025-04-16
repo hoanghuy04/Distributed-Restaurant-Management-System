@@ -5,14 +5,14 @@
 package dal;
 
 import dto.ToppingDTO;
+import jakarta.persistence.*;
 import model.ToppingEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
 import util.IDGeneratorUtility;
 
 /**
@@ -69,8 +69,8 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     }
 
     @Override
-    public Optional<ToppingEntity> findById(String id) {
-        return Optional.ofNullable(em.find(ToppingEntity.class, id));
+    public ToppingEntity findById(String id) {
+        return em.find(ToppingEntity.class, id);
     }
 
     @Override
@@ -79,42 +79,50 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     }
 
     public List<ToppingEntity> findByCriteria(ToppingDTO toppingDTO) {
-        StringBuilder sql = new StringBuilder("select t.* from toppings t where 1 = 1 ");
+        StringBuilder jpql = new StringBuilder("select t from ToppingEntity t where 1=1");
+        Map<String, Object> parameters = new HashMap<>();
 
-        if (!toppingDTO.getName().trim().equals("")) {
-            sql.append(" and t.name like N'" + toppingDTO.getName() + "' ");
+        if (toppingDTO.getName() != null && !toppingDTO.getName().trim().isEmpty()) {
+            jpql.append(" and t.name like :name");
+            parameters.put("name", "%" + toppingDTO.getName() + "%");
         }
 
-        if (!toppingDTO.getDesc().trim().equals("")) {
-            sql.append(" and t.description like N'" + toppingDTO.getDesc() + "' ");
+        if (toppingDTO.getDesc() != null && !toppingDTO.getDesc().trim().isEmpty()) {
+            jpql.append(" and t.description like :description");
+            parameters.put("description", "%" + toppingDTO.getDesc() + "%");
         }
 
-        if (toppingDTO.getCostPrice() >= 0) {
+        if ( toppingDTO.getCostPrice() >= 0) {
             double costPrice = toppingDTO.getCostPrice();
             if (costPrice == 0) {
-                sql.append(" and t.cost_price is not null ");
-            } else if (costPrice == (long) costPrice) {
-                sql.append(" and t.cost_price = " + (long) costPrice + " ");
+                jpql.append(" and t.costPrice is not null");
+            } else {
+                jpql.append(" and t.costPrice = :costPrice");
+                parameters.put("costPrice", costPrice);
             }
         }
 
         if (toppingDTO.getStockQty() > 0) {
-            sql.append(" and t.stock_quantity = " + toppingDTO.getStockQty() + " ");
+            jpql.append(" and t.stockQuantity = :stockQuantity");
+            parameters.put("stockQuantity", toppingDTO.getStockQty());
         }
 
-        Query q = em.createNativeQuery(sql.toString(), ToppingEntity.class);
-        return q.getResultList();
+        TypedQuery<ToppingEntity> query = em.createQuery(jpql.toString(), ToppingEntity.class);
+
+        for (Map.Entry<String, Object> param : parameters.entrySet()) {
+            query.setParameter(param.getKey(), param.getValue());
+        }
+
+        return query.getResultList();
     }
-
-    public Optional<ToppingEntity> findByName(String name) {
+    public ToppingEntity findByName(String name) {
         try {
-            ToppingEntity result = em.createNamedQuery("ToppingEntity.findByName", ToppingEntity.class)
-                    .setParameter("name", name)
-                    .getSingleResult();
-            return Optional.of(result);
+            return em.createNamedQuery("ToppingEntity.findByName", ToppingEntity.class)
+                    .setParameter("name", name).getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
+
     }
 
 }
