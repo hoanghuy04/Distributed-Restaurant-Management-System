@@ -359,7 +359,6 @@ public class DataGenerator {
         order.setTotalDiscount();
         order.setTotalPaid();
 
-        System.out.println(order);
         return order;
     }
     private String generateVietnamesePhoneNumber() {
@@ -378,8 +377,6 @@ public class DataGenerator {
                 categoryDAL.insert(category);
             }
         }
-        System.out.println("---------------DANH MỤC SẢN PHẨM---------------");
-        categoryDAL.findAll().forEach(x -> System.out.println(x));
 
         //ToppingEntity
         for (int i = 0; i < 6; i++) {
@@ -388,8 +385,6 @@ public class DataGenerator {
                 toppingDAL.insert(topping);
             }
         }
-        System.out.println("---------------DANH MỤC TOPPING---------------");
-        toppingDAL.findAll().forEach(x -> System.out.println(x));
 
         //ItemEntity & ItemToppingEntity
         for (CategoryEntity categoryEntity : categoryDAL.findAll()) {
@@ -418,8 +413,6 @@ public class DataGenerator {
                     }
                 }
             }
-            System.out.println("---------------Các sản phẩm trong danh mục " + categoryEntity.getName().toUpperCase() + " ---------------");
-            itemDAL.findByCategory(categoryEntity).forEach(x -> System.out.println(x));
         }
 
         //Employee entity
@@ -442,12 +435,6 @@ public class DataGenerator {
             customerDAL.insert(generateCustomerEntity());
         }
 
-        //OrderEntity
-        for (int i = 0; i < 10; i++) {
-            //new Entity
-            orderDAL.insert(generateOrderEntity());
-        }
-
         //Floor
         for (int i = 0; i < 3; i++) {
             floorDAL.insert(generateFloorEntity(15));
@@ -461,6 +448,12 @@ public class DataGenerator {
         //Customer
         for(int i = 0; i<10; ++i) {
             customerDAL.insert(generateCustomerEntity());
+        }
+
+        //OrderEntity
+        for (int i = 0; i < 10; i++) {
+            //new Entity
+            orderDAL.insert(generateOrderEntity());
         }
     }
 
