@@ -45,8 +45,8 @@ public class EmployeeBUS implements BaseBUS<EmployeeEntity, String> {
         return employeeDAL.findAll();
     }
 
-    public List<EmployeeEntity> getListEmployeeActive(String active) {
-        return employeeDAL.getListEmployeeActive(active);
+    public List<EmployeeEntity> getListEmployeeActive() {
+        return employeeDAL.getListEmployeeActive();
     }
 
     public EmployeeEntity checkLogin(String username, String password) {

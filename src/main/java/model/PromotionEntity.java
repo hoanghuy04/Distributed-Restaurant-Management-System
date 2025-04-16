@@ -43,11 +43,11 @@ public class PromotionEntity extends BaseEntity {
     private double discountPercentage;
 
     @Column(name = "started_date", nullable = false)
-    private LocalDate startedDate;
+    private LocalDateTime startedDate;
 
 
     @Column(name = "ended_date", nullable = false)
-    private LocalDate endedDate;
+    private LocalDateTime endedDate;
 
     @Column(name = "active", nullable = false)
     private boolean active;
@@ -63,7 +63,7 @@ public class PromotionEntity extends BaseEntity {
     @OneToMany(mappedBy = "promotion")
     private Set<PromotionDetailEntity> promotionDetails;
     
-    public PromotionEntity(String description, double discountPercentage, LocalDate startedDate, LocalDate endedDate,
+    public PromotionEntity(String description, double discountPercentage, LocalDateTime startedDate, LocalDateTime endedDate,
             boolean active, Set<PromotionDetailEntity> promotionDetails, List<CustomerLevelEnum> applicableCustomerLevels, PromotionTypeEnum promotionType, double minPrice) {
         this.description = description;
         this.discountPercentage = discountPercentage;
@@ -76,8 +76,8 @@ public class PromotionEntity extends BaseEntity {
         this.minPrice = minPrice;
     }
 
-    public PromotionEntity(String promotionId, String description, double discountPercentage, double minPrice, LocalDate startedDate,
-            LocalDate endedDate, boolean active, LocalDateTime creatededDate, List<OrderEntity> orders, Set<PromotionDetailEntity> promotionDetails, 
+    public PromotionEntity(String promotionId, String description, double discountPercentage, double minPrice, LocalDateTime startedDate,
+            LocalDateTime endedDate, boolean active, LocalDateTime creatededDate, List<OrderEntity> orders, Set<PromotionDetailEntity> promotionDetails,
             List<CustomerLevelEnum> applicableCustomerLevels, PromotionTypeEnum promotionType) {
         this.promotionId = promotionId;
         this.description = description;

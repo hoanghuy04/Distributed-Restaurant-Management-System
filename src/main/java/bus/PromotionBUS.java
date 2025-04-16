@@ -7,6 +7,7 @@ import model.PromotionEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;

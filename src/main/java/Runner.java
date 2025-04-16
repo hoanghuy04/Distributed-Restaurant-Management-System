@@ -342,8 +342,8 @@ public class Runner {
                     System.out.println("Nhập mô ta:");
                     String description = sc.nextLine();
                     double discountPercentage = getDoubleInput("Nhập phần trăm giảm giá:");
-                    LocalDate startedDate = getDateInput("Nhập ngày bắt đầu: ", LocalDate.now());
-                    LocalDate endedDate = getDateInput("Nhập ngày kết thúc: ", LocalDate.now());
+                    LocalDateTime startedDate = getDateTimeInput("Nhập ngày bắt đầu: ", LocalDateTime.now());
+                    LocalDateTime endedDate = getDateTimeInput("Nhập ngày kết thúc: ", LocalDateTime.now());
                     double minPrice = getDoubleInput("Nhập tiền tối thiểu để áp dụng: ");
                     LocalDate today = LocalDate.now();
 
@@ -1222,13 +1222,13 @@ public class Runner {
                 }
 
                 // Cập nhật ngày bắt đầu
-                LocalDate newStartDate = getDateInput("Nhập ngày bắt đầu mới (nhấn Enter để giữ nguyên):", promotion.getStartedDate());
+                LocalDateTime newStartDate = getDateTimeInput("Nhập ngày bắt đầu mới (nhấn Enter để giữ nguyên):", promotion.getStartedDate());
                 if (newStartDate != null) {
                     promotion.setStartedDate(newStartDate);
                 }
 
                 // Cập nhật ngày kết thúc
-                LocalDate newEndDate = getDateInput("Nhập ngày kết thúc mới (nhấn Enter để giữ nguyên): ", promotion.getEndedDate());
+                LocalDateTime newEndDate = getDateTimeInput("Nhập ngày kết thúc mới (nhấn Enter để giữ nguyên): ", promotion.getEndedDate());
                 if (newEndDate != null) {
                     promotion.setEndedDate(newEndDate);
                 }
@@ -1919,7 +1919,7 @@ public class Runner {
                             .forEach(ord -> generator.getOrderDAL().deleteById(ord.getOrderId()));
                 }
 
-                generator.getEmployeeDAL().deleteEmployeesByRole(roleId);
+//                generator.getEmployeeDAL().deleteEmployeesByRole(roleId);
                 boolean result = generator.getRoleDAL().deleteById(roleId);
                 if (result) {
                     System.out.println("Xóa chức vụ thành công!");
@@ -2186,22 +2186,22 @@ public class Runner {
         }
     }
 
-    public static LocalDate getDateInput(String prompt, LocalDate defaultDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = defaultDate;
+    public static LocalDateTime getDateTimeInput(String prompt, LocalDateTime defaultDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime dateTime = defaultDateTime;
 
-        while (date == null) {
-            System.out.print(prompt + " (định dạng dd/MM/yyyy): ");
+        while (dateTime == null) {
+            System.out.print(prompt + " (định dạng dd/MM/yyyy HH:mm): ");
             String input = sc.nextLine();
-            if (input.isEmpty()) return date;
+            if (input.isEmpty()) return dateTime;
             try {
-                date = LocalDate.parse(input, formatter);
+                dateTime = LocalDateTime.parse(input, formatter);
             } catch (DateTimeParseException e) {
-                System.out.println("Ngày nhập không hợp lệ. Vui lòng thử lại.");
+                System.out.println("Ngày giờ nhập không hợp lệ. Vui lòng thử lại.");
             }
         }
 
-        return date;
+        return dateTime;
     }
 
     private static int getIntInput(String prompt) {

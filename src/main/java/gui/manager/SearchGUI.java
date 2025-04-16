@@ -87,7 +87,7 @@ public class SearchGUI extends javax.swing.JPanel {
 
     private void loadEmployees() {
         cbbStaff.addItem("Chọn nhân viên");
-        List<EmployeeEntity> employees = empBUS.getListEmployeeActive("True");
+        List<EmployeeEntity> employees = empBUS.getListEmployeeActive();
         for (EmployeeEntity employee : employees) {
             cbbStaff.addItem(employee.getFullname());
         }

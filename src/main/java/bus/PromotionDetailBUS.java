@@ -52,11 +52,11 @@ public class PromotionDetailBUS implements BaseBUS<PromotionDetailEntity, Promot
         return promotionDetailDAL.findAll();
     }
     
-    public PromotionDetailEntity getTopDiscountPercentageOnItem(double totalPrice, ItemEntity it) {
-        Optional<PromotionDetailEntity> optionalPromotionDetail = promotionDetailDAL.getTopDiscountPercentageOnItem(totalPrice, it);
-        return optionalPromotionDetail.orElse(null);
-    }
-    public boolean deleteEntitiesByPromotionId(String promotionId) {
-        return promotionDetailDAL.deleteEntitiesByPromotionId(promotionId);
-    }
+//    public PromotionDetailEntity getTopDiscountPercentageOnItem(double totalPrice, ItemEntity it) {
+//        Optional<PromotionDetailEntity> optionalPromotionDetail = promotionDetailDAL.getTopDiscountPercentageOnItem(totalPrice, it);
+//        return optionalPromotionDetail.orElse(null);
+//    }
+//    public boolean deleteEntitiesByPromotionId(String promotionId) {
+//        return promotionDetailDAL.deleteEntitiesByPromotionId(promotionId);
+//    }
 }
