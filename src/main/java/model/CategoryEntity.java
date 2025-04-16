@@ -1,8 +1,10 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /*
  * @description: CategoryEntity
@@ -42,6 +44,16 @@ public class CategoryEntity extends BaseEntity{
         this.description = description;
         this.active = active;
         setName(name);
+    }
+    
+    public CategoryEntity(String categoryId) {
+        setCategoryId(categoryId);
+    }
+
+    public CategoryEntity(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.active = true;
     }
 
     public void setName(String name) throws Exception {

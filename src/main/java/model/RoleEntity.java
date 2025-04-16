@@ -1,7 +1,7 @@
 package model;
 
-
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
 
 @Entity
@@ -11,9 +11,10 @@ import lombok.*;
 @Table(name = "roles")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
-        @NamedQuery(name = "RoleEntity.findAll", query = "select r from RoleEntity r")
+    @NamedQuery(name = "RoleEntity.findAll", query = "select r from RoleEntity r")
 })
 public class RoleEntity {
+
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "role_id", columnDefinition = "nvarchar(50)")
@@ -21,5 +22,13 @@ public class RoleEntity {
 
     @Column(name = "role_name", nullable = false)
     private String roleName;
+    
+    public RoleEntity(String roleName) {
+        this.roleName = roleName;
+    }
 
+    public RoleEntity(String roleId, String roleName, LocalDate createdDate) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
 }

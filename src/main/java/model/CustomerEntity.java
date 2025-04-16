@@ -11,7 +11,11 @@ import org.hibernate.query.Order;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -50,6 +54,32 @@ public class CustomerEntity extends BaseEntity{
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
+
+    public CustomerEntity(String name, String email, String phone, Address address, LocalDateTime dayOfBirth) {
+        setName(name);
+        setEmail(email);
+        setPhone(phone);
+//        setAddress(address);
+        setDayOfBirth(dayOfBirth);
+        setCustomerLevel(CustomerLevelEnum.NEW);
+    }
+    
+    public CustomerEntity(String customerId) {
+        setCustomerId(customerId);
+    }
+
+    public CustomerEntity(String customerId, String name, String email, String phoneNumber, Address address, LocalDateTime createdDate, LocalDateTime dayOfBirth, Set<OrderEntity> orders, int rewardedPoint, CustomerLevelEnum levelCustomer) {
+        setCustomerId(customerId);
+        setName(name);
+        setEmail(email);
+        setPhone(phoneNumber);
+        setAddress(address);
+        setCreatedDate(createdDate);
+        setDayOfBirth(dayOfBirth);
+        setOrders(orders);
+        this.rewardedPoint = rewardedPoint;
+        setCustomerLevel(levelCustomer);
+    }
 
     public int getRewardedPoint() {
         if (orders == null || orders.isEmpty()) {

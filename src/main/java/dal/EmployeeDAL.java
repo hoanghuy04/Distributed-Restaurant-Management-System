@@ -1,59 +1,73 @@
 package dal;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import model.EmployeeEntity;
-import model.OrderDetailEntity;
-import model.OrderEntity;
-import model.PromotionEntity;
-import org.hibernate.query.Order;
-import util.IDGeneratorUtil;
-
-import java.time.LocalDate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import util.IDGeneratorUtility;
 
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
-    private EntityManager entityManager;
-    @Override
-    public boolean insert(EmployeeEntity employeeEntity) {
-        employeeEntity.setEmployeeId(IDGeneratorUtil.generateIDWithCreatedDate("Emp", "employees", "employee_id"
-                , "created_date", entityManager, LocalDateTime.now()));
-        return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(employeeEntity));
+public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
+
+    private EntityManager em;
+
+    public EmployeeDAL(EntityManager em) {
+        this.em = em;
     }
 
-    @Override
-    public boolean update(EmployeeEntity employeeEntity) {
-        return BaseDAL.executeTransaction(entityManager, () -> entityManager.merge(employeeEntity));
+    private EntityTransaction getEntityTransaction() {
+        return em.getTransaction();
     }
 
-    @Override
-    public boolean deleteById(String s) {
-        EmployeeEntity employeeEntity = entityManager.find(EmployeeEntity.class, s);
-        if (employeeEntity != null) {
-            return BaseDAL.executeTransaction(entityManager, () -> entityManager.remove(employeeEntity));
+    private boolean executeTransaction(Runnable action) {
+        EntityTransaction et = getEntityTransaction();
+
+        try {
+            et.begin();
+            action.run();
+            et.commit();
+            return true;
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
         }
         return false;
     }
 
     @Override
-    public Optional<EmployeeEntity> findById(String s) {
-        return Optional.ofNullable(entityManager.find(EmployeeEntity.class, s));
+    public boolean insert(EmployeeEntity t) {
+        t.setEmployeeId(IDGeneratorUtility.generateIDWithCreatedDate("Emp", "employees", "employee_id", "created_date", em, LocalDateTime.now()));
+        return executeTransaction(() -> em.persist(t));
+    }
+
+    @Override
+    public boolean update(EmployeeEntity t) {
+        return executeTransaction(() -> em.merge(t));
+    }
+
+    @Override
+    public boolean deleteById(String id) {
+        return false;
+    }
+
+    @Override
+    public Optional<EmployeeEntity> findById(String id) {
+        return Optional.ofNullable(em.find(EmployeeEntity.class, id));
     }
 
     @Override
     public List<EmployeeEntity> findAll() {
-        return entityManager.createNamedQuery("EmployeeEntity.findAll", EmployeeEntity.class).getResultList();
+        return em.createNamedQuery("EmployeeEntity.findAll", EmployeeEntity.class).getResultList();
     }
 
     public Optional<EmployeeEntity> findByEmail(String email) {
         try {
-            EmployeeEntity result = entityManager.createNamedQuery("EmployeeEntity.findByEmail", EmployeeEntity.class)
+            EmployeeEntity result = em.createNamedQuery("EmployeeEntity.findByEmail", EmployeeEntity.class)
                     .setParameter("email", "%" + email + "%")
                     .getSingleResult();
             return Optional.of(result);
@@ -64,26 +78,23 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
 
     public boolean deleteEmployeesByRole(String roleId) {
 
-        return BaseDAL.executeTransaction(entityManager, () -> {
+        return BaseDAL.executeTransaction(em, () -> {
             // Tìm tất cả các Employee có roleId tương ứng
-            List<EmployeeEntity> employees = entityManager.createQuery(
-                            "SELECT e FROM EmployeeEntity e WHERE e.role.roleId = :roleId", EmployeeEntity.class)
+            List<EmployeeEntity> employees = em.createQuery(
+                    "SELECT e FROM EmployeeEntity e WHERE e.role.roleId = :roleId", EmployeeEntity.class)
                     .setParameter("roleId", roleId)
                     .getResultList();
 
-
-
             // Xóa từng Employee tìm thấy
             for (EmployeeEntity employee : employees) {
-                entityManager.remove(employee);
+                em.remove(employee);
             }
         });
     }
 
-
     public Optional<EmployeeEntity> findByPhoneNumber(String phoneNumber) {
         try {
-            EmployeeEntity result = entityManager.createNamedQuery("EmployeeEntity.findByPhoneNumber", EmployeeEntity.class)
+            EmployeeEntity result = em.createNamedQuery("EmployeeEntity.findByPhoneNumber", EmployeeEntity.class)
                     .setParameter("phoneNumber", "%" + phoneNumber + "%")
                     .getSingleResult();
             return Optional.of(result);
@@ -91,4 +102,72 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String>{
             return Optional.empty();
         }
     }
+
+    public List<EmployeeEntity> getListEmployeeActive(String active) {
+        String sql = "select e.* from employees e where e.active = 'True' ";
+
+        Query q = em.createNativeQuery(sql, EmployeeEntity.class);
+
+        return q.getResultList();
+    }
+
+    public EmployeeEntity checkLogin(String username, String password) {
+        String sql = "select e.* from employees e where e.employee_id = ?1 AND e.password = ?2 ";
+
+        Query q = em.createNativeQuery(sql, EmployeeEntity.class);
+
+        q.setParameter(1, username);
+        q.setParameter(2, password);
+        try {
+            return (EmployeeEntity) q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+
+    }
+
+    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active) {
+        List<EmployeeEntity> Employees = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM employees WHERE 1=1");
+        List<Object> parameters = new ArrayList<>();
+
+        if (name != null && !name.trim().isEmpty()) {
+            queryBuilder.append(" AND fullname LIKE ?");
+            parameters.add("%" + name + "%");
+        }
+        if (phone != null && !phone.trim().isEmpty()) {
+            queryBuilder.append(" AND phone_number LIKE ?");
+            parameters.add("%" + phone + "%");
+        }
+        if (address != null && !address.trim().isEmpty()) {
+            queryBuilder.append(" AND address LIKE ?");
+            parameters.add("%" + address + "%");
+        }
+        if (email != null && !email.trim().isEmpty()) {
+            queryBuilder.append(" AND email LIKE ?");
+            parameters.add("%" + email + "%");
+        }
+        if (pass != null && !pass.trim().isEmpty()) {
+            queryBuilder.append(" AND password LIKE ?");
+            parameters.add("%" + pass + "%");
+        }
+        if (roleId != null && !roleId.trim().isEmpty()) {
+            queryBuilder.append(" AND role_id = ?");
+            parameters.add(roleId);
+        }
+        queryBuilder.append(" AND active = ?");
+        parameters.add(active);
+
+        Query query = em.createNativeQuery(queryBuilder.toString(), EmployeeEntity.class);
+
+        // Thiết lập các tham số cho truy vấn
+        for (int i = 0; i < parameters.size(); i++) {
+            query.setParameter(i + 1, parameters.get(i));
+        }
+
+        Employees = query.getResultList();
+
+        return Employees;
+    }
+
 }

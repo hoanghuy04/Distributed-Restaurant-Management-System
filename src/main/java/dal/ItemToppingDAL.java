@@ -1,43 +1,74 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package dal;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import lombok.AllArgsConstructor;
 import model.ItemEntity;
 import model.ItemToppingEntity;
+import model.ItemToppingId;
 import model.ToppingEntity;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
-/*
- * @description: ItemToppingDAL
- * @author: Trần Ngọc Huyền
- * @date: 1/18/2025
- * @version: 1.0
+/**
+ *
+ * @author Trần Ngọc Huyền
  */
-@AllArgsConstructor
-public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, String>{
+public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, ItemToppingId> {
+
     private EntityManager em;
 
-    @Override
-    public boolean insert(ItemToppingEntity itemToppingEntity) {
-        return BaseDAL.executeTransaction(em, () -> em.persist(itemToppingEntity));
+    public ItemToppingDAL(EntityManager em) {
+        this.em = em;
     }
 
-    @Override
-    public boolean update(ItemToppingEntity itemToppingEntity) {
-        return BaseDAL.executeTransaction(em, () -> em.merge(itemToppingEntity));
+    private EntityTransaction getTransaction() {
+        return this.em.getTransaction();
     }
 
-    @Override
-    public boolean deleteById(String s) {
+    private boolean executeTransaction(Runnable action) {
+        EntityTransaction et = this.getTransaction();
+        try {
+            et.begin();
+            action.run();
+            et.commit();
+            return true;
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
+        }
         return false;
     }
 
     @Override
-    public Optional<ItemToppingEntity> findById(String s) {
-        return Optional.empty();
+    public boolean insert(ItemToppingEntity t) {
+        return executeTransaction(() -> em.persist(t));
+    }
+
+    @Override
+    public boolean update(ItemToppingEntity t) {
+        return executeTransaction(() -> em.merge(t));
+    }
+
+    @Override
+    public boolean deleteById(ItemToppingId id) {
+        return executeTransaction(() -> {
+            ItemToppingEntity entity = em.find(ItemToppingEntity.class, id);
+            if (entity != null) {
+                em.remove(entity);
+            }
+        });
+    }
+
+    @Override
+    public Optional<ItemToppingEntity> findById(ItemToppingId id) {
+        return Optional.ofNullable(em.find(ItemToppingEntity.class, id));
     }
 
     @Override
@@ -45,6 +76,19 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, String>{
         return em.createNamedQuery("ItemToppingEntity.findAll", ItemToppingEntity.class).getResultList();
     }
 
+    public Optional<ItemToppingEntity> findByItemAndToppingId(ItemEntity item, ToppingEntity topping) {
+        String sql = "select * from item_toppings "
+                + "where item_id = ?1 and topping_id = ?2 ";
+        Query q = em.createNativeQuery(sql.toString(), ItemToppingEntity.class);
+        q.setParameter(1, item.getItemId());
+        q.setParameter(2, topping.getToppingId());
+        try {
+            return Optional.ofNullable((ItemToppingEntity) q.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+    
     public Optional<ItemToppingEntity> findByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
         try {
             ItemToppingEntity result = em.createNamedQuery("ItemToppingEntity.findByItemAndTopping", ItemToppingEntity.class)
