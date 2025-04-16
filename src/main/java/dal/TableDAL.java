@@ -55,8 +55,8 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
     }
 
     @Override
-    public Optional<TableEntity> findById(String id) {
-        return Optional.ofNullable(em.find(TableEntity.class, id));
+    public TableEntity findById(String id) {
+        return em.find(TableEntity.class, id);
     }
 
     @Override

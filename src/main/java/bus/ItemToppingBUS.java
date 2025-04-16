@@ -42,8 +42,8 @@ public class ItemToppingBUS implements BaseBUS<ItemToppingEntity, ItemToppingId>
 
     @Override
     public ItemToppingEntity getEntityById(ItemToppingId id) {
-        Optional<ItemToppingEntity> optionalItemTopping = itemToppingDAL.findById(id);
-        return optionalItemTopping.orElse(null); // Trả về null nếu không tìm thấy
+        ItemToppingEntity itemTopping = itemToppingDAL.findById(id);
+        return itemTopping == null ? null : itemTopping;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ItemToppingBUS implements BaseBUS<ItemToppingEntity, ItemToppingId>
     }
     
     public ItemToppingEntity findByItemAndToppingId(ItemEntity item, ToppingEntity topping) {
-        Optional<ItemToppingEntity> optional = itemToppingDAL.findByItemAndToppingId(item, topping);
-        return optional.orElse(null);
+        ItemToppingEntity itemTopping = itemToppingDAL.findByItemAndToppingId(item, topping);
+        return itemTopping == null ? null : itemTopping;
     }
 }

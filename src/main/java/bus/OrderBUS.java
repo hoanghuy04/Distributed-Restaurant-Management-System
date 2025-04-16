@@ -60,7 +60,7 @@ public class OrderBUS implements BaseBUS<OrderEntity, String> {
 
     @Override
     public OrderEntity getEntityById(String id) {
-        return orderDAL.findById(id).orElse(null);
+        return orderDAL.findById(id);
     }
 
     @Override

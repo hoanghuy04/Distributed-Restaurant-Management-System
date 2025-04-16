@@ -40,8 +40,7 @@ public class TableBUS implements BaseBUS<TableEntity, String> {
 
     @Override
     public TableEntity getEntityById(String id) {
-        Optional<TableEntity> optionalTable = tableDAL.findById(id);
-        return optionalTable.orElse(null); // Return null if not found
+       return tableDAL.findById(id);
     }
 
     @Override

@@ -72,8 +72,8 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity, Promot
     }
 
     @Override
-    public Optional<PromotionDetailEntity> findById(PromotionDetailId id) {
-        return Optional.ofNullable(em.find(PromotionDetailEntity.class, id));
+    public PromotionDetailEntity findById(PromotionDetailId id) {
+        return em.find(PromotionDetailEntity.class, id);
     }
 
     @Override

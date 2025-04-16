@@ -53,8 +53,8 @@ public class FloorDAL implements BaseDAL<FloorEntity, String> {
     }
 
     @Override
-    public Optional<FloorEntity> findById(String id) {
-        return Optional.ofNullable(em.find(FloorEntity.class, id));
+    public FloorEntity findById(String id) {
+        return em.find(FloorEntity.class, id);
     }
 
     @Override

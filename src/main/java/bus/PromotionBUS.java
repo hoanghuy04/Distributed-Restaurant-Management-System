@@ -38,8 +38,7 @@ public class PromotionBUS implements BaseBUS<PromotionEntity, String> {
 
     @Override
     public PromotionEntity getEntityById(String id) {
-        Optional<PromotionEntity> optionalPromotion = promotionDAL.findById(id);
-        return optionalPromotion.orElse(null);
+        return promotionDAL.findById(id);
     }
 
     @Override

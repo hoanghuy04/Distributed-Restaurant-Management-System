@@ -34,8 +34,7 @@ public class RoleBUS implements BaseBUS<RoleEntity, String>{
 
     @Override
     public RoleEntity getEntityById(String id) {
-        Optional<RoleEntity> roleOptional = roleDAL.findById(id);
-        return roleOptional.orElse(null);
+        return roleDAL.findById(id);
     }
 
     @Override

@@ -41,8 +41,8 @@ public class ItemBUS implements BaseBUS<ItemEntity, String> {
 
     @Override
     public ItemEntity getEntityById(String id) {
-        Optional<ItemEntity> optionalItem = itemDAL.findById(id);
-        return optionalItem.orElse(null); // Return null if not found
+        ItemEntity item = itemDAL.findById(id);
+        return item == null ? null : item;
     }
 
     @Override
