@@ -1,0 +1,56 @@
+package bus;
+
+import dal.OrderDetailDAL;
+import model.OrderDetailEntity;
+import model.OrderDetailId;
+import jakarta.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
+
+public class OrderDetailBUS implements BaseBUS<OrderDetailEntity, OrderDetailId> {
+
+    private OrderDetailDAL orderDetailDAL;
+
+    public OrderDetailBUS(EntityManager entityManager) {
+        this.orderDetailDAL = new OrderDetailDAL(entityManager);
+    }
+
+    @Override
+    public boolean insertEntity(OrderDetailEntity orderDetail) {
+        return orderDetailDAL.insert(orderDetail);
+    }
+
+    @Override
+    public boolean updateEntity(OrderDetailEntity orderDetail) {
+        return orderDetailDAL.update(orderDetail);
+    }
+
+    @Override
+    public boolean deleteEntity(OrderDetailId id) {
+        return orderDetailDAL.deleteById(id);
+    }
+
+    @Override
+    public OrderDetailEntity getEntityById(OrderDetailId id) {
+        Optional<OrderDetailEntity> optionalOrderDetail = orderDetailDAL.findById(id);
+        return optionalOrderDetail.orElse(null); // Return null if not found
+    }
+
+    @Override
+    public List<OrderDetailEntity> getAllEntities() {
+        return orderDetailDAL.findAll();
+    }
+
+    public List<OrderDetailEntity> getOrderDetailsByOrderId(String orderId) {
+        return orderDetailDAL.findByOrderId(orderId);
+    }
+
+    public List<OrderDetailEntity> getOrderDetailsByItemId(String itemId) {
+        return orderDetailDAL.findByItemId(itemId);
+    }
+
+//    public Optional<OrderDetailEntity> getOrderDetailByOrderIdAndItemId(String orderId, String itemId) {
+//        return orderDetailDAL.findByOrderIdAndItemId(orderId, itemId);
+//    }
+
+}

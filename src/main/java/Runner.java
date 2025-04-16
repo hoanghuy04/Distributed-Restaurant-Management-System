@@ -105,7 +105,7 @@ public class Runner {
                     break;
                 }
 
-                if (generator.getCategoryDAL().findByName(name).orElse(null) != null) {
+                if (generator.getCategoryDAL().findByName(name) != null) {
                     System.out.println("Tên danh mục bị trùng");
                     break;
                 }

@@ -18,4 +18,13 @@ public enum CustomerLevelEnum {
     public void setCustomerLevel(String customerLevel) {
         this.customerLevel = customerLevel;
     }
+    
+    public static CustomerLevelEnum convertToEnum(String text) {
+        for (CustomerLevelEnum level : CustomerLevelEnum.values()) {
+            if (level.customerLevel.equalsIgnoreCase(text)) {
+                return level;
+            }
+        }
+        throw new IllegalArgumentException("Không tìm thấy LevelCustomer cho: " + text);
+    }
 }

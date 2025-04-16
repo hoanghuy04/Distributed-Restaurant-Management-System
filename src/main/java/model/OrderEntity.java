@@ -5,6 +5,7 @@
  */
 package model;
 
+import common.Constants;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,8 @@ import util.CombinedTableConverterUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,9 +33,10 @@ import java.util.Set;
 @Table(name = "orders")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-        @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
+    @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
 })
 public class OrderEntity extends BaseEntity {
+
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "order_id", columnDefinition = "nvarchar(50)")
@@ -108,11 +112,71 @@ public class OrderEntity extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderDetailEntity> orderDetails;
 
-
     @Override
     @Column(name = "order_date", nullable = false, updatable = false)
     public LocalDateTime getCreatedDate() {
         return super.getCreatedDate();
+    }
+
+    public OrderEntity() {
+        this.reservationTime = LocalDateTime.now();
+        this.expectedCompletionTime = LocalDateTime.now().plusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES);
+        this.orderStatus = OrderStatusEnum.SINGLE;
+        this.orderType = OrderTypeEnum.IMMEDIATE;
+        this.paymentStatus = PaymentStatusEnum.UNPAID;
+        this.paymentMethod = PaymentMethodEnum.CASH;
+        this.reservationStatus = ReservationStatusEnum.RECEIVED;
+        this.orderDetails = new HashSet<>();
+        this.combinedTables = new ArrayList<>();
+    }
+
+    public OrderEntity(String orderId) {
+        setOrderId(orderId);
+        this.reservationTime = LocalDateTime.now();
+    }
+
+    public OrderEntity(LocalDateTime reservationTime, LocalDateTime expectedCompletionTime, int numberOfCustomer, double deposit,
+            CustomerEntity customer, EmployeeEntity employee, TableEntity table, OrderStatusEnum orderStatus, OrderTypeEnum orderType,
+            PaymentMethodEnum paymentMethod, PaymentStatusEnum paymentStatus, ReservationStatusEnum reservationStatus, HashSet<OrderDetailEntity> orderDetails, List<TableEntity> listOfCombinedTable) {
+        this.reservationTime = reservationTime;
+        this.expectedCompletionTime = expectedCompletionTime;
+        this.numberOfCustomer = numberOfCustomer;
+        this.deposit = deposit;
+        this.customer = customer;
+        this.employee = employee;
+        this.table = table;
+        this.orderStatus = orderStatus;
+        this.orderType = orderType;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+        this.reservationStatus = reservationStatus;
+        this.orderDetails = orderDetails;
+        this.combinedTables = listOfCombinedTable;
+    }
+
+    public OrderEntity(String orderId, LocalDateTime orderDate, LocalDateTime reservationTime, LocalDateTime expectedCompletionTime, double totalPrice, double totalDiscount,
+            double totalPaid, int numberOfCustomer, double deposit, CustomerEntity customer, EmployeeEntity employee, TableEntity table,
+            PromotionEntity promotion, OrderStatusEnum orderStatus, OrderTypeEnum orderType, ReservationStatusEnum reservationStatus, PaymentMethodEnum paymentMethod,
+            PaymentStatusEnum paymentStatus, HashSet<OrderDetailEntity> orderDetails, List<TableEntity> listOfCombinedTable) {
+        setOrderId(orderId);
+        this.reservationTime = reservationTime;
+        this.expectedCompletionTime = expectedCompletionTime;
+        this.totalPrice = totalPrice;
+        this.totalDiscount = totalDiscount;
+        this.totalPaid = totalPaid;
+        this.numberOfCustomer = numberOfCustomer;
+        this.deposit = deposit;
+        this.customer = customer;
+        this.employee = employee;
+        this.table = table;
+        this.promotion = promotion;
+        this.orderStatus = orderStatus;
+        this.orderType = orderType;
+        this.paymentMethod = paymentMethod;
+        this.reservationStatus = reservationStatus;
+        this.paymentStatus = paymentStatus;
+        this.orderDetails = orderDetails;
+        this.combinedTables = listOfCombinedTable;
     }
 
     public void setTotalPrice() {

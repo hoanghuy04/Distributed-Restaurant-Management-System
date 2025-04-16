@@ -8,6 +8,7 @@ import model.enums.PromotionTypeEnum;
 import util.CustomerLevelConverter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promotions")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @NamedQueries({
         @NamedQuery(name = "PromotionEntity.findAll", query = "select p from PromotionEntity p")
 })
@@ -61,6 +62,35 @@ public class PromotionEntity extends BaseEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "promotion")
     private Set<PromotionDetailEntity> promotionDetails;
+    
+    public PromotionEntity(String description, double discountPercentage, LocalDate startedDate, LocalDate endedDate,
+            boolean active, Set<PromotionDetailEntity> promotionDetails, List<CustomerLevelEnum> applicableCustomerLevels, PromotionTypeEnum promotionType, double minPrice) {
+        this.description = description;
+        this.discountPercentage = discountPercentage;
+        this.startedDate = startedDate;
+        this.endedDate = endedDate;
+        this.active = active;
+        this.promotionDetails = promotionDetails;
+        this.customerLevels = applicableCustomerLevels;
+        this.promotionType = promotionType;
+        this.minPrice = minPrice;
+    }
+
+    public PromotionEntity(String promotionId, String description, double discountPercentage, double minPrice, LocalDate startedDate,
+            LocalDate endedDate, boolean active, LocalDateTime creatededDate, List<OrderEntity> orders, Set<PromotionDetailEntity> promotionDetails, 
+            List<CustomerLevelEnum> applicableCustomerLevels, PromotionTypeEnum promotionType) {
+        this.promotionId = promotionId;
+        this.description = description;
+        this.discountPercentage = discountPercentage;
+        this.minPrice = minPrice;
+        this.startedDate = startedDate;
+        this.endedDate = endedDate;
+        this.active = active;
+        this.orders = orders;
+        this.promotionDetails = promotionDetails;
+        this.customerLevels = applicableCustomerLevels;
+        this.promotionType = promotionType;
+    }
 
 //    @ManyToOne
 //    @MapsId("itemId")

@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /*
  * @description:
@@ -16,8 +17,9 @@ import lombok.Getter;
  * @date: 1/16/2025
  * @version: 1.0
  */
+
+@NoArgsConstructor
 @Data
-@Getter
 @Entity
 @Table(name = "order_details")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -61,15 +63,29 @@ public class OrderDetailEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "nvarchar(50)")
     private String description;
 
+    public OrderDetailEntity(int quantity, String description, ItemEntity item, OrderEntity order, ToppingEntity topping) {
+        this.quantity = quantity;
+        this.item = item;
+        this.order = order;
+        this.topping = topping;
+        setDescription(description);
+        setLineTotal();
+        setDiscount();
+    }
+
 
     public void setLineTotal() {
-        this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
+        if(this.item != null && this.topping != null) {
+            this.lineTotal = (item.getSellingPrice() + topping.getItemToppings()
                 .stream()
                 .filter(x -> {
                     return x.getItem().equals(item) && x.getTopping().getToppingId().equals(topping.getToppingId());
                 })
                 .mapToDouble(x -> x.getSellingPrice())
                 .sum()) * quantity;
+        } else {
+            this.lineTotal = 0;
+        }
     }
 
 

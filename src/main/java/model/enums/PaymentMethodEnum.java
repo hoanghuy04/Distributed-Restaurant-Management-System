@@ -14,4 +14,12 @@ public enum PaymentMethodEnum {
     public String getPaymentMethod() {
         return paymentMethod;
     }
+    public static PaymentMethodEnum convertToEnum(String pMethod) {
+        for (PaymentMethodEnum paymentMethod : PaymentMethodEnum.values()) {
+            if (paymentMethod.getPaymentMethod().equalsIgnoreCase(pMethod)) {
+                return paymentMethod;
+            }
+        }
+        throw new IllegalArgumentException("Phương thức " + pMethod + " không tồn tại!");
+    }
 }

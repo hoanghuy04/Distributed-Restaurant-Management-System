@@ -11,7 +11,6 @@ package model;
  * @date: 1/17/2025
  * @version: 1.0
  */
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,17 +19,20 @@ import model.enums.SizeEnum;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Data
 @Entity
 @Table(name = "items")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-        @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
-        @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
-        @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
+    @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
+    @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
+    @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
 })
 public class ItemEntity extends BaseEntity {
+
     @Id
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include
@@ -72,7 +74,6 @@ public class ItemEntity extends BaseEntity {
     @OneToMany(mappedBy = "item")
     private Set<PromotionDetailEntity> promotionDetailEntities;
 
-
     @ToString.Exclude
     @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<ItemToppingEntity> itemToppings = new HashSet<>();
@@ -86,8 +87,8 @@ public class ItemEntity extends BaseEntity {
     }
 
     public ItemEntity(String itemId, String name, double costPrice,
-                      int stockQuantity, String description, String img, boolean active,
-                      SizeEnum size, CategoryEntity category, Set<ItemToppingEntity> itemToppings) throws Exception {
+            int stockQuantity, String description, String img, boolean active,
+            SizeEnum size, CategoryEntity category, Set<ItemToppingEntity> itemToppings) throws Exception {
         this.itemId = itemId;
         this.description = description;
         this.img = img;
@@ -99,6 +100,41 @@ public class ItemEntity extends BaseEntity {
         setStockQuantity(stockQuantity);
         setName(name);
         setSellingPrice();
+    }
+
+    public ItemEntity(String itemId) {
+        setItemId(itemId);
+    }
+
+    public ItemEntity(String name, double costPrice, int stockQuantity, String description, boolean active, CategoryEntity category, String img) {
+        try {
+            setName(name);
+            setCostPrice(costPrice);
+            setStockQuantity(stockQuantity);
+            setDescription(description);
+            setActive(active);
+            setCategory(category);
+            setImg(img);
+            setSellingPrice();
+        } catch (Exception ex) {
+            Logger.getLogger(ItemEntity.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ItemEntity(String name, double costPrice, int stockQuantity, String description, boolean active, CategoryEntity category, SizeEnum size, String img) {
+        this(name, costPrice, stockQuantity, description, active, category, img);
+        this.size = size;
+        setSellingPrice();
+    }
+
+    public ItemEntity(String itemId, String name, double costPrice, int stockQuantity, String description, boolean active, double sellingPrice, CategoryEntity category, String img) {
+        setItemId(itemId);
+        this.name = name;
+        this.costPrice = costPrice;
+        this.stockQuantity = stockQuantity;
+        this.description = description;
+        this.active = active;
+        this.sellingPrice = sellingPrice;
     }
 
     public void setSellingPrice() {
@@ -121,16 +157,22 @@ public class ItemEntity extends BaseEntity {
     }
 
     public void setCostPrice(double costPrice) {
-        if (costPrice < 0)
+        if (costPrice < 0) {
             this.costPrice = 0;
-        else
+        } else {
             this.costPrice = costPrice;
+        }
     }
 
     public void setStockQuantity(int stockQuantity) {
-        if (stockQuantity < 0)
+        if (stockQuantity < 0) {
             this.stockQuantity = 0;
-        else
+        } else {
             this.stockQuantity = stockQuantity;
+        }
+    }
+
+    public double getTopDiscountPercentage() {
+        return 0;
     }
 }
