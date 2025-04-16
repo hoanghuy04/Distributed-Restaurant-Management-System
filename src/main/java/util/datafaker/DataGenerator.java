@@ -154,13 +154,13 @@ public class DataGenerator {
     // EmployeEntity
     public EmployeeEntity generateEmployeeEntity() {
         EmployeeEntity employee = new EmployeeEntity();
-        employee.setPassword(faker.internet().password(8, 16));
+        employee.setPassword("123");
         employee.setFullname(faker.name().fullName());
         employee.setPhoneNumber(generateVietnamesePhoneNumber());
         employee.setEmail(faker.internet().emailAddress());
         employee.setAddress(generateAddress());
         employee.setActive(faker.bool().bool());
-        employee.setRole(generateRoleEntity());
+        System.out.println(employee.getRole());
 
         List<RoleEntity> roles = roleDAL.findAll();
         employee.setRole(roles.isEmpty() ? null : roles.get(rand.nextInt(roles.size())));
@@ -172,7 +172,7 @@ public class DataGenerator {
         RoleEntity roleEntity = new RoleEntity();
         Random random = new Random();
 
-        List<String> roles = new ArrayList<>(Arrays.asList("Manager", "Chef", "Waiter", "Bartender", "Dishwasher"));
+        List<String> roles = new ArrayList<>(Arrays.asList("MANAGER", "STAFF"));
         List<String> currRoles = new ArrayList<>();
         if (roleDAL.findAll().size() > 0) {
             roleDAL.findAll().stream().forEach(role -> currRoles.add(role.getRoleName()));
@@ -307,6 +307,7 @@ public class DataGenerator {
         // Lấy customer ngẫu nhiên
         List<CustomerEntity> customers = customerDAL.findAll();
         order.setCustomer(customers.isEmpty() ? null : customers.get(rand.nextInt(customers.size())));
+        
 
         // Lấy employee ngẫu nhiên
         List<EmployeeEntity> employees = employeeDAL.findAll();
@@ -415,6 +416,10 @@ public class DataGenerator {
                 }
             }
         }
+        
+        //Role entity
+        roleDAL.insert(new RoleEntity("R0001", "MANAGER", LocalDate.now()));
+        roleDAL.insert(new RoleEntity("R0002", "MANAGER", LocalDate.now()));
 
         //Employee entity
         for (int i = 0; i < 10; i++) {

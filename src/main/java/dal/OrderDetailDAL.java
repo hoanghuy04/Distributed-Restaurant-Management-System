@@ -1,66 +1,77 @@
-/*
- * @ (#) OrderDetailDAL.java      1.0      1/18/2025
- *
- * Copyright (c) 2025 IUH. ALL rights reserved.
- */
 package dal;
 
+import model.OrderDetailId;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import model.ItemEntity;
 import model.OrderDetailEntity;
-import model.PromotionEntity;
 import model.ToppingEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-/*
- * @description:
- * @author: Hoang Huy
- * @date: 1/18/2025
- * @version: 1.0
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
-    private EntityManager entityManager;
+public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId> {
 
-    @Override
-    public boolean insert(OrderDetailEntity orderDetailEntity) {
-        return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(orderDetailEntity));
+    private EntityManager em;
+
+    public OrderDetailDAL(EntityManager em) {
+        this.em = em;
+    }
+
+    private EntityTransaction getEntityTransaction() {
+        return em.getTransaction();
+    }
+
+    private boolean executeTransaction(Runnable action) {
+        EntityTransaction et = getEntityTransaction();
+
+        try {
+            et.begin();
+            action.run();
+            et.commit();
+            return true;
+        } catch (Exception e) {
+            if (et.isActive()) {
+                et.rollback();
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean update(OrderDetailEntity orderDetailEntity) {
-        return BaseDAL.executeTransaction(entityManager, () -> entityManager.persist(orderDetailEntity));
+    public boolean insert(OrderDetailEntity t) {
+        return executeTransaction(() -> em.persist(t));
     }
 
     @Override
-    public boolean deleteById(String s) {
-        return BaseDAL.executeTransaction(entityManager, () -> {
-            OrderDetailEntity entity = entityManager.find(OrderDetailEntity.class, s);
+    public boolean update(OrderDetailEntity t) {
+        return executeTransaction(() -> em.merge(t));
+    }
+
+    @Override
+    public boolean deleteById(OrderDetailId id) {
+        return executeTransaction(() -> {
+            OrderDetailEntity entity = em.find(OrderDetailEntity.class, id);
             if (entity != null) {
-                entityManager.remove(entity);
+                em.remove(entity);
             }
         });
     }
 
     @Override
-    public Optional<OrderDetailEntity> findById(String s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Optional<OrderDetailEntity> findById(OrderDetailId id) {
+        return Optional.ofNullable(em.find(OrderDetailEntity.class, id));
     }
 
     @Override
     public List<OrderDetailEntity> findAll() {
-        return entityManager.createNamedQuery("OrderDetailEntity.findAll", OrderDetailEntity.class).getResultList();
+        return em.createNamedQuery("OrderDetailEntity.findAll", OrderDetailEntity.class).getResultList();
     }
 
     public Optional<OrderDetailEntity> findById(String orderId, String itemId, String toppingId) {
         try {
-            OrderDetailEntity result = entityManager.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
+            OrderDetailEntity result = em.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
                     .setParameter("orderId", orderId)
                     .setParameter("itemId", itemId)
                     .setParameter("toppingId", toppingId)
@@ -72,13 +83,13 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
     }
 
     public List<OrderDetailEntity> findByOrderId(String orderId) {
-        return entityManager.createNamedQuery("OrderDetailEntity.findByOrderId", OrderDetailEntity.class)
+        return em.createNamedQuery("OrderDetailEntity.findByOrderId", OrderDetailEntity.class)
                 .setParameter("orderId", orderId)
                 .getResultList();
     }
 
     public boolean deleteByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
-        return BaseDAL.executeTransaction(entityManager, () -> {
+        return BaseDAL.executeTransaction(em, () -> {
             StringBuilder jpql = new StringBuilder("delete from OrderDetailEntity it where 1=1");
             if (itemEntity != null) {
                 jpql.append(" and it.item.itemId = :itemId");
@@ -86,7 +97,7 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
             if (toppingEntity != null) {
                 jpql.append(" and it.topping.toppingId = :toppingId");
             }
-            Query query = entityManager.createQuery(jpql.toString());
+            Query query = em.createQuery(jpql.toString());
             if (itemEntity != null) {
                 query.setParameter("itemId", itemEntity.getItemId());
             }
@@ -96,4 +107,17 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, String> {
             query.executeUpdate();
         });
     }
+
+    public List<OrderDetailEntity> findByItemId(String itemId) {
+        return em.createNamedQuery("OrderDetail.findByItemId", OrderDetailEntity.class)
+                .setParameter("itemId", itemId)
+                .getResultList();
+    }
+
+//    public List<OrderDetailEntity> findByOrderIdAndItemId(String orderId, String itemId) {
+//        return em.createNamedQuery("OrderDetail.findByOrderIdAndItemId", OrderDetailEntity.class)
+//                 .setParameter("orderId", orderId)
+//                 .setParameter("itemId", itemId)
+//                 .getResultList();
+//    }
 }
