@@ -18,7 +18,6 @@ import model.enums.TableStatusEnum;
 
 /**
  *
- * @author Trần Ngọc Huyền ..
  */
 public class MainHuyen {
 

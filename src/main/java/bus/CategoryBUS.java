@@ -47,7 +47,7 @@ public class CategoryBUS implements BaseBUS<CategoryEntity, String>{
     }
     
     public CategoryEntity findByName(String name) {
-        return categoryDAL.findByName(name);
+        return categoryDAL.findByName(name).orElse(null);
     }
     
     public List<CategoryEntity> getTablesWithKeyword(String scrip, String name, boolean active) {
