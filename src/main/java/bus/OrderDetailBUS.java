@@ -40,17 +40,4 @@ public class OrderDetailBUS implements BaseBUS<OrderDetailEntity, OrderDetailId>
     public List<OrderDetailEntity> getAllEntities() {
         return orderDetailDAL.findAll();
     }
-
-    public List<OrderDetailEntity> getOrderDetailsByOrderId(String orderId) {
-        return orderDetailDAL.findByOrderId(orderId);
-    }
-
-    public List<OrderDetailEntity> getOrderDetailsByItemId(String itemId) {
-        return orderDetailDAL.findByItemId(itemId);
-    }
-
-//    public Optional<OrderDetailEntity> getOrderDetailByOrderIdAndItemId(String orderId, String itemId) {
-//        return orderDetailDAL.findByOrderIdAndItemId(orderId, itemId);
-//    }
-
 }

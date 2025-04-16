@@ -77,7 +77,7 @@ public class OrderBUS implements BaseBUS<OrderEntity, String> {
     }
 
     public List<OrderEntity> getReservationsByOption(String option) {
-        List<OrderEntity> reservations = orderDAL.getReservationsbyOption(option);
+        List<OrderEntity> reservations = orderDAL.getReservationsByOption(option);
         SortOrderByReservaionTimeUtil.sortAscByFloorAndTableId(reservations);
         return reservations;
     }
@@ -123,13 +123,13 @@ public class OrderBUS implements BaseBUS<OrderEntity, String> {
                 .count();
     }
     public double getRevenueByYear(int year) {
-        return orderDAL.getOrdersbyYear(year).stream()
+        return orderDAL.getOrdersByYear(year).stream()
                 .mapToDouble(x -> x.getTotalPaid() + x.getDeposit())
                 .sum();
     }
 
     public double getCapitalByYear(int year) {
-        return orderDAL.getOrdersbyYear(year).stream()
+        return orderDAL.getOrdersByYear(year).stream()
                 .flatMap(o -> o.getOrderDetails().stream())
                 .mapToDouble(od -> (od.getItem().getCostPrice() + od.getTopping().getCostPrice())*od.getQuantity())
                 .sum();

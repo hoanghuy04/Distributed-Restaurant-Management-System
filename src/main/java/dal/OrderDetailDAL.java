@@ -1,5 +1,6 @@
 package dal;
 
+import dal.connectDB.ConnectDB;
 import model.OrderDetailId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId> {
 
     private EntityManager em;
+
+    //default constructor
+    public OrderDetailDAL() {
+        this.em = ConnectDB.getEntityManager();
+    }
 
     public OrderDetailDAL(EntityManager em) {
         this.em = em;
@@ -107,17 +113,4 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
             query.executeUpdate();
         });
     }
-
-    public List<OrderDetailEntity> findByItemId(String itemId) {
-        return em.createNamedQuery("OrderDetail.findByItemId", OrderDetailEntity.class)
-                .setParameter("itemId", itemId)
-                .getResultList();
-    }
-
-//    public List<OrderDetailEntity> findByOrderIdAndItemId(String orderId, String itemId) {
-//        return em.createNamedQuery("OrderDetail.findByOrderIdAndItemId", OrderDetailEntity.class)
-//                 .setParameter("orderId", orderId)
-//                 .setParameter("itemId", itemId)
-//                 .getResultList();
-//    }
 }
