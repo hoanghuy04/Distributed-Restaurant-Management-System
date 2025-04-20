@@ -75,17 +75,12 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
         return em.createNamedQuery("OrderDetailEntity.findAll", OrderDetailEntity.class).getResultList();
     }
 
-    public Optional<OrderDetailEntity> findById(String orderId, String itemId, String toppingId) {
-        try {
-            OrderDetailEntity result = em.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
+    public OrderDetailEntity findById(String orderId, String itemId, String toppingId) {
+        return em.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
                     .setParameter("orderId", orderId)
                     .setParameter("itemId", itemId)
                     .setParameter("toppingId", toppingId)
                     .getSingleResult();
-            return Optional.of(result);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
     }
 
     public List<OrderDetailEntity> findByOrderId(String orderId) {
