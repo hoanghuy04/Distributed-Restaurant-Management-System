@@ -86,7 +86,8 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
                 + "SELECT o.table.tableId FROM OrderEntity o "
                 + "WHERE o.reservationTime <= :reservationDateTime "
                 + "AND o.expectedCompletionTime >= :reservationDateTime "
-                + "AND o.reservationStatus IN ('PENDING', 'RECEIVED'))";
+                + "AND o.reservationStatus IN ('PENDING', 'RECEIVED') "
+                + " AND o.paymentStatus = 'UNPAID')";
 
         Query query = em.createQuery(jpql, TableEntity.class);
 

@@ -77,13 +77,13 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
                 + "AND CURRENT_DATE BETWEEN p.startedDate AND p.endedDate "
                 + "AND p.minPrice <= :totalPaid "
                 + "AND p.promotionType = :promotionType "
-                + "AND :customerLevel MEMBER OF p.customerLevels "
+                + "AND CONCAT(',', p.customerLevels, ',') LIKE :customerLevel "
                 + "ORDER BY p.discountPercentage DESC";
 
         TypedQuery<PromotionEntity> q = em.createQuery(jpql, PromotionEntity.class);
         q.setParameter("totalPaid", totalPaid);
         q.setParameter("promotionType", PromotionTypeEnum.ORDER);  // Assuming PromotionTypeEnum exists
-        q.setParameter("customerLevel", customerLevelEnum);
+        q.setParameter("customerLevel", customerLevelEnum.name());
         q.setMaxResults(1);
 
         try {
@@ -130,7 +130,7 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         parameters.put("active", active);
 
         Query query = em.createQuery(queryBuilder.toString(), PromotionEntity.class);
-        
+
         // Set parameters
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
@@ -144,7 +144,7 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         ConnectDB.connect();
         EntityManager em = ConnectDB.getEntityManager();
         PromotionDAL promotionDAL = new PromotionDAL(em);
-        List<PromotionEntity> promotions = promotionDAL.getPromotionsWithKeywordfit(LocalDate.of(2025,4,11).atStartOfDay(), null, null, null, null, null, null, true);
+        List<PromotionEntity> promotions = promotionDAL.getPromotionsWithKeywordfit(LocalDate.of(2025, 4, 11).atStartOfDay(), null, null, null, null, null, null, true);
         for (PromotionEntity promotion : promotions) {
             System.out.println(promotion);
         }

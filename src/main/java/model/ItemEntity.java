@@ -18,6 +18,7 @@ import lombok.ToString;
 import model.enums.SizeEnum;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -174,6 +175,13 @@ public class ItemEntity extends BaseEntity implements Serializable {
     }
 
     public double getTopDiscountPercentage() {
-        return 0;
+        return promotionDetails.stream()
+                .filter(x -> x.getPromotion().getStartedDate() != null
+                        && x.getPromotion().getEndedDate() != null
+                        && x.getPromotion().getStartedDate().isBefore(LocalDateTime.now())
+                        && x.getPromotion().getEndedDate().isAfter(LocalDateTime.now()))
+                .mapToDouble(p -> p.getPromotion().getDiscountPercentage())
+                .max()
+                .orElse(0);
     }
 }
