@@ -245,8 +245,8 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
 
     public List<OrderEntity> getListMergedOrder() {
         String jpql = "SELECT o FROM OrderEntity o " +
-                      "WHERE o.paymentStatus = 'UNPAID' " +
-                      "AND size(o.combinedTables) > 0";
+                "WHERE o.paymentStatus = 'UNPAID' " +
+                "AND o.combinedTables IS NOT NULL";
 
         Query query = em.createQuery(jpql, OrderEntity.class);
         return query.getResultList();

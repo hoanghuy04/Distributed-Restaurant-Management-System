@@ -76,7 +76,7 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
     public CustomerEntity findByPhone(String phoneNumber) {
         try {
             return em.createNamedQuery("CustomerEntity.findByPhone", CustomerEntity.class)
-                    .setParameter("phoneNumber", phoneNumber)
+                    .setParameter("phone", phoneNumber)
                     .getSingleResult();
         } catch (Exception e) {
             return null;
