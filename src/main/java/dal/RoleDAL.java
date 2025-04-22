@@ -4,12 +4,12 @@
  */
 package dal;
 
-import model.RoleEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import java.util.List;
-import java.util.Optional;
+import model.RoleEntity;
 import util.IDGeneratorUtility;
+
+import java.util.List;
 
 
 public class RoleDAL implements BaseDAL<RoleEntity, String>{

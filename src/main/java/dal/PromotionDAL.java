@@ -1,22 +1,21 @@
 package dal;
 
 import dal.connectDB.ConnectDB;
-import model.OrderEntity;
-import model.PromotionEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
+import model.PromotionEntity;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 import util.IDGeneratorUtility;
+
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
@@ -75,13 +74,13 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
 
     //NEED FIXING
-    public Optional<PromotionEntity> getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
+    public PromotionEntity getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
         String sql = "select top 1 p.* "
                 + "from promotions p "
                 + "where p.active = 'true' "
                 + "and GETDATE() between started_date and ended_date "
-                + "and min_price <= ?1 "
-                + "and promotion_type = 'ORDER' "
+                + "and p.min_price <= ?1 "
+                + "and p.promotion_type = 'ORDER' "
                 + "and (',' + p.applicable_customer_levels + ',' like '%,' + ?2 + ',%') "
                 + "order by p.discount_rate desc";
 
@@ -90,9 +89,9 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         q.setParameter(2, customerLevelEnum.toString());
 
         try {
-            return Optional.ofNullable((PromotionEntity) q.getSingleResult());
+            return (PromotionEntity) q.getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
