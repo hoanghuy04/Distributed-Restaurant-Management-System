@@ -17,9 +17,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tables")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@NamedQueries({
-        @NamedQuery(name = "TableEntity.findAll", query = "select t from TableEntity t")
-})
 public class TableEntity implements Serializable {
     @Id
     @Column(name = "table_id", columnDefinition = "nvarchar(50)")

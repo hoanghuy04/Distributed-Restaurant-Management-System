@@ -1,22 +1,18 @@
 package dal;
 
 import dal.connectDB.ConnectDB;
-import model.OrderEntity;
+import jakarta.persistence.*;
 import model.PromotionEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 import util.IDGeneratorUtility;
+
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
@@ -75,26 +71,28 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
 
     //NEED FIXING
-    public Optional<PromotionEntity> getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
-        String sql = "select top 1 p.* "
-                + "from promotions p "
-                + "where p.active = 'true' "
-                + "and GETDATE() between started_date and ended_date "
-                + "and min_price <= ?1 "
-                + "and promotion_type = 'ORDER' "
-                + "and (',' + p.applicable_customer_levels + ',' like '%,' + ?2 + ',%') "
-                + "order by p.discount_rate desc";
+    public PromotionEntity getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
+        String jpql = "SELECT p FROM PromotionEntity p "
+                + "WHERE p.active = true "
+                + "AND CURRENT_DATE BETWEEN p.startedDate AND p.endedDate "
+                + "AND p.minPrice <= :totalPaid "
+                + "AND p.promotionType = :promotionType "
+                + "AND :customerLevel MEMBER OF p.customerLevels "
+                + "ORDER BY p.discountPercentage DESC";
 
-        Query q = em.createNativeQuery(sql, PromotionEntity.class);
-        q.setParameter(1, totalPaid);
-        q.setParameter(2, customerLevelEnum.toString());
+        TypedQuery<PromotionEntity> q = em.createQuery(jpql, PromotionEntity.class);
+        q.setParameter("totalPaid", totalPaid);
+        q.setParameter("promotionType", PromotionTypeEnum.ORDER);  // Assuming PromotionTypeEnum exists
+        q.setParameter("customerLevel", customerLevelEnum);
+        q.setMaxResults(1);
 
         try {
-            return Optional.ofNullable((PromotionEntity) q.getSingleResult());
+            return q.getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
     }
+
 
     public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String des, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
         StringBuilder queryBuilder = new StringBuilder("SELECT p FROM PromotionEntity p WHERE 1=1 ");

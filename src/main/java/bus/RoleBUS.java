@@ -5,10 +5,10 @@
 package bus;
 
 import dal.RoleDAL;
-import model.RoleEntity;
 import jakarta.persistence.EntityManager;
+import model.RoleEntity;
+
 import java.util.List;
-import java.util.Optional;
 
 public class RoleBUS implements BaseBUS<RoleEntity, String>{
     private RoleDAL roleDAL;
