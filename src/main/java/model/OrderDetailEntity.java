@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /*
  * @description:
  * @author: Hoang Huy
@@ -31,7 +33,7 @@ import lombok.NoArgsConstructor;
                 query = "SELECT o FROM OrderDetailEntity o WHERE o.order.orderId = :orderId AND o.item.itemId = :itemId AND o.topping.toppingId = :toppingId"
         )
 })
-public class OrderDetailEntity extends BaseEntity {
+public class OrderDetailEntity extends BaseEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

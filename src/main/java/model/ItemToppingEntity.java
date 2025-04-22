@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import model.enums.SizeEnum;
 
+import java.io.Serializable;
+
 /*
  * @description: ItemToppingEntity
  * @author: Trần Ngọc Huyền
@@ -20,7 +22,7 @@ import model.enums.SizeEnum;
         @NamedQuery(name = "ItemToppingEntity.findByItemAndTopping",
                 query = "SELECT it FROM ItemToppingEntity it WHERE it.item = :item AND it.topping = :topping")
 })
-public class ItemToppingEntity {
+public class ItemToppingEntity implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false, columnDefinition = "nvarchar(50)")

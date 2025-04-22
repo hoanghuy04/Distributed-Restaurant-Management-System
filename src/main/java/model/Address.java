@@ -4,11 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
 @Data
-public class Address {
+public class Address implements Serializable {
     @Column(name = "street", columnDefinition = "nvarchar(255)")
     private String street;
 

@@ -8,6 +8,7 @@ import model.enums.CustomerLevelEnum;
 import org.hibernate.Hibernate;
 import org.hibernate.query.Order;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
         @NamedQuery(name = "CustomerEntity.findAll", query = "select c from CustomerEntity c"),
         @NamedQuery(name = "CustomerEntity.findByPhone", query = "select c from CustomerEntity c where c.phone = :phone"),
 })
-public class CustomerEntity extends BaseEntity{
+public class CustomerEntity extends BaseEntity implements Serializable {
     @Id
     @Column(name = "customer_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include

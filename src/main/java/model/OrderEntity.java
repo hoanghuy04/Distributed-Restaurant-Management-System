@@ -14,6 +14,7 @@ import lombok.ToString;
 import model.enums.*;
 import util.CombinedTableConverterUtil;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
 })
-public class OrderEntity extends BaseEntity {
+public class OrderEntity extends BaseEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

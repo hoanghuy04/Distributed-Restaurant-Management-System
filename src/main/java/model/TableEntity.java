@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.TableStatusEnum;
 
+import java.io.Serializable;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -16,8 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tables")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-
-public class TableEntity {
+public class TableEntity implements Serializable {
     @Id
     @Column(name = "table_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include

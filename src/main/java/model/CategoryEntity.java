@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /*
  * @description: CategoryEntity
  * @author: Trần Ngọc Huyền
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
         @NamedQuery(name = "CategoryEntity.findAll", query = "select c from CategoryEntity c"),
         @NamedQuery(name = "CategoryEntity.findByName", query = "select c from CategoryEntity c where c.name = :name")
 })
-public class CategoryEntity extends BaseEntity{
+public class CategoryEntity extends BaseEntity implements Serializable{
     @Id
     @Column(name = "category_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include

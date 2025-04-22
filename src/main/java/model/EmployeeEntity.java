@@ -1,6 +1,8 @@
 package model;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
 import lombok.*;
 
@@ -15,7 +17,7 @@ import lombok.*;
     @NamedQuery(name = "EmployeeEntity.findByEmail", query = "SELECT e FROM EmployeeEntity e WHERE e.email like :email"),
     @NamedQuery(name = "EmployeeEntity.findAll", query = "select e from EmployeeEntity e")
 })
-public class EmployeeEntity extends BaseEntity {
+public class EmployeeEntity extends BaseEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

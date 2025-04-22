@@ -1,6 +1,8 @@
 package model;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import lombok.*;
 
@@ -14,7 +16,7 @@ import lombok.*;
     @NamedQuery(name = "RoleEntity.findAll", query = "select r from RoleEntity r"),
         @NamedQuery(name = "RoleEntity.findByName", query = "select r from RoleEntity r where r.roleName = :name"),
 })
-public class RoleEntity {
+public class RoleEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

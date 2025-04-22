@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NamedQueries({
     @NamedQuery(name = "FloorEntity.findAll", query = "select f from FloorEntity f")
 })
-public class FloorEntity {
+public class FloorEntity implements Serializable {
 
     @Id
     @Column(name = "floor_id", nullable = false, columnDefinition = "nvarchar(50)")
