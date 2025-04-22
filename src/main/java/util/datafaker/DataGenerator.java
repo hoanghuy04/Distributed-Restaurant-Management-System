@@ -62,12 +62,22 @@ public class DataGenerator {
     // ItemEntity
     public ItemEntity generateItemEntity(CategoryEntity category) {
         String name = "";
+        String img = "";
+        String prefix = "";
+        int maxIndex = 0;
+
         if (category.getName().trim().equalsIgnoreCase("Pizza")) {
-            name = "Pizza " + (rand.nextBoolean()?  faker.food().spice(): faker.food().ingredient());
-        } else if (category.getName().trim().equalsIgnoreCase("Mì Ý")) {
-            name = "Mì Ý " + (rand.nextBoolean()?  faker.food().spice(): faker.food().ingredient());
+            name = "Pizza " + (rand.nextBoolean() ? faker.food().spice() : faker.food().ingredient());
+            prefix = "item_c1_";
+            maxIndex = 15;
         } else if (category.getName().trim().equalsIgnoreCase("Khai Vị")) {
             name = "Khai Vị " + faker.food().dish();
+            prefix = "item_c2_";
+            maxIndex = 10;
+        } else if (category.getName().trim().equalsIgnoreCase("Mì Ý")) {
+            name = "Mì Ý " + (rand.nextBoolean() ? faker.food().spice() : faker.food().ingredient());
+            prefix = "item_c3_";
+            maxIndex = 9;
         } else if (category.getName().trim().equalsIgnoreCase("Đồ uống")) {
             int drinkType = rand.nextInt(3);
             switch (drinkType) {
@@ -81,17 +91,24 @@ public class DataGenerator {
                     name = "Coffee " + faker.coffee().blendName();
                     break;
             }
+            prefix = "item_c4_";
+            maxIndex = 8;
         }
-        if(itemDAL.findByName(name) != null) {
+
+        if (itemDAL.findByName(name) != null) {
             return null;
         }
+
+        // Sinh ngẫu nhiên ảnh tương ứng với danh mục
+        int imgIndex = rand.nextInt(maxIndex + 1);
+        img = prefix + imgIndex + ".png";
 
         double costPrice = category.getName().trim().equalsIgnoreCase("Pizza") ?
                 rand.nextDouble() * 150 + 50 : rand.nextDouble() * 100 + 50;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
-        String img = faker.internet().url();
-        SizeEnum size = category.getName().trim().equalsIgnoreCase("Pizza") ? SizeEnum.values()[rand.nextInt(SizeEnum.values().length)] : null;
+        SizeEnum size = category.getName().trim().equalsIgnoreCase("Pizza") ?
+                SizeEnum.values()[rand.nextInt(SizeEnum.values().length)] : null;
 
         try {
             return new ItemEntity("", name, costPrice, stockQuantity,
@@ -428,6 +445,11 @@ public class DataGenerator {
             employeeDAL.insert(generateEmployeeEntity());
         }
 
+        //Customer
+        for(int i = 0; i<10; ++i) {
+            customerDAL.insert(generateCustomerEntity());
+        }
+
         //promotion entity
         for (int i = 0; i < 10; i++) {
             promotionDAL.insert(generatePromotionEntity());
@@ -436,11 +458,6 @@ public class DataGenerator {
         //promotion detail entity
         for (int i = 0; i < 10; i++) {
             promotionDetailDAL.insert(generatePromotionDetailEntity());
-        }
-
-        //Customer entity
-        for (int i = 0; i < 10; i++) {
-            customerDAL.insert(generateCustomerEntity());
         }
 
         //Floor
@@ -453,10 +470,7 @@ public class DataGenerator {
                 tableDAL.insert(generateTableEntity(x));
             }
         });
-        //Customer
-        for(int i = 0; i<10; ++i) {
-            customerDAL.insert(generateCustomerEntity());
-        }
+
 
         //OrderEntity
         for (int i = 0; i < 10; i++) {
