@@ -4,12 +4,15 @@
  */
 package gui.manager;
 
+import bus.OrderBUS;
 import bus.impl.OrderBUSImpl;
 import common.Constants;
 import dal.connectDB.ConnectDB;
+import gui.FormLoad;
 import gui.custom.TableDesign;
 import gui.custom.chart.ModelChart;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +37,9 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
      * Creates new form RevenueStatsGUI
      */
     private TableDesign tableDesign;
-    private OrderBUSImpl orderBUSImpl;
-    public RevenueStatsGUI() {
-        orderBUSImpl = new OrderBUSImpl(ConnectDB.getEntityManager());
+    private OrderBUS orderBUS;
+    public RevenueStatsGUI() throws RemoteException {
+        orderBUS = FormLoad.orderBUS;
         String headers[] = {"Mã hóa đơn","Khách hàng","Nhân viên","Ngày lập","Tổng tiền"};
         List<Integer> tableWidth = Arrays.asList(50,80,80,120,150);
         tableDesign = new TableDesign(headers, tableWidth);
@@ -133,7 +136,11 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         btnThongKe.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         btnThongKe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThongKeActionPerformed(evt);
+                try {
+                    btnThongKeActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -337,7 +344,11 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         comboStats.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Hôm trước", "7 ngày trước", "30 ngày trước", "Năm nay", "Năm trước" }));
         comboStats.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboStatsItemStateChanged(evt);
+                try {
+                    comboStatsItemStateChanged(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -453,7 +464,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_endedDayActionPerformed
 
-    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboStatsItemStateChanged
+    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws RemoteException {//GEN-FIRST:event_comboStatsItemStateChanged
         String selectedItem = comboStats.getSelectedItem().toString(); 
         if(selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
@@ -500,7 +511,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboStatsItemStateChanged
 
-    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThongKeActionPerformed
+    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnThongKeActionPerformed
         LocalDate startedDate = LocalDate.parse(startedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(endedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if (endedDate.isAfter(LocalDate.now())) {
@@ -538,7 +549,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnThongKeActionPerformed
    
-    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) {
+    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) throws RemoteException {
         stats.removeAll();
         Chart chart = new Chart();
         stats.add(chart);
@@ -547,24 +558,24 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         stats.revalidate();
     }
 
-    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) {
+    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws RemoteException {
         chart.clear();
 
         if (year != null) {
-            lblRevenue.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueByYear(year)) + " VND");
-            lblCapital.setText(DoubleFormatUlti.format(orderBUSImpl.getCapitalByYear(year)) + " VND");
-            lblProfit.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueByYear(year) - orderBUSImpl.getCapitalByYear(year)) + " VND");
+            lblRevenue.setText(DoubleFormatUlti.format(orderBUS.getRevenueByYear(year)) + " VND");
+            lblCapital.setText(DoubleFormatUlti.format(orderBUS.getCapitalByYear(year)) + " VND");
+            lblProfit.setText(DoubleFormatUlti.format(orderBUS.getRevenueByYear(year) - orderBUS.getCapitalByYear(year)) + " VND");
         } else {
-            lblRevenue.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(startDate, endDate)) + " VND");
-            lblCapital.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalCapital(startDate, endDate)) + " VND");
-            lblProfit.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(startDate, endDate) - orderBUSImpl.getTotalCapital(startDate, endDate)) + " VND");
+            lblRevenue.setText(DoubleFormatUlti.format(orderBUS.getTotalRevenue(startDate, endDate)) + " VND");
+            lblCapital.setText(DoubleFormatUlti.format(orderBUS.getTotalCapital(startDate, endDate)) + " VND");
+            lblProfit.setText(DoubleFormatUlti.format(orderBUS.getTotalRevenue(startDate, endDate) - orderBUS.getTotalCapital(startDate, endDate)) + " VND");
         }
 
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
         chart.addLegend("Tiền vốn", Constants.COLOR_CAPITAL);
         chart.addLegend("Lợi nhuận", Constants.COLOR_PROFIT);
 
-        Map<String, Map<Double, Double>> map = orderBUSImpl.getRevenueStatsByDateOrYear(startDate, endDate, year);
+        Map<String, Map<Double, Double>> map = orderBUS.getRevenueStatsByDateOrYear(startDate, endDate, year);
         map.forEach((dateOrMonth, value) -> {
             double revenue = value.keySet().stream().findFirst().orElse(0.0);
             double capital = value.values().stream().findFirst().orElse(0.0);

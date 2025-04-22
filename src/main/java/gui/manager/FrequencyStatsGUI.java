@@ -4,6 +4,7 @@
  */
 package gui.manager;
 
+import bus.OrderBUS;
 import bus.impl.OrderBUSImpl;
 import common.Constants;
 import gui.FormLoad;
@@ -11,6 +12,8 @@ import gui.custom.chart.Chart;
 import gui.custom.chart.ModelChart;
 import gui.custom.curvechart.CurveChart;
 import gui.custom.curvechart.ModelChart2;
+
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,10 +31,10 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
     /**
      * Creates new form FrequencyStatsGUI
      */
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
 
-    public FrequencyStatsGUI() {
-        orderBUSImpl = FormLoad.orderBUSImpl;
+    public FrequencyStatsGUI() throws RemoteException {
+        orderBUS = FormLoad.orderBUS;
         initComponents();
         setTextForReservation(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999));
         createChartByHours(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999), statsByHours);
@@ -325,7 +328,11 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         comboHours.setPreferredSize(new java.awt.Dimension(200, 40));
         comboHours.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboHoursItemStateChanged(evt);
+                try {
+                    comboHoursItemStateChanged(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel10.add(comboHours, java.awt.BorderLayout.EAST);
@@ -354,7 +361,11 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         cboCurve.setPreferredSize(new java.awt.Dimension(200, 40));
         cboCurve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboCurveActionPerformed(evt);
+                try {
+                    cboCurveActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(cboCurve, java.awt.BorderLayout.EAST);
@@ -435,7 +446,7 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         add(jPanel5, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void comboHoursItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboHoursItemStateChanged
+    private void comboHoursItemStateChanged(java.awt.event.ItemEvent evt) throws RemoteException {//GEN-FIRST:event_comboHoursItemStateChanged
         String selectedItem = comboHours.getSelectedItem().toString();
         if (selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
@@ -484,7 +495,7 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboHoursItemStateChanged
 
-    private void cboCurveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCurveActionPerformed
+    private void cboCurveActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_cboCurveActionPerformed
         String selectedItem = cboCurve.getSelectedItem().toString();
         if (selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
@@ -528,17 +539,17 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cboCurveActionPerformed
 
-    private void setTextForReservation(LocalDateTime startDate, LocalDateTime endDate) {
-        lblQtyAll.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "ALL") + " đơn đã phục vụ");
-        lblQtyOff.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "IMMEDIATE") + " đơn đặt trực tiếp");
-        lblQtyOnl.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "ADVANCE") + " đơn đặt trực tuyến");
+    private void setTextForReservation(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
+        lblQtyAll.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "ALL") + " đơn đã phục vụ");
+        lblQtyOff.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "IMMEDIATE") + " đơn đặt trực tiếp");
+        lblQtyOnl.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "ADVANCE") + " đơn đặt trực tuyến");
 
-        lblRevenueAll.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "ALL")) + " VNĐ");
-        lblRevenueOff.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "IMMEDIATE")) + " VNĐ");
-        lblRevenueOnl.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "ADVANCE")) + " VNĐ");
+        lblRevenueAll.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "ALL")) + " VNĐ");
+        lblRevenueOff.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "IMMEDIATE")) + " VNĐ");
+        lblRevenueOnl.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "ADVANCE")) + " VNĐ");
     }
 
-    private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
+    private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws RemoteException {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -547,10 +558,10 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
+    private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
-        Map<String, Integer> map = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "ALL");
+        Map<String, Integer> map = orderBUS.getTotalFrequencyByHours(startDate, endDate, "ALL");
 
         Map<String, Integer> completeMap = new TreeMap<>();
 
@@ -568,7 +579,7 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         chart.start();
     }
 
-    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
+    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws RemoteException {
         panel.removeAll();
         CurveChart chart = new CurveChart();
         panel.add(chart);
@@ -577,12 +588,12 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) {
+    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
         chart.clear();
         chart.addLegend("IMMEDIATE", Constants.COLOR_REVENUE, Constants.COLOR_REVENUE);
         chart.addLegend("ADVANCE", Constants.COLOR_CAPITAL, Constants.COLOR_CAPITAL);
-        Map<String, Integer> map1 = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "IMMEDIATE");
-        Map<String, Integer> map2 = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "ADVANCE");
+        Map<String, Integer> map1 = orderBUS.getTotalFrequencyByHours(startDate, endDate, "IMMEDIATE");
+        Map<String, Integer> map2 = orderBUS.getTotalFrequencyByHours(startDate, endDate, "ADVANCE");
         
         Map<String, Map<Integer, Integer>> resultMap = new TreeMap<>();
 

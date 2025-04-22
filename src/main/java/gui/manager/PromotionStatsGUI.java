@@ -4,11 +4,14 @@
  */
 package gui.manager;
 
+import bus.OrderBUS;
 import bus.impl.OrderBUSImpl;
 import gui.FormLoad;
 import common.Constants;
 import gui.custom.curvechart.CurveChart;
 import gui.custom.curvechart.ModelChart2;
+
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,13 +26,13 @@ import util.DoubleFormatUlti;
  */
 public class PromotionStatsGUI extends javax.swing.JPanel {
 
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
 
     /**
      * Creates new form PromotionStatsGUI
      */
     public PromotionStatsGUI() {
-        orderBUSImpl = FormLoad.orderBUSImpl;
+        orderBUS = FormLoad.orderBUS;
         initComponents();
     }
 
@@ -301,7 +304,11 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         jButton1.setText("Thống kê");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -482,7 +489,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         add(jPanel5, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_jButton1ActionPerformed
         LocalDate startedDate = LocalDate.parse(this.startedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(this.endedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         
@@ -508,7 +515,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
+    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws RemoteException {
         panel.removeAll();
         CurveChart chart = new CurveChart();
         panel.add(chart);
@@ -517,12 +524,12 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) {
+    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
         chart.clear();
         chart.addLegend("ORDER", Constants.COLOR_REVENUE, Constants.COLOR_REVENUE);
         chart.addLegend("ITEM", Constants.COLOR_CAPITAL, Constants.COLOR_CAPITAL);
         
-        Map<String, Map<Integer,Integer>> map = orderBUSImpl.getFrequencyPromotionStatsbyDatetime(startDate, endDate);
+        Map<String, Map<Integer,Integer>> map = orderBUS.getFrequencyPromotionStatsbyDatetime(startDate, endDate);
         map.forEach((key, values) -> {
             double order = values.getOrDefault(1, 0); 
             double item = values.getOrDefault(2, 0); 
@@ -534,7 +541,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         
         lblOrder.setText(map.entrySet().stream().mapToInt(entry -> entry.getValue().getOrDefault(1, 0)).sum() +" lần");
         lblItem.setText(map.entrySet().stream().mapToInt(entry -> entry.getValue().getOrDefault(2, 0)).sum() +" lần");
-        lblTotalDiscount.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalDiscount(startDate, endDate)) + " VNĐ");
+        lblTotalDiscount.setText(DoubleFormatUlti.format(orderBUS.getTotalDiscount(startDate, endDate)) + " VNĐ");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PromotionStatsPanel;

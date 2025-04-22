@@ -4,8 +4,7 @@
  */
 package gui.manager;
 
-import bus.impl.CategoryBUSImpl;
-import bus.impl.ItemBUSImpl;
+import bus.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import common.Constants;
 import model.CategoryEntity;
@@ -15,6 +14,7 @@ import gui.custom.chart.ModelChart;
 import gui.custom.piechart.ModelPieChart;
 import gui.custom.piechart.PieChart;
 import java.awt.Color;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,15 +34,15 @@ public class ItemStatsGUI extends javax.swing.JPanel {
     /**
      * Creates new form ItemStatsGUI
      */
-    private CategoryBUSImpl categoryBUSImpl;
-    private ItemBUSImpl itemBUSImpl;
+    private CategoryBUS categoryBUS;
+    private ItemBUS itemBUS;
 
-    public ItemStatsGUI() {
+    public ItemStatsGUI() throws RemoteException {
         FlatLightLaf.setup();
-        categoryBUSImpl = FormLoad.categoryBUSImpl;
-        itemBUSImpl = FormLoad.itemBUSImpl;
+        categoryBUS = FormLoad.categoryBUS;
+        itemBUS = FormLoad.itemBUS;
         List<String> categoryItems = new ArrayList<>();
-        categoryItems = categoryBUSImpl.getAllEntities().stream().map(x -> x.getName()).toList();
+        categoryItems = categoryBUS.getAllEntities().stream().map(x -> x.getName()).toList();
         initComponents();
         loadComboItemType();
         createChartRevenue(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999), comboItemType.getSelectedItem().toString(), statsRevenue);
@@ -52,13 +52,13 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         createChartPieChart(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999), categoryItems, statsCircle);
     }
 
-    private void loadComboItemType() {
+    private void loadComboItemType() throws RemoteException {
         comboItemType.removeAllItems();
-        List<CategoryEntity> categories = categoryBUSImpl.getAllEntities();
+        List<CategoryEntity> categories = categoryBUS.getAllEntities();
         categories.forEach(x -> comboItemType.addItem(x.getName()));
     }
 
-    private void createChartRevenue(LocalDateTime startDate, LocalDateTime endDate, String nameItem, JPanel panel) {
+    private void createChartRevenue(LocalDateTime startDate, LocalDateTime endDate, String nameItem, JPanel panel) throws RemoteException {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -67,15 +67,15 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartRevenue(Chart chart, LocalDateTime startDate, LocalDateTime endDate, String nameItem) {
+    private void updateChartRevenue(Chart chart, LocalDateTime startDate, LocalDateTime endDate, String nameItem) throws RemoteException {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
-        Map<String, Double> map = itemBUSImpl.getTop5ItemHaveBestRevenue(startDate, endDate, nameItem);
+        Map<String, Double> map = itemBUS.getTop5ItemHaveBestRevenue(startDate, endDate, nameItem);
         map.entrySet().forEach(x -> chart.addData(new ModelChart(x.getKey(), new double[]{x.getValue()})));
         chart.start();
     }
 
-    private void createChartQuantity(LocalDateTime startDate, LocalDateTime endDate, String nameItem, JPanel panel) {
+    private void createChartQuantity(LocalDateTime startDate, LocalDateTime endDate, String nameItem, JPanel panel) throws RemoteException {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -84,14 +84,14 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartQuantity(Chart chart, LocalDateTime startDate, LocalDateTime endDate, String nameItem) {
+    private void updateChartQuantity(Chart chart, LocalDateTime startDate, LocalDateTime endDate, String nameItem) throws RemoteException {
         chart.clear();
         chart.addLegend("Số Lượng", Constants.COLOR_REVENUE);
-        Map<String, Integer> map = itemBUSImpl.getTop5ItemHaveBestQuantity(startDate, endDate, nameItem);
+        Map<String, Integer> map = itemBUS.getTop5ItemHaveBestQuantity(startDate, endDate, nameItem);
         map.entrySet().forEach(x -> chart.addData(new ModelChart(x.getKey(), new double[]{x.getValue()})));
         chart.start();
     }
-    private void createChartAll(LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems, JPanel panel) {
+    private void createChartAll(LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems, JPanel panel) throws RemoteException {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -100,14 +100,14 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartAll(Chart chart, LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems) {
+    private void updateChartAll(Chart chart, LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems) throws RemoteException {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
-        Map<String, Double> map = itemBUSImpl.getRevenueOfAllItems(startDate, endDate, nameItems);
+        Map<String, Double> map = itemBUS.getRevenueOfAllItems(startDate, endDate, nameItems);
         map.entrySet().forEach(x -> chart.addData(new ModelChart(x.getKey(), new double[]{x.getValue()})));
         chart.start();
     }
-    private void createChartPieChart(LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems, JPanel panel) {
+    private void createChartPieChart(LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems, JPanel panel) throws RemoteException {
         panel.removeAll();
         PieChart pieChart = new PieChart();
         panel.add(pieChart);
@@ -116,8 +116,8 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updatePieChart(PieChart pieChart, LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems) {
-        Map<String, Double> map = itemBUSImpl.getRevenueOfAllItems(startDate, endDate, nameItems);
+    private void updatePieChart(PieChart pieChart, LocalDateTime startDate, LocalDateTime endDate, List<String> nameItems) throws RemoteException {
+        Map<String, Double> map = itemBUS.getRevenueOfAllItems(startDate, endDate, nameItems);
         map.entrySet().forEach((entry) -> {
             String key = entry.getKey();
             double value = entry.getValue();
@@ -136,17 +136,17 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         });
     }
     
-    private void setTextForCategory(LocalDateTime startDate, LocalDateTime endDate) {
-        lblPizzaRevenue.setText("" + DoubleFormatUlti.format(itemBUSImpl.getTotalRevenueByCategory(startDate, endDate, "Pizza")));
-        double temp = itemBUSImpl.getTotalRevenueByCategory(startDate, endDate, "Khai vị") + itemBUSImpl.getTotalRevenueByCategory(startDate, endDate, "Salad");
+    private void setTextForCategory(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
+        lblPizzaRevenue.setText("" + DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Pizza")));
+        double temp = itemBUS.getTotalRevenueByCategory(startDate, endDate, "Khai vị") + itemBUS.getTotalRevenueByCategory(startDate, endDate, "Salad");
         lblKhaiViSaladRevenue.setText("" + DoubleFormatUlti.format(temp));
-        lblMiyRevenue.setText(""+DoubleFormatUlti.format(itemBUSImpl.getTotalRevenueByCategory(startDate, endDate, "Mì ý")));
-        lblThucUongRevenue.setText(""+DoubleFormatUlti.format(itemBUSImpl.getTotalRevenueByCategory(startDate, endDate, "Thức uống")));
-        temp = itemBUSImpl.getQtyByCategory(startDate, endDate, "Salad") + itemBUSImpl.getQtyByCategory(startDate, endDate, "Khai vị");
+        lblMiyRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Mì ý")));
+        lblThucUongRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Thức uống")));
+        temp = itemBUS.getQtyByCategory(startDate, endDate, "Salad") + itemBUS.getQtyByCategory(startDate, endDate, "Khai vị");
         lblQtyKhaiviSalad.setText("Số lượng đã bán: " + DoubleFormatUlti.format(temp));
-        lblQtyPizza.setText("Số lượng đã bán: "+ itemBUSImpl.getQtyByCategory(startDate, endDate, "Pizza"));
-        lblQtyMiy.setText("Số lượng đã bán: "+ itemBUSImpl.getQtyByCategory(startDate, endDate, "Mì ý"));
-        lblQtyThucuong.setText("Số lượng đã bán: "+ itemBUSImpl.getQtyByCategory(startDate, endDate, "Thức uống"));
+        lblQtyPizza.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Pizza"));
+        lblQtyMiy.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Mì ý"));
+        lblQtyThucuong.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Thức uống"));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -263,7 +263,11 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         comboStats.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Hôm trước", "7 ngày trước", "30 ngày trước", "Năm nay", "Năm trước" }));
         comboStats.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboStatsItemStateChanged(evt);
+                try {
+                    comboStatsItemStateChanged(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -769,7 +773,11 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         roundedButton1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         roundedButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roundedButton1ActionPerformed(evt);
+                try {
+                    roundedButton1ActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -913,7 +921,7 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboItemTypeActionPerformed
 
-    private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
+    private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_roundedButton1ActionPerformed
         LocalDate started = LocalDate.parse(startedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate ended = LocalDate.parse(endedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if (started.isAfter(LocalDate.now())) {
@@ -954,10 +962,10 @@ public class ItemStatsGUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_roundedButton1ActionPerformed
 
-    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboStatsItemStateChanged
+    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws RemoteException {//GEN-FIRST:event_comboStatsItemStateChanged
         String selectedItem = comboStats.getSelectedItem().toString(); 
         List<String> categoryItems = new ArrayList<>();
-        categoryItems = categoryBUSImpl.getAllEntities().stream().map(x -> x.getName()).toList();
+        categoryItems = categoryBUS.getAllEntities().stream().map(x -> x.getName()).toList();
         if(selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
             LocalDate localDateEnd = LocalDate.of(LocalDate.now().getYear(), 12, 31);

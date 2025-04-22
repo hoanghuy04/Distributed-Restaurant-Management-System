@@ -4,9 +4,7 @@
  */
 package gui.manager;
 
-import bus.impl.ItemBUSImpl;
-import bus.impl.ItemToppingBUSImpl;
-import bus.impl.ToppingBUSImpl;
+import bus.*;
 import common.Constants;
 import dto.ToppingDTO;
 import model.*;
@@ -39,17 +37,17 @@ public class ToppingGUI extends javax.swing.JPanel  {
     private List<Integer> tableWidth;
     private DefaultTableModel defaultTableModel;
     private TableColumnModel columnModel;
-    private ToppingBUSImpl toppingBUSImpl;
-    private ItemToppingBUSImpl itemToppingBUSImpl;
-    private ItemBUSImpl itemBUSImpl;
+    private ToppingBUS toppingBUS;
+    private ItemToppingBUS itemToppingBUS;
+    private ItemBUS itemBUS;
     private DialogVoucherDetail dialog;
     private List<ItemEntity> items;
     private boolean isMouseClick = false;
 
-    public ToppingGUI() {
-        this.toppingBUSImpl = FormLoad.toppingBUSImpl;
-        this.itemToppingBUSImpl = FormLoad.itemToppingBUSImpl;
-        this.itemBUSImpl = FormLoad.itemBUSImpl;
+    public ToppingGUI() throws RemoteException {
+        this.toppingBUS = FormLoad.toppingBUS;
+        this.itemToppingBUS = FormLoad.itemToppingBUS;
+        this.itemBUS = FormLoad.itemBUS;
         this.items = new ArrayList<>();
         dialog = new DialogVoucherDetail(this);
         initComponents();
@@ -74,7 +72,7 @@ public class ToppingGUI extends javax.swing.JPanel  {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws RemoteException {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -349,7 +347,11 @@ public class ToppingGUI extends javax.swing.JPanel  {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 50));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnAdd);
@@ -359,7 +361,11 @@ public class ToppingGUI extends javax.swing.JPanel  {
         btnUpdate.setPreferredSize(new java.awt.Dimension(150, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnUpdate);
@@ -369,7 +375,11 @@ public class ToppingGUI extends javax.swing.JPanel  {
         btnSearch.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnSearch);
@@ -410,7 +420,11 @@ public class ToppingGUI extends javax.swing.JPanel  {
         customTable();
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                try {
+                    tableMouseClicked(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jScrollPane3.setViewportView(table);
@@ -440,45 +454,45 @@ public class ToppingGUI extends javax.swing.JPanel  {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
             ToppingDTO tmp = convertEntityFromTable();
-            toppingBUSImpl.addTopping(tmp);
-            loadData(toppingBUSImpl.getAllEntities());
+            toppingBUS.addTopping(tmp);
+            loadData(toppingBUS.getAllEntities());
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnUpdateActionPerformed
         if (validData()) {
             ToppingDTO tmp = convertEntityFromTable();
             int row = table.getSelectedRow();
             if (row != -1) {
                 String id = table.getValueAt(row, 0).toString();
-                toppingBUSImpl.updateTopping(tmp, id);
-                loadData(toppingBUSImpl.getAllEntities());
+                toppingBUS.updateTopping(tmp, id);
+                loadData(toppingBUS.getAllEntities());
             } else {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần cập nhật");
             }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnSearchActionPerformed
         ToppingDTO tmp = convertEntityFromTable();
-        loadData(toppingBUSImpl.findTopping(tmp));
+        loadData(toppingBUS.findTopping(tmp));
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         clearData();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_tableMouseClicked
         int row = table.getSelectedRow();
         if (row != -1) {
             items = new ArrayList<>();
             String itemId = "";
             String name = table.getValueAt(row, 1).toString();
             String toppingId = table.getValueAt(row, 0).toString();
-            ToppingEntity topping = toppingBUSImpl.getEntityById(toppingId);
+            ToppingEntity topping = toppingBUS.getEntityById(toppingId);
             Set<ItemToppingEntity> itemToppings = topping.getItemToppings();
             if (!itemToppings.isEmpty()) {
                 StringBuilder itemCodes = new StringBuilder();
@@ -523,7 +537,7 @@ public class ToppingGUI extends javax.swing.JPanel  {
         isMouseClick = true;
     }//GEN-LAST:event_txtItemMouseClicked
 
-    private void customTable() {
+    private void customTable() throws RemoteException {
         headers = new String[]{"Mã", "Tên", "Giá vốn", "Số lượng", "Trạng thái", "Mô tả"};
         tableWidth = Arrays.asList(100, 100, 100, 100, 100, 100);
         this.tableDesign = new TableDesign(headers, tableWidth);
@@ -532,7 +546,7 @@ public class ToppingGUI extends javax.swing.JPanel  {
         table.setModel(defaultTableModel);
         this.columnModel = tableDesign.getColumnModel();
         table.setColumnModel(columnModel);
-        loadData(toppingBUSImpl.getAllEntities());
+        loadData(toppingBUS.getAllEntities());
     }
 
     private void loadData(List<ToppingEntity> list) {
