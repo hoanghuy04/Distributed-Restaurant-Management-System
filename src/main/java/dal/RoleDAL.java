@@ -63,8 +63,8 @@ public class RoleDAL implements BaseDAL<RoleEntity, String>{
     public List<RoleEntity> findAll() {
         return em.createNamedQuery("RoleEntity.findAll", RoleEntity.class).getResultList();
     }
-    
+
     public RoleEntity findByName(String roleName) {
-        return em.createNamedQuery("RoleEntity.findByName", RoleEntity.class).setParameter("roleName", roleName).getSingleResult();
+        return em.createNamedQuery("RoleEntity.findByName", RoleEntity.class).setParameter("name", roleName).getSingleResult();
     }
 }

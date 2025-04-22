@@ -188,13 +188,16 @@ public class DataGenerator {
         promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
         promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
 
-        LocalDate startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
-        LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
+        LocalDate startDateTmp = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
+        LocalDate endDateTmp = startDateTmp.plusDays(faker.number().numberBetween(7, 30));
+
+        LocalDateTime startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30)).atStartOfDay();
+        LocalDateTime endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
         promotion.setStartedDate(startDate);
         promotion.setEndedDate(endDate);
 
         LocalDate today = LocalDate.now();
-        boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
+        boolean isActive = (today.isAfter(startDateTmp) || today.isEqual(startDateTmp)) && (today.isBefore(endDateTmp) || today.isEqual(endDateTmp));
 
 
         PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();

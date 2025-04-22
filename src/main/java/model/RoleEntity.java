@@ -11,7 +11,8 @@ import lombok.*;
 @Table(name = "roles")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
-    @NamedQuery(name = "RoleEntity.findAll", query = "select r from RoleEntity r")
+    @NamedQuery(name = "RoleEntity.findAll", query = "select r from RoleEntity r"),
+        @NamedQuery(name = "RoleEntity.findByName", query = "select r from RoleEntity r where r.roleName = :name"),
 })
 public class RoleEntity {
 
