@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.TableStatusEnum;
 
+import java.io.Serializable;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NamedQueries({
         @NamedQuery(name = "TableEntity.findAll", query = "select t from TableEntity t")
 })
-public class TableEntity {
+public class TableEntity implements Serializable {
     @Id
     @Column(name = "table_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include

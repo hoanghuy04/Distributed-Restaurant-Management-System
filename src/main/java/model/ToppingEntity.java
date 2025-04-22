@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ import java.util.Set;
         @NamedQuery(name = "ToppingEntity.findAll", query = "select t from ToppingEntity t"),
         @NamedQuery(name = "ToppingEntity.findByName", query = "select t from ToppingEntity t where t.name = :name")
 })
-public class ToppingEntity extends BaseEntity {
+public class ToppingEntity extends BaseEntity implements Serializable {
     @Id
     @Column(name = "topping_id", columnDefinition = "nvarchar(50)")
     @EqualsAndHashCode.Include

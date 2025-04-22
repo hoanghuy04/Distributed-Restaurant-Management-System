@@ -6,6 +6,8 @@ import model.enums.CustomerLevelEnum;
 import model.enums.OrderStatusEnum;
 import model.enums.PromotionTypeEnum;
 
+import java.io.Serializable;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,7 +19,7 @@ import model.enums.PromotionTypeEnum;
         @NamedQuery(name = "PromotionDetailEntity.findByPromotionId", query = "select p from PromotionDetailEntity p where p.promotion.promotionId = :promotionId"),
         @NamedQuery(name = "PromotionDetailEntity.findByItemId", query = "select p from PromotionDetailEntity p where p.item.itemId = :itemId")
 })
-public class PromotionDetailEntity {
+public class PromotionDetailEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

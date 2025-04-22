@@ -7,6 +7,7 @@ import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 import util.CustomerLevelConverter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "PromotionEntity.findAll", query = "select p from PromotionEntity p")
 })
-public class PromotionEntity extends BaseEntity {
+public class PromotionEntity extends BaseEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include

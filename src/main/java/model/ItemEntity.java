@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import model.enums.SizeEnum;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ import java.util.logging.Logger;
     @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
     @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
 })
-public class ItemEntity extends BaseEntity {
+public class ItemEntity extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "item_id", columnDefinition = "nvarchar(50)")
