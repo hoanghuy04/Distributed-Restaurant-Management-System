@@ -64,8 +64,8 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
     }
 
     @Override
-    public Optional<CustomerEntity> findById(String id) {
-        return Optional.ofNullable(em.find(CustomerEntity.class, id));
+    public CustomerEntity findById(String id) {
+        return em.find(CustomerEntity.class, id);
     }
 
     @Override

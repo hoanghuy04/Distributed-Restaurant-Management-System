@@ -66,5 +66,4 @@ public class TableEntity {
         this.tableStatus = tableStatus;
         this.floor = floor;
     }
-    
 }

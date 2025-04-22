@@ -43,8 +43,7 @@ public class PromotionDetailBUS implements BaseBUS<PromotionDetailEntity, Promot
 
     @Override
     public PromotionDetailEntity getEntityById(PromotionDetailId id) {
-        Optional<PromotionDetailEntity> optionalPromotionDetail = promotionDetailDAL.findById(id);
-        return optionalPromotionDetail.orElse(null);
+        return promotionDetailDAL.findById(id);
     }
 
     @Override

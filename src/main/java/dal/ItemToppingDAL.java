@@ -4,14 +4,12 @@
  */
 package dal;
 
+import jakarta.persistence.*;
 import model.ItemEntity;
 import model.ItemToppingEntity;
 import model.ItemToppingId;
 import model.ToppingEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -67,8 +65,8 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, ItemToppingId>
     }
 
     @Override
-    public Optional<ItemToppingEntity> findById(ItemToppingId id) {
-        return Optional.ofNullable(em.find(ItemToppingEntity.class, id));
+    public ItemToppingEntity findById(ItemToppingId id) {
+        return em.find(ItemToppingEntity.class, id);
     }
 
     @Override
@@ -76,28 +74,29 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, ItemToppingId>
         return em.createNamedQuery("ItemToppingEntity.findAll", ItemToppingEntity.class).getResultList();
     }
 
-    public Optional<ItemToppingEntity> findByItemAndToppingId(ItemEntity item, ToppingEntity topping) {
-        String sql = "select * from item_toppings "
-                + "where item_id = ?1 and topping_id = ?2 ";
-        Query q = em.createNativeQuery(sql.toString(), ItemToppingEntity.class);
-        q.setParameter(1, item.getItemId());
-        q.setParameter(2, topping.getToppingId());
+    public ItemToppingEntity findByItemAndToppingId(ItemEntity item, ToppingEntity topping) {
+        String jpql = "select it from ItemToppingEntity it " +
+                "where it.item.itemId = :itemId and it.topping.toppingId = :toppingId";
+
+        TypedQuery<ItemToppingEntity> query = em.createQuery(jpql, ItemToppingEntity.class);
+        query.setParameter("itemId", item.getItemId());
+        query.setParameter("toppingId", topping.getToppingId());
+
         try {
-            return Optional.ofNullable((ItemToppingEntity) q.getSingleResult());
+            return query.getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
     }
-    
-    public Optional<ItemToppingEntity> findByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
+
+    public ItemToppingEntity findByItemAndTopping(ItemEntity itemEntity, ToppingEntity toppingEntity) {
         try {
-            ItemToppingEntity result = em.createNamedQuery("ItemToppingEntity.findByItemAndTopping", ItemToppingEntity.class)
+            return em.createNamedQuery("ItemToppingEntity.findByItemAndTopping", ItemToppingEntity.class)
                     .setParameter("item", itemEntity)
                     .setParameter("topping", toppingEntity)
                     .getSingleResult();
-            return Optional.of(result);
-        } catch (Exception e) {
-            return Optional.empty();
+        } catch (NoResultException e) {
+            return null;
         }
     }
 

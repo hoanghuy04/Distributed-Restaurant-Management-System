@@ -38,7 +38,7 @@ public class CategoryBUS implements BaseBUS<CategoryEntity, String>{
 
     @Override
     public CategoryEntity getEntityById(String id) {
-        return categoryDAL.findById(id).get();
+        return categoryDAL.findById(id);
     }
 
     @Override
@@ -47,11 +47,7 @@ public class CategoryBUS implements BaseBUS<CategoryEntity, String>{
     }
     
     public CategoryEntity findByName(String name) {
-        return categoryDAL.findByName(name).orElse(null);
+        return categoryDAL.findByName(name);
     }
-    
-    public List<CategoryEntity> getTablesWithKeyword(String scrip, String name, boolean active) {
 
-        return categoryDAL.getTablesWithKeyword(scrip, name, active);
-    }      
 }

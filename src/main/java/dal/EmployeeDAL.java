@@ -59,8 +59,8 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
     }
 
     @Override
-    public Optional<EmployeeEntity> findById(String id) {
-        return Optional.ofNullable(em.find(EmployeeEntity.class, id));
+    public EmployeeEntity findById(String id) {
+        return em.find(EmployeeEntity.class, id);
     }
 
     @Override

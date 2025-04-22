@@ -57,8 +57,7 @@ public class ToppingBUS implements BaseBUS<ToppingEntity, String> {
 
     @Override
     public ToppingEntity getEntityById(String id) {
-        Optional<ToppingEntity> optionalTopping = toppingDAL.findById(id);
-        return optionalTopping.orElse(null); // Trả về null nếu không tìm thấy
+        return toppingDAL.findById(id);
     }
 
     @Override
@@ -86,7 +85,7 @@ public class ToppingBUS implements BaseBUS<ToppingEntity, String> {
 
         Set<ItemToppingEntity> list = new HashSet<>();
         for (String itemId : toppingDTO.getListItemIds()) {
-            ItemEntity item = itemDAL.findById(itemId).get();
+            ItemEntity item = itemDAL.findById(itemId);
 
             ItemToppingEntity itemTopping = new ItemToppingEntity(item, toppingEntity);
             list.add(itemTopping);
@@ -99,7 +98,7 @@ public class ToppingBUS implements BaseBUS<ToppingEntity, String> {
 
     public void updateTopping(ToppingDTO toppingDTO, String id) {
         try {
-            ToppingEntity toppingEntity = toppingDAL.findById(id).get();
+            ToppingEntity toppingEntity = toppingDAL.findById(id);
             
             toppingEntity.setName(toppingDTO.getName());
             toppingEntity.setDescription(toppingDTO.getDesc());
@@ -114,7 +113,7 @@ public class ToppingBUS implements BaseBUS<ToppingEntity, String> {
             }
             
             for (String itemId : toppingDTO.getListItemIds()) {
-                ItemEntity item = itemDAL.findById(itemId).get();
+                ItemEntity item = itemDAL.findById(itemId);
                 
                 ItemToppingEntity itemTopping = new ItemToppingEntity(item, toppingEntity);
                 list.add(itemTopping);
