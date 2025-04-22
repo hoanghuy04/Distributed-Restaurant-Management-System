@@ -81,8 +81,8 @@ public class ItemDAL implements BaseDAL<ItemEntity, String> {
     public List<ItemEntity> findByCategoryName(String name) {
         String sql = "select i from ItemEntity i "
                 + "join CategoryEntity c on i.category.id = c.categoryId "
-                + "where lower(c.name) = lower(N'" + name + "')";
-        return  em.createQuery(sql, ItemEntity.class).getResultList();
+                + "where lower(c.name) = lower(:name)";
+        return  em.createQuery(sql, ItemEntity.class).setParameter("name", name).getResultList();
     }
 
     public List<ItemEntity> findByName(String nameItem, String nameCategory) {
