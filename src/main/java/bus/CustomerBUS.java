@@ -32,8 +32,7 @@ public class CustomerBUS implements BaseBUS<CustomerEntity, String> {
     
     @Override
     public CustomerEntity getEntityById(String id) {
-        Optional<CustomerEntity> optionalCustomer = customerDAL.findById(id);
-        return optionalCustomer.orElse(null); // Return null if not found
+        return customerDAL.findById(id);
     }
 
     @Override

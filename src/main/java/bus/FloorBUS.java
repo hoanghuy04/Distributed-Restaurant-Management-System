@@ -30,10 +30,8 @@ public class FloorBUS implements BaseBUS<FloorEntity, String> {
 
     @Override
     public FloorEntity getEntityById(String id) {
-        Optional<FloorEntity> optionalFloor = floorDAL.findById(id);
-        return optionalFloor.orElse(null); // Return null if not found
+        return floorDAL.findById(id);
     }
-
     @Override
     public List<FloorEntity> getAllEntities() {
         return floorDAL.findAll();
