@@ -1,5 +1,6 @@
 package dal;
 
+import dal.connectDB.ConnectDB;
 import model.OrderDetailId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId> {
 
     private EntityManager em;
+
+    //default constructor
+    public OrderDetailDAL() {
+        this.em = ConnectDB.getEntityManager();
+    }
 
     public OrderDetailDAL(EntityManager em) {
         this.em = em;
@@ -69,17 +75,12 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
         return em.createNamedQuery("OrderDetailEntity.findAll", OrderDetailEntity.class).getResultList();
     }
 
-    public Optional<OrderDetailEntity> findById(String orderId, String itemId, String toppingId) {
-        try {
-            OrderDetailEntity result = em.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
+    public OrderDetailEntity findById(String orderId, String itemId, String toppingId) {
+        return em.createNamedQuery("OrderDetailEntity.findById", OrderDetailEntity.class)
                     .setParameter("orderId", orderId)
                     .setParameter("itemId", itemId)
                     .setParameter("toppingId", toppingId)
                     .getSingleResult();
-            return Optional.of(result);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
     }
 
     public List<OrderDetailEntity> findByOrderId(String orderId) {
@@ -107,17 +108,4 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
             query.executeUpdate();
         });
     }
-
-    public List<OrderDetailEntity> findByItemId(String itemId) {
-        return em.createNamedQuery("OrderDetail.findByItemId", OrderDetailEntity.class)
-                .setParameter("itemId", itemId)
-                .getResultList();
-    }
-
-//    public List<OrderDetailEntity> findByOrderIdAndItemId(String orderId, String itemId) {
-//        return em.createNamedQuery("OrderDetail.findByOrderIdAndItemId", OrderDetailEntity.class)
-//                 .setParameter("orderId", orderId)
-//                 .setParameter("itemId", itemId)
-//                 .getResultList();
-//    }
 }
