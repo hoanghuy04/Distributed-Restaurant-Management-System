@@ -4,20 +4,15 @@
  */
 package dal;
 
-import bus.PromotionBUS;
-import common.LevelCustomer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import model.ItemEntity;
-import model.OrderEntity;
 import model.PromotionDetailEntity;
 import model.PromotionDetailId;
 import model.PromotionEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+
 import java.util.List;
-import java.util.Optional;
-import util.CustomerLevelConverter;
 
 /**
  *
