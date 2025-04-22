@@ -4,12 +4,16 @@
  */
 package gui.manager;
 
+import bus.CategoryBUS;
+import bus.ItemBUS;
 import bus.impl.CategoryBUSImpl;
 import bus.impl.ItemBUSImpl;
 import model.CategoryEntity;
 import model.ItemEntity;
 import gui.FormLoad;
 import gui.staff.PanelCategoryDetail;
+
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,15 +28,15 @@ public class DialogVoucherDetail extends javax.swing.JDialog {
     /**
      * Creates new form DialogVoucherDetail
      */
-    private CategoryBUSImpl categoryBUSImpl;
-    private ItemBUSImpl itemBUSImpl;
+    private CategoryBUS categoryBUS;
+    private ItemBUS itemBUS;
     private PromotionGUI promotionGUI;
     private ToppingGUI toppingGUI;
 
-    public DialogVoucherDetail(JPanel parentGUI) {
+    public DialogVoucherDetail(JPanel parentGUI) throws RemoteException {
         super(new JFrame(), true);
-        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
-        this.itemBUSImpl = FormLoad.itemBUSImpl;
+        this.categoryBUS = FormLoad.categoryBUS;
+        this.itemBUS = FormLoad.itemBUS;
         if (parentGUI instanceof PromotionGUI) {
             this.promotionGUI = (PromotionGUI) parentGUI;
         } else if (parentGUI instanceof ToppingGUI) {
@@ -68,13 +72,11 @@ public class DialogVoucherDetail extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public void addTabCategory() {
-        List<CategoryEntity> categories = categoryBUSImpl.getAllEntities();
+
+    public void addTabCategory() throws RemoteException {
+        List<CategoryEntity> categories = categoryBUS.getAllEntities();
         for (CategoryEntity category : categories) {
-            List<ItemEntity> items = itemBUSImpl.findByCategoryName(category.getName());
+            List<ItemEntity> items = itemBUS.findByCategoryName(category.getName());
             if (promotionGUI != null) {
                 PanelCategoryDetail pnCD = new PanelCategoryDetail(items, promotionGUI);
                 tabCategory.add(pnCD, category.getName());

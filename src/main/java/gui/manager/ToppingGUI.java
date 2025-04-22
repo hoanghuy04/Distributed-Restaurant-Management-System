@@ -529,7 +529,7 @@ public class ToppingGUI extends javax.swing.JPanel  {
         }
     }//GEN-LAST:event_tableMouseClicked
 
-    private void txtItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtItemMouseClicked
+    private void txtItemMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_txtItemMouseClicked
         loadDialog();
         if (isMouseClick) {
             dialog.setVisible(true);
@@ -556,7 +556,7 @@ public class ToppingGUI extends javax.swing.JPanel  {
         });
     }
 
-    private void loadDialog() {
+    private void loadDialog() throws RemoteException {
         dialog.getTabCategory().removeAll();
         dialog.addTabCategory();
         ReloadComponentUlti.reload(dialog.getTabCategory());

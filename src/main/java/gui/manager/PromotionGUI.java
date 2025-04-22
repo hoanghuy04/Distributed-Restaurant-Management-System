@@ -111,7 +111,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadDialog() {
+    private void loadDialog() throws RemoteException {
         dialogVoucherDetail.getTabCategory().removeAll();
         dialogVoucherDetail.addTabCategory();
         dialogVoucherDetail.getTabCategory().revalidate();

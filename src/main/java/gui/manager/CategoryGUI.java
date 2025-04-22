@@ -4,11 +4,13 @@
  */
 package gui.manager;
 
+import bus.CategoryBUS;
 import bus.impl.CategoryBUSImpl;
 import model.CategoryEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,14 +28,14 @@ public class CategoryGUI extends javax.swing.JPanel {
     private final List<Integer> len;
     private final TableDesign tableDesign;
     private DefaultTableModel modelTable = new DefaultTableModel();
-    private final CategoryBUSImpl categoryBUSImpl;
+    private final CategoryBUS categoryBUS;
 
     /**
      * Creates new form FloorGUI
      */
-    public CategoryGUI() {
+    public CategoryGUI() throws RemoteException {
 
-        categoryBUSImpl = FormLoad.categoryBUSImpl;
+        categoryBUS = FormLoad.categoryBUS;
         headers = new String[]{"Mã danh mục", "Tên danh mục", "Mô tả", "Trạng thái"};
         len = Arrays.asList(100, 200, 50, 100);
         tableDesign = new TableDesign(headers, len);
@@ -147,7 +149,11 @@ public class CategoryGUI extends javax.swing.JPanel {
         btnFind.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFindActionPerformed(evt);
+                try {
+                    btnFindActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnFind);
@@ -299,7 +305,7 @@ public class CategoryGUI extends javax.swing.JPanel {
                     active = false;
                 }
                 CategoryEntity f = new CategoryEntity(null, name, desc, active);
-                if (categoryBUSImpl.insertEntity(f)) {
+                if (categoryBUS.insertEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                     deleteAllTable();
                     loadData();
@@ -312,13 +318,13 @@ public class CategoryGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnFindActionPerformed
         String name = lblName.getText().trim();
         if (name.isBlank() || name.isEmpty()) {
             deleteAllTable();
             loadData();
         } else {
-            CategoryEntity f = categoryBUSImpl.findByName(name);
+            CategoryEntity f = categoryBUS.findByName(name);
             if (f != null) {
                 deleteAllTable();
                 modelTable.addRow(new Object[]{
@@ -349,7 +355,7 @@ public class CategoryGUI extends javax.swing.JPanel {
                 try {
                     f = new CategoryEntity(id, name, desc, active);
 
-                    if (categoryBUSImpl.updateEntity(f)) {
+                    if (categoryBUS.updateEntity(f)) {
                         JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
                         deleteAllTable();
                         loadData();
@@ -385,8 +391,8 @@ public class CategoryGUI extends javax.swing.JPanel {
         isActiveBTN.setSelected(false);
     }
 
-    private void loadData() {
-        categoryBUSImpl.getAllEntities().stream().forEach(f -> {
+    private void loadData() throws RemoteException {
+        categoryBUS.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getCategoryId(), f.getName(), f.getDescription(), f.isActive() ? "Đang hoạt động" : "Không hoạt động"
             });
