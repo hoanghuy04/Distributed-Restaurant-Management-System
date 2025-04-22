@@ -105,9 +105,9 @@ public class PanelDate extends RoundedPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelDate = new gui.custom.RoundedPanel();
-        lblDate = new javax.swing.JLabel();
-        lblnumber = new javax.swing.JLabel();
+        panelDate = new RoundedPanel();
+        lblDate = new JLabel();
+        lblnumber = new JLabel();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -115,8 +115,8 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        panelDate.setBackground(new java.awt.Color(255, 255, 255));
-        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelDate.setBackground(new Color(255, 255, 255));
+        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
         panelDate.setPreferredSize(new java.awt.Dimension(288, 77));
         panelDate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -196,9 +196,9 @@ public class PanelDate extends RoundedPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblDate;
-    private javax.swing.JLabel lblnumber;
-    private gui.custom.RoundedPanel panelDate;
+    private JLabel lblDate;
+    private JLabel lblnumber;
+    private RoundedPanel panelDate;
     // End of variables declaration//GEN-END:variables
 
     public void deselectPanel() {

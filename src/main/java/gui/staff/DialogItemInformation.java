@@ -25,7 +25,7 @@ import util.*;
  *
  * @author Trần Ngọc Huyền
  */
-public class DialogItemInformation extends javax.swing.JDialog {
+public class DialogItemInformation extends JDialog {
 
     /**
      * Creates new form DialogItemInformation
@@ -48,11 +48,11 @@ public class DialogItemInformation extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
 
         // Cấu hình KeyBinding để nhấn Enter đóng dialog
-        this.getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(javax.swing.KeyStroke.getKeyStroke("ENTER"), "action");
-        this.getRootPane().getActionMap().put("action", new javax.swing.AbstractAction() {
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("ENTER"), "action");
+        this.getRootPane().getActionMap().put("action", new AbstractAction() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 confirmAddingItem();
             }
         });
@@ -75,100 +75,100 @@ public class DialogItemInformation extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnGroup = new javax.swing.ButtonGroup();
-        panelWrapper = new javax.swing.JPanel();
-        panelHead = new javax.swing.JPanel();
-        lblTitle = new javax.swing.JLabel();
-        panelBody = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        lblImg = new javax.swing.JLabel();
-        lblPrice = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        btnGroup = new ButtonGroup();
+        panelWrapper = new JPanel();
+        panelHead = new JPanel();
+        lblTitle = new JLabel();
+        panelBody = new JPanel();
+        jPanel1 = new JPanel();
+        lblImg = new JLabel();
+        lblPrice = new JLabel();
+        jPanel2 = new JPanel();
         roundedPanel1 = new gui.custom.RoundedPanel();
         roundedPanel2 = new gui.custom.RoundedPanel();
-        lblName = new javax.swing.JLabel();
-        lblDesc = new javax.swing.JLabel();
-        lblSizeCrust = new javax.swing.JLabel();
+        lblName = new JLabel();
+        lblDesc = new JLabel();
+        lblSizeCrust = new JLabel();
         roundedButton1 = new gui.custom.RoundedButton();
         roundedPanel5 = new gui.custom.RoundedPanel();
         pnTopping = new gui.custom.RoundedPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        lbl = new javax.swing.JLabel();
-        pnCrusts = new javax.swing.JPanel();
+        jPanel3 = new JPanel();
+        jPanel4 = new JPanel();
+        lbl = new JLabel();
+        pnCrusts = new JPanel();
         roundedPanel9 = new gui.custom.RoundedPanel();
         roundedPanel10 = new gui.custom.RoundedPanel();
-        jPanel5 = new javax.swing.JPanel();
+        jPanel5 = new JPanel();
         pnSize = new gui.custom.RoundedPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new JPanel();
+        jPanel6 = new JPanel();
         roundedPanel3 = new gui.custom.RoundedPanel();
-        lbl2 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        lbl2 = new JLabel();
+        jPanel8 = new JPanel();
         qtySpinner = new JSpinner(new SpinnerNumberModel(1, 1, null, 1));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 250));
-        setSize(new java.awt.Dimension(0, 0));
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new Dimension(800, 250));
+        setSize(new Dimension(0, 0));
 
         panelWrapper.setBackground(new java.awt.Color(255, 255, 255));
-        panelWrapper.setPreferredSize(new java.awt.Dimension(800, 250));
+        panelWrapper.setPreferredSize(new Dimension(800, 250));
         panelWrapper.setLayout(new java.awt.BorderLayout());
 
         panelHead.setBackground(Constants.COLOR_PRIMARY);
-        panelHead.setPreferredSize(new java.awt.Dimension(600, 39));
+        panelHead.setPreferredSize(new Dimension(600, 39));
         panelHead.setLayout(new java.awt.BorderLayout());
 
         lblTitle.setBackground(Constants.COLOR_PRIMARY);
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTitle.setForeground(new java.awt.Color(255, 255, 255));
-        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setText("Thêm sản phẩm");
         lblTitle.setToolTipText("");
         panelHead.add(lblTitle, java.awt.BorderLayout.CENTER);
 
         panelWrapper.add(panelHead, java.awt.BorderLayout.NORTH);
 
-        panelBody.setPreferredSize(new java.awt.Dimension(750, 250));
+        panelBody.setPreferredSize(new Dimension(750, 250));
         panelBody.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         lblPrice.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblPrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPrice.setHorizontalAlignment(SwingConstants.CENTER);
         lblPrice.setText("jLabel2");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblImg, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addComponent(lblPrice, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblImg, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPrice, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
         );
 
         panelBody.add(jPanel1);
 
         jPanel2.setBackground(Constants.COLOR_BG);
         jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(400, 333));
+        jPanel2.setPreferredSize(new Dimension(400, 333));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         roundedPanel1.setBackground(Constants.COLOR_BG);
-        roundedPanel1.setPreferredSize(new java.awt.Dimension(424, 333));
+        roundedPanel1.setPreferredSize(new Dimension(424, 333));
         roundedPanel1.setLayout(new java.awt.BorderLayout());
 
         roundedPanel2.setBackground(Constants.COLOR_BG);
-        roundedPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
+        roundedPanel2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
 
         lblName.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblName.setText("N - Pizza Aloha");
@@ -176,26 +176,26 @@ public class DialogItemInformation extends javax.swing.JDialog {
         lblSizeCrust.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblSizeCrust.setForeground(Constants.COLOR_PRIMARY);
 
-        javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
+        GroupLayout roundedPanel2Layout = new GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
         roundedPanel2Layout.setHorizontalGroup(
-            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            roundedPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSizeCrust, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                    .addComponent(lblDesc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(roundedPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSizeCrust, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblName, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                    .addComponent(lblDesc, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         roundedPanel2Layout.setVerticalGroup(
-            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            roundedPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblSizeCrust, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblName, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSizeCrust, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDesc)
                 .addGap(10, 10, 10))
         );
@@ -207,34 +207,34 @@ public class DialogItemInformation extends javax.swing.JDialog {
         roundedButton1.setText("Thêm");
         roundedButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         roundedButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 roundedButton1ActionPerformed(evt);
             }
         });
         roundedPanel1.add(roundedButton1, java.awt.BorderLayout.SOUTH);
 
-        roundedPanel5.setMaximumSize(new java.awt.Dimension(2147483647, 100));
-        roundedPanel5.setMinimumSize(new java.awt.Dimension(0, 0));
-        roundedPanel5.setPreferredSize(new java.awt.Dimension(418, 0));
+        roundedPanel5.setMaximumSize(new Dimension(2147483647, 100));
+        roundedPanel5.setMinimumSize(new Dimension(0, 0));
+        roundedPanel5.setPreferredSize(new Dimension(418, 0));
         roundedPanel5.setLayout(new java.awt.BorderLayout());
 
         pnTopping.setBackground(Constants.COLOR_BG);
-        pnTopping.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
-        pnTopping.setMaximumSize(new java.awt.Dimension(32767, 100));
-        pnTopping.setLayout(new javax.swing.BoxLayout(pnTopping, javax.swing.BoxLayout.LINE_AXIS));
+        pnTopping.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
+        pnTopping.setMaximumSize(new Dimension(32767, 100));
+        pnTopping.setLayout(new BoxLayout(pnTopping, BoxLayout.LINE_AXIS));
 
         jPanel3.setBackground(Constants.COLOR_BG);
-        jPanel3.setMaximumSize(new java.awt.Dimension(16, 81));
-        jPanel3.setPreferredSize(new java.awt.Dimension(16, 81));
+        jPanel3.setMaximumSize(new Dimension(16, 81));
+        jPanel3.setPreferredSize(new Dimension(16, 81));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 80, Short.MAX_VALUE)
         );
 
@@ -249,21 +249,21 @@ public class DialogItemInformation extends javax.swing.JDialog {
         jPanel4.add(lbl, java.awt.BorderLayout.NORTH);
 
         pnCrusts.setBackground(Constants.COLOR_BG);
-        pnCrusts.setMaximumSize(new java.awt.Dimension(400, 100));
-        pnCrusts.setLayout(new javax.swing.BoxLayout(pnCrusts, javax.swing.BoxLayout.Y_AXIS));
+        pnCrusts.setMaximumSize(new Dimension(400, 100));
+        pnCrusts.setLayout(new BoxLayout(pnCrusts, BoxLayout.Y_AXIS));
         jPanel4.add(pnCrusts, java.awt.BorderLayout.CENTER);
 
         roundedPanel9.setBackground(Constants.COLOR_BG);
-        roundedPanel9.setPreferredSize(new java.awt.Dimension(0, 10));
+        roundedPanel9.setPreferredSize(new Dimension(0, 10));
 
-        javax.swing.GroupLayout roundedPanel9Layout = new javax.swing.GroupLayout(roundedPanel9);
+        GroupLayout roundedPanel9Layout = new GroupLayout(roundedPanel9);
         roundedPanel9.setLayout(roundedPanel9Layout);
         roundedPanel9Layout.setHorizontalGroup(
-            roundedPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            roundedPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
         roundedPanel9Layout.setVerticalGroup(
-            roundedPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            roundedPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 10, Short.MAX_VALUE)
         );
 
@@ -274,49 +274,49 @@ public class DialogItemInformation extends javax.swing.JDialog {
         roundedPanel5.add(pnTopping, java.awt.BorderLayout.NORTH);
 
         roundedPanel10.setBackground(Constants.COLOR_BG);
-        roundedPanel10.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
-        roundedPanel10.setMaximumSize(new java.awt.Dimension(2147483647, 100));
-        roundedPanel10.setMinimumSize(new java.awt.Dimension(0, 0));
-        roundedPanel10.setPreferredSize(new java.awt.Dimension(418, 0));
+        roundedPanel10.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Constants.COLOR_BORDER));
+        roundedPanel10.setMaximumSize(new Dimension(2147483647, 100));
+        roundedPanel10.setMinimumSize(new Dimension(0, 0));
+        roundedPanel10.setPreferredSize(new Dimension(418, 0));
         roundedPanel10.setLayout(new java.awt.BorderLayout());
 
         jPanel5.setBackground(Constants.COLOR_BG);
-        jPanel5.setPreferredSize(new java.awt.Dimension(16, 16));
+        jPanel5.setPreferredSize(new Dimension(16, 16));
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 16, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 83, Short.MAX_VALUE)
         );
 
         roundedPanel10.add(jPanel5, java.awt.BorderLayout.WEST);
 
         pnSize.setBackground(Constants.COLOR_BG);
-        pnSize.setMaximumSize(new java.awt.Dimension(32767, 100));
+        pnSize.setMaximumSize(new Dimension(32767, 100));
         pnSize.setLayout(new java.awt.BorderLayout());
 
         jPanel7.setBackground(Constants.COLOR_BG);
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        GroupLayout jPanel7Layout = new GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
         pnSize.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel6.setBackground(Constants.COLOR_BG);
-        jPanel6.setPreferredSize(new java.awt.Dimension(300, 80));
+        jPanel6.setPreferredSize(new Dimension(300, 80));
         jPanel6.setLayout(new java.awt.BorderLayout());
 
         roundedPanel3.setBackground(Constants.COLOR_BG);
@@ -328,16 +328,16 @@ public class DialogItemInformation extends javax.swing.JDialog {
         roundedPanel3.add(lbl2, java.awt.BorderLayout.NORTH);
 
         jPanel8.setBackground(Constants.COLOR_BG);
-        jPanel8.setPreferredSize(new java.awt.Dimension(10, 10));
+        jPanel8.setPreferredSize(new Dimension(10, 10));
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        GroupLayout jPanel8Layout = new GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 382, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 10, Short.MAX_VALUE)
         );
 
@@ -346,7 +346,7 @@ public class DialogItemInformation extends javax.swing.JDialog {
         jPanel6.add(roundedPanel3, java.awt.BorderLayout.NORTH);
 
         qtySpinner.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        qtySpinner.setPreferredSize(new java.awt.Dimension(100, 40));
+        qtySpinner.setPreferredSize(new Dimension(100, 40));
         qtySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 qtySpinnerStateChanged(evt);
@@ -380,11 +380,11 @@ public class DialogItemInformation extends javax.swing.JDialog {
 
         getContentPane().add(panelWrapper, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(816, 324));
+        setSize(new Dimension(816, 324));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
+    private void roundedButton1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
 //        ItemCartDTO itemCartDTO = new ItemCartDTO(item, itemTopping, txtDes.getText());
 //        orderGUI.cartDTO.insert(itemCartDTO);
 //        PanelOrderDetail pnOD = new PanelOrderDetail(itemCartDTO, orderGUI);
@@ -534,30 +534,30 @@ public class DialogItemInformation extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup btnGroup;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JLabel lbl;
-    private javax.swing.JLabel lbl2;
-    private javax.swing.JLabel lblDesc;
-    private javax.swing.JLabel lblImg;
-    private javax.swing.JLabel lblName;
-    private javax.swing.JLabel lblPrice;
-    private javax.swing.JLabel lblSizeCrust;
-    private javax.swing.JLabel lblTitle;
-    private javax.swing.JPanel panelBody;
-    private javax.swing.JPanel panelHead;
-    private javax.swing.JPanel panelWrapper;
-    private javax.swing.JPanel pnCrusts;
+    private ButtonGroup btnGroup;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JPanel jPanel6;
+    private JPanel jPanel7;
+    private JPanel jPanel8;
+    private JLabel lbl;
+    private JLabel lbl2;
+    private JLabel lblDesc;
+    private JLabel lblImg;
+    private JLabel lblName;
+    private JLabel lblPrice;
+    private JLabel lblSizeCrust;
+    private JLabel lblTitle;
+    private JPanel panelBody;
+    private JPanel panelHead;
+    private JPanel panelWrapper;
+    private JPanel pnCrusts;
     private gui.custom.RoundedPanel pnSize;
     private gui.custom.RoundedPanel pnTopping;
-    private javax.swing.JSpinner qtySpinner;
+    private JSpinner qtySpinner;
     private gui.custom.RoundedButton roundedButton1;
     private gui.custom.RoundedPanel roundedPanel1;
     private gui.custom.RoundedPanel roundedPanel10;

@@ -464,10 +464,10 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private void initComponents() {
 
         dateChooser1 = new gui.custom.datechooser.DateChooser(false);
-        panelWrapper = new javax.swing.JPanel();
-        panelHead = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
+        panelHead = new JPanel();
         lblTitle = new javax.swing.JLabel();
-        panelBody = new javax.swing.JPanel();
+        panelBody = new JPanel();
         lblReservationTime = new javax.swing.JLabel();
         txtDate = new gui.custom.RoundedTextField();
         lblTable = new javax.swing.JLabel();
@@ -493,7 +493,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         cbbCombinedTables = new gui.custom.ComboBoxMultiSelection();
         cbbCompletionTime = new gui.custom.RoundedComboBox(completionTimes);
 
-        dateChooser1.setForeground(new java.awt.Color(51, 153, 255));
+        dateChooser1.setForeground(new Color(51, 153, 255));
         dateChooser1.setTextRefernce(txtDate);
         dateChooser1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -509,9 +509,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panelWrapper.setBackground(new java.awt.Color(255, 255, 255));
+        panelWrapper.setBackground(new Color(255, 255, 255));
 
-        panelHead.setBackground(new java.awt.Color(204, 204, 204));
+        panelHead.setBackground(new Color(204, 204, 204));
 
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -553,7 +553,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
             }
         });
         txtDate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtDateKeyReleased(evt);
             }
         });
@@ -581,10 +581,10 @@ public class DialogAddReservation extends javax.swing.JDialog {
             }
         });
         txtPhoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+            public void keyPressed(KeyEvent evt) {
                 txtPhoneNumberKeyPressed(evt);
             }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtPhoneNumberKeyReleased(evt);
             }
         });
@@ -971,7 +971,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void txtPhoneNumberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyPressed
+    private void txtPhoneNumberKeyPressed(KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyPressed
 //        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 //            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
 //            if (customerEntity == null) {
@@ -1025,7 +1025,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
     }//GEN-LAST:event_dateChooser1MouseClicked
 
-    private void txtDateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDateKeyReleased
+    private void txtDateKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtDateKeyReleased
         // TODO add your handling code here:
 
     }//GEN-LAST:event_txtDateKeyReleased
@@ -1088,7 +1088,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
 //        }
     }//GEN-LAST:event_txtDepositFocusLost
 
-    private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
+    private void txtPhoneNumberKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             this.customerEntity = customerBUSImpl.findByPhone(txtPhoneNumber.getText().trim());
             if (customerEntity == null) {
@@ -1152,9 +1152,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private javax.swing.JLabel lblReservationTime;
     private javax.swing.JLabel lblTable;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JPanel panelBody;
-    private javax.swing.JPanel panelHead;
-    private javax.swing.JPanel panelWrapper;
+    private JPanel panelBody;
+    private JPanel panelHead;
+    private JPanel panelWrapper;
     private gui.custom.RoundedTextField txtDate;
     private gui.custom.RoundedTextField txtDeposit;
     private gui.custom.RoundedTextField txtName;

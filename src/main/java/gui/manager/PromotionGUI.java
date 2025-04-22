@@ -87,7 +87,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }
 
-    private void clearData() {
+    private void clearData() throws RemoteException {
         if (items != null) {
             items.clear();
         }
@@ -343,7 +343,11 @@ public class PromotionGUI extends javax.swing.JPanel {
         btnSearch1.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearch1ActionPerformed(evt);
+                try {
+                    btnSearch1ActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         panelEdit.add(btnSearch1);
@@ -365,12 +369,20 @@ public class PromotionGUI extends javax.swing.JPanel {
         });
         cbbType.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cbbTypeMouseClicked(evt);
+                try {
+                    cbbTypeMouseClicked(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         cbbType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbTypeActionPerformed(evt);
+                try {
+                    cbbTypeActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -381,7 +393,11 @@ public class PromotionGUI extends javax.swing.JPanel {
         txtItem.setEditable(false);
         txtItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtItemMouseClicked(evt);
+                try {
+                    txtItemMouseClicked(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -550,7 +566,7 @@ public class PromotionGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_chkNewActionPerformed
 
-    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
+    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnSearch1ActionPerformed
         clearData();
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
@@ -740,7 +756,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void cbbTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTypeActionPerformed
+    private void cbbTypeActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_cbbTypeActionPerformed
         if (cbbType.getSelectedItem().toString().equals("ITEM")) {
             this.items = new ArrayList<>();
             for (String itemId : txtItem.getText().trim().split(",")) {
@@ -761,7 +777,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_cbbTypeActionPerformed
 
-    private void txtItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtItemMouseClicked
+    private void txtItemMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_txtItemMouseClicked
         cbbTypeActionPerformed(null);
     }//GEN-LAST:event_txtItemMouseClicked
 
@@ -829,7 +845,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void cbbTypeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbbTypeMouseClicked
+    private void cbbTypeMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_cbbTypeMouseClicked
         if (cbbType.getSelectedItem().toString().equals("ITEM")) {
             this.items = new ArrayList<>();
             for (String itemId : txtItem.getText().trim().split(",")) {

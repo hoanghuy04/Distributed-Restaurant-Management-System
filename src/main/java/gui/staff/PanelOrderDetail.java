@@ -146,9 +146,9 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         lblDiscount = new javax.swing.JLabel();
         btnPlus = new gui.custom.RoundedButton();
         btnMinus = new gui.custom.RoundedButton();
-        txtQty = new gui.custom.RoundedTextField();
+        txtQty = new RoundedTextField();
         btnDelete = new gui.custom.RoundedButton();
-        txtDescription = new gui.custom.RoundedTextField();
+        txtDescription = new RoundedTextField();
         lblToppingName = new javax.swing.JLabel();
 
         setBackground(Constants.COLOR_BG);
@@ -217,7 +217,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
             }
         });
         txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtQtyKeyReleased(evt);
             }
         });
@@ -237,7 +237,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
             }
         });
         txtDescription.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtDescriptionKeyReleased(evt);
             }
         });
@@ -325,7 +325,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+    private void txtQtyKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txtQtyFocusLost(null);
         }
@@ -341,7 +341,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtQtyMouseClicked
 
-    private void txtDescriptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyReleased
+    private void txtDescriptionKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyReleased
         cartDTO.findItem(itemCartDTO).setDescription(txtDescription.getText().trim());
     }//GEN-LAST:event_txtDescriptionKeyReleased
 
@@ -440,7 +440,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
     private javax.swing.JLabel lblSTT;
     private javax.swing.JLabel lblSellPrice;
     private javax.swing.JLabel lblToppingName;
-    private gui.custom.RoundedTextField txtDescription;
-    private gui.custom.RoundedTextField txtQty;
+    private RoundedTextField txtDescription;
+    private RoundedTextField txtQty;
     // End of variables declaration//GEN-END:variables
 }

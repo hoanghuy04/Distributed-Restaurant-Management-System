@@ -13,7 +13,7 @@ import util.ReloadComponentUlti;
  *
  * @author Trần Ngọc Huyền.
  */
-public class MainGUI extends javax.swing.JPanel {
+public class MainGUI extends JPanel {
 
     /**
      * Creates new form MainGUI
@@ -41,13 +41,13 @@ public class MainGUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelTop = new javax.swing.JPanel();
+        panelTop = new JPanel();
         tabMain = new javax.swing.JTabbedPane();
 
         setMaximumSize(new java.awt.Dimension(865, 543));
         setMinimumSize(new java.awt.Dimension(865, 543));
         setPreferredSize(new java.awt.Dimension(865, 543));
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         panelTop.setLayout(new java.awt.BorderLayout());
 
@@ -97,7 +97,7 @@ public class MainGUI extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel panelTop;
+    private JPanel panelTop;
     private javax.swing.JTabbedPane tabMain;
     // End of variables declaration//GEN-END:variables
 }

@@ -47,7 +47,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelCodeConfirm = new javax.swing.JPanel();
+        panelCodeConfirm = new JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txtCode = new gui.custom.RoundedTextField();
@@ -57,7 +57,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         lblResendCode = new javax.swing.JLabel();
-        panelResetPassword = new javax.swing.JPanel();
+        panelResetPassword = new JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtPassword = new gui.custom.RoundedTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -66,8 +66,8 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         jLabel13 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         txtPasswordConfirm = new gui.custom.RoundedTextField();
-        panelWrapper = new javax.swing.JPanel();
-        panelEmailConfirm = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
+        panelEmailConfirm = new JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         txtEmail = new gui.custom.RoundedTextField();
@@ -568,10 +568,10 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel lblResendCode;
-    private javax.swing.JPanel panelCodeConfirm;
-    private javax.swing.JPanel panelEmailConfirm;
-    private javax.swing.JPanel panelResetPassword;
-    private javax.swing.JPanel panelWrapper;
+    private JPanel panelCodeConfirm;
+    private JPanel panelEmailConfirm;
+    private JPanel panelResetPassword;
+    private JPanel panelWrapper;
     private gui.custom.RoundedTextField txtCode;
     private gui.custom.RoundedTextField txtEmail;
     private gui.custom.RoundedTextField txtPassword;

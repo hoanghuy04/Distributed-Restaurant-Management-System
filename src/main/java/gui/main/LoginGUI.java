@@ -4,12 +4,14 @@
  */
 package gui.main;
 
+import bus.EmployeeBUS;
 import bus.impl.EmployeeBUSImpl;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import common.Constants;
 import dal.connectDB.ConnectDB;
+import gui.FormLoad;
 import model.EmployeeEntity;
 import gui.menu.Application;
 import gui.custom.RoundedButton;
@@ -17,6 +19,8 @@ import gui.custom.textfield.PasswordField;
 import gui.staff.DialogPasswordRecover;
 import gui.staff.MainGUI;
 import gui.staff.OverviewGUI;
+
+import java.rmi.RemoteException;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +38,7 @@ import util.ResizeImage;
 public class LoginGUI extends javax.swing.JFrame {
 
     public static EmployeeEntity emp;
-    private EmployeeBUSImpl empBUS;
+    private EmployeeBUS empBUS;
     private MainMenu mainMenu;
     private DateTimeFormatter df = DateTimeFormatter.ofPattern("ddMMyy");
 
@@ -42,8 +46,8 @@ public class LoginGUI extends javax.swing.JFrame {
      * Creates new form LonginGUI
      *
      */
-    public LoginGUI() {
-        empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
+    public LoginGUI() throws RemoteException {
+        empBUS = FormLoad.employeeBUS;
         initComponents();
         encryptPassword();
         setLocationRelativeTo(null);
@@ -58,7 +62,11 @@ public class LoginGUI extends javax.swing.JFrame {
         actionMap.put("xacNhan", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                btnLoginActionPerformed(null);
+                try {
+                    btnLoginActionPerformed(null);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -79,7 +87,7 @@ public class LoginGUI extends javax.swing.JFrame {
         this.txtPass.setText(txtPass);
     }
 
-    private void encryptPassword() {
+    private void encryptPassword() throws RemoteException {
         List<EmployeeEntity> list = empBUS.getAllEntities(); // Thêm dấu ngoặc tròn
         for (EmployeeEntity e : list) {
             if (!isBCryptHash(e.getPassword())) { // Kiểm tra định dạng BCrypt
@@ -188,7 +196,11 @@ public class LoginGUI extends javax.swing.JFrame {
         });
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
+                try {
+                    btnLoginActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -211,7 +223,11 @@ public class LoginGUI extends javax.swing.JFrame {
         });
         txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPassKeyReleased(evt);
+                try {
+                    txtPassKeyReleased(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -333,7 +349,7 @@ public class LoginGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnLoginActionPerformed
         String name = txtName.getText().trim();
         String id = new String(txtPass.getPassword());
         if (name.length() == 0) {
@@ -354,7 +370,7 @@ public class LoginGUI extends javax.swing.JFrame {
             FlatLightLaf.setup();
             if (emp.getRole().getRoleName().equals("STAFF")) {
                 Application.app = new Application(1);
-                Application.showForm(new MainGUI(Application.app));
+//                Application.showForm(new MainGUI(Application.app));
                 Application.app.setVisible(true);
             } else if (emp.getRole().getRoleName().equals("MANAGER")) {
                 Application.app = new Application(2);
@@ -389,7 +405,7 @@ public class LoginGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_chkShowIdActionPerformed
 
-    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyReleased
+    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) throws RemoteException {//GEN-FIRST:event_txtPassKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnLoginActionPerformed(null);
         }
@@ -400,7 +416,7 @@ public class LoginGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameKeyReleased
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        new DialogPasswordRecover(this).setVisible(true);
+//        new DialogPasswordRecover(this).setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**

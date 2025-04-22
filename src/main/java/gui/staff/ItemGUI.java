@@ -183,7 +183,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnImport.setBackground(new java.awt.Color(0, 153, 51));
         btnImport.setForeground(new java.awt.Color(255, 255, 255));
-        btnImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnImport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnImport.setText("Import");
         btnImport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnImport.addActionListener(new java.awt.event.ActionListener() {
@@ -197,7 +197,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnExport.setBackground(new java.awt.Color(0, 153, 51));
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
-        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnExport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnExport.setText("Export");
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
@@ -675,7 +675,7 @@ public class ItemGUI extends javax.swing.JPanel {
         fileChooser.setDialogTitle("Chọn ảnh");
 
         // Đặt thư mục mặc định
-        fileChooser.setCurrentDirectory(new java.io.File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
+        fileChooser.setCurrentDirectory(new File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
 
         // Chỉ hiển thị các tệp hình ảnh
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
@@ -683,7 +683,7 @@ public class ItemGUI extends javax.swing.JPanel {
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            java.io.File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = fileChooser.getSelectedFile();
             ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
 
             // Resize và hiển thị ảnh trên JLabel

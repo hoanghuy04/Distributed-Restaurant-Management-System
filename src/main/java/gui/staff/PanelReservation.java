@@ -141,38 +141,38 @@ public class PanelReservation extends RoundedPanel {
     private void initComponents() {
 
         panelReservationTop = new javax.swing.JPanel();
-        lblCusTotal = new javax.swing.JLabel();
-        lblNamePhone = new javax.swing.JLabel();
+        lblCusTotal = new JLabel();
+        lblNamePhone = new JLabel();
         panelReservationMid = new javax.swing.JPanel();
         panelMidLeft = new javax.swing.JPanel();
-        lblTableName = new javax.swing.JLabel();
+        lblTableName = new JLabel();
         panelMidRight = new javax.swing.JPanel();
         panelMidRightTop = new javax.swing.JPanel();
-        lblDeposit = new javax.swing.JLabel();
+        lblDeposit = new JLabel();
         panelMidRightBot = new javax.swing.JPanel();
-        lblReservationTime = new javax.swing.JLabel();
+        lblReservationTime = new JLabel();
         panelReservationBot = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        setBorder(javax.swing.BorderFactory.createLineBorder(new Color(204, 204, 204)));
         setMaximumSize(new java.awt.Dimension(250, 200));
         setMinimumSize(new java.awt.Dimension(250, 200));
         setPreferredSize(new java.awt.Dimension(250, 200));
         setLayout(new java.awt.BorderLayout());
 
         panelReservationTop.setBackground(getColor());
-        panelReservationTop.setForeground(new java.awt.Color(255, 255, 255));
+        panelReservationTop.setForeground(new Color(255, 255, 255));
         panelReservationTop.setPreferredSize(new java.awt.Dimension(35, 35));
 
-        lblCusTotal.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblCusTotal.setForeground(new java.awt.Color(255, 255, 255));
+        lblCusTotal.setFont(new Font("Segoe UI", 1, 16)); // NOI18N
+        lblCusTotal.setForeground(new Color(255, 255, 255));
         lblCusTotal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-user-24.png"))); // NOI18N
         lblCusTotal.setText("2");
 
-        lblNamePhone.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblNamePhone.setForeground(new java.awt.Color(255, 255, 255));
+        lblNamePhone.setFont(new Font("Segoe UI", 1, 16)); // NOI18N
+        lblNamePhone.setForeground(new Color(255, 255, 255));
         lblNamePhone.setText("Huyền - 0964424149");
 
         javax.swing.GroupLayout panelReservationTopLayout = new javax.swing.GroupLayout(panelReservationTop);
@@ -197,16 +197,16 @@ public class PanelReservation extends RoundedPanel {
 
         add(panelReservationTop, java.awt.BorderLayout.NORTH);
 
-        panelReservationMid.setBackground(new java.awt.Color(255, 255, 255));
+        panelReservationMid.setBackground(new Color(255, 255, 255));
         panelReservationMid.setPreferredSize(new java.awt.Dimension(100, 100));
         panelReservationMid.setLayout(new java.awt.GridLayout(1, 0));
 
-        panelMidLeft.setBackground(new java.awt.Color(231, 239, 248));
+        panelMidLeft.setBackground(new Color(231, 239, 248));
         panelMidLeft.setPreferredSize(new java.awt.Dimension(50, 50));
         panelMidLeft.setLayout(new java.awt.BorderLayout());
 
-        lblTableName.setBackground(new java.awt.Color(115, 171, 227));
-        lblTableName.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblTableName.setBackground(new Color(115, 171, 227));
+        lblTableName.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
         lblTableName.setForeground(Constants.COLOR_STRONG_BLUE);
         lblTableName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTableName.setText("1");
@@ -214,15 +214,15 @@ public class PanelReservation extends RoundedPanel {
 
         panelReservationMid.add(panelMidLeft);
 
-        panelMidRight.setBackground(new java.awt.Color(255, 255, 255));
+        panelMidRight.setBackground(new Color(255, 255, 255));
         panelMidRight.setPreferredSize(new java.awt.Dimension(50, 50));
         panelMidRight.setLayout(new java.awt.GridLayout(2, 1));
 
-        panelMidRightTop.setBackground(new java.awt.Color(255, 255, 255));
+        panelMidRightTop.setBackground(new Color(255, 255, 255));
         panelMidRightTop.setPreferredSize(new java.awt.Dimension(25, 25));
         panelMidRightTop.setLayout(new java.awt.BorderLayout());
 
-        lblDeposit.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblDeposit.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         lblDeposit.setForeground(Constants.COLOR_STRONG_BLUE);
         lblDeposit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDeposit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-coin-24.png"))); // NOI18N
@@ -231,11 +231,11 @@ public class PanelReservation extends RoundedPanel {
 
         panelMidRight.add(panelMidRightTop);
 
-        panelMidRightBot.setBackground(new java.awt.Color(255, 255, 255));
-        panelMidRightBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        panelMidRightBot.setBackground(new Color(255, 255, 255));
+        panelMidRightBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(0, 0, 0)));
         panelMidRightBot.setLayout(new java.awt.BorderLayout());
 
-        lblReservationTime.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblReservationTime.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         lblReservationTime.setForeground(Constants.COLOR_STRONG_BLUE);
         lblReservationTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblReservationTime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-alarm-clock-24.png"))); // NOI18N
@@ -248,14 +248,14 @@ public class PanelReservation extends RoundedPanel {
 
         add(panelReservationMid, java.awt.BorderLayout.CENTER);
 
-        panelReservationBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        panelReservationBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(0, 0, 0)));
         panelReservationBot.setMaximumSize(new java.awt.Dimension(250, 35));
         panelReservationBot.setMinimumSize(new java.awt.Dimension(250, 35));
         panelReservationBot.setPreferredSize(new java.awt.Dimension(250, 35));
 
-        jButton1.setBackground(new java.awt.Color(231, 231, 231));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(204, 204, 204));
+        jButton1.setBackground(new Color(231, 231, 231));
+        jButton1.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
+        jButton1.setForeground(new Color(204, 204, 204));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-trash-15.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,8 +263,8 @@ public class PanelReservation extends RoundedPanel {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(229, 229, 229));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jButton3.setBackground(new Color(229, 229, 229));
+        jButton3.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-edit-30.png"))); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,8 +272,8 @@ public class PanelReservation extends RoundedPanel {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(229, 229, 229));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jButton2.setBackground(new Color(229, 229, 229));
+        jButton2.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-done-26.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -420,11 +420,11 @@ public class PanelReservation extends RoundedPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel lblCusTotal;
-    private javax.swing.JLabel lblDeposit;
-    private javax.swing.JLabel lblNamePhone;
-    private javax.swing.JLabel lblReservationTime;
-    private javax.swing.JLabel lblTableName;
+    private JLabel lblCusTotal;
+    private JLabel lblDeposit;
+    private JLabel lblNamePhone;
+    private JLabel lblReservationTime;
+    private JLabel lblTableName;
     private javax.swing.JPanel panelMidLeft;
     private javax.swing.JPanel panelMidRight;
     private javax.swing.JPanel panelMidRightBot;

@@ -133,14 +133,14 @@ public class PanelFood extends javax.swing.JPanel {
     private void initComponents() {
 
         roundedPanel4 = new gui.custom.RoundedPanel();
-        lblPriceItem = new javax.swing.JLabel();
-        lblNameItem = new javax.swing.JLabel();
+        lblPriceItem = new JLabel();
+        lblNameItem = new JLabel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         roundedPanel1 = new gui.custom.RoundedPanel();
-        lblImgItem = new javax.swing.JLabel();
-        lblDiscountItem = new javax.swing.JLabel();
+        lblImgItem = new JLabel();
+        lblDiscountItem = new JLabel();
 
-        setPreferredSize(new java.awt.Dimension(200, 240));
+        setPreferredSize(new Dimension(200, 240));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
@@ -148,8 +148,8 @@ public class PanelFood extends javax.swing.JPanel {
         });
         setLayout(new java.awt.BorderLayout());
 
-        roundedPanel4.setBackground(new java.awt.Color(241, 241, 241));
-        roundedPanel4.setPreferredSize(new java.awt.Dimension(212, 80));
+        roundedPanel4.setBackground(new Color(241, 241, 241));
+        roundedPanel4.setPreferredSize(new Dimension(212, 80));
         roundedPanel4.setLayout(new java.awt.GridLayout(2, 1));
 
         lblPriceItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -167,15 +167,15 @@ public class PanelFood extends javax.swing.JPanel {
 
         add(roundedPanel4, java.awt.BorderLayout.SOUTH);
 
-        jLayeredPane1.setPreferredSize(new java.awt.Dimension(200, 300));
+        jLayeredPane1.setPreferredSize(new Dimension(200, 300));
 
         roundedPanel1.setLayout(new java.awt.BorderLayout());
         roundedPanel1.add(lblImgItem, java.awt.BorderLayout.CENTER);
 
         lblDiscountItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblDiscountItem.setForeground(new java.awt.Color(255, 255, 255));
+        lblDiscountItem.setForeground(new Color(255, 255, 255));
         lblDiscountItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDiscountItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-discount-60.png"))); // NOI18N
+        lblDiscountItem.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-discount-60.png"))); // NOI18N
         lblDiscountItem.setText("0.2%");
         lblDiscountItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -240,10 +240,10 @@ public class PanelFood extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JLabel lblDiscountItem;
-    private javax.swing.JLabel lblImgItem;
-    private javax.swing.JLabel lblNameItem;
-    private javax.swing.JLabel lblPriceItem;
+    private JLabel lblDiscountItem;
+    private JLabel lblImgItem;
+    private JLabel lblNameItem;
+    private JLabel lblPriceItem;
     private gui.custom.RoundedPanel roundedPanel1;
     private gui.custom.RoundedPanel roundedPanel4;
     // End of variables declaration//GEN-END:variables
