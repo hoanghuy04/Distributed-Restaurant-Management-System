@@ -4,16 +4,14 @@
  */
 package gui.manager;
 
-import bus.FloorBUS;
+import bus.impl.FloorBUSImpl;
 import model.FloorEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
 import java.util.Arrays;
 import java.util.List;
-import javax.management.Notification;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -24,14 +22,14 @@ public class FloorGUI extends javax.swing.JPanel {
     private final String[] headers;
     private final List<Integer> len;
     private final TableDesign tableDesign;
-    private final FloorBUS floorBUS;
+    private final FloorBUSImpl floorBUSImpl;
     private DefaultTableModel modelTable = new DefaultTableModel();
 
     /**
      * Creates new form FloorGUI
      */
     public FloorGUI() {
-        floorBUS = FormLoad.floorBUS;
+        floorBUSImpl = FormLoad.floorBUSImpl;
         headers = new String[]{"Mã lầu", "Tên lầu", "Sức chứa"};
         len = Arrays.asList(100, 200, 50);
         tableDesign = new TableDesign(headers, len);
@@ -284,7 +282,7 @@ public class FloorGUI extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             FloorEntity f = new FloorEntity(null, name, capacity);
-            if (floorBUS.insertEntity(f)) {
+            if (floorBUSImpl.insertEntity(f)) {
                 JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                 deleteAllTable();
                 loadData();
@@ -300,7 +298,7 @@ public class FloorGUI extends javax.swing.JPanel {
             deleteAllTable();
             loadData();
         } else {
-            FloorEntity f = floorBUS.findByName(name);
+            FloorEntity f = floorBUSImpl.findByName(name);
             if (f != null) {
                 deleteAllTable();
                 modelTable.addRow(new Object[]{
@@ -327,7 +325,7 @@ public class FloorGUI extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 FloorEntity f = new FloorEntity(id, name, capacity);
-                if (floorBUS.updateEntity(f)) {
+                if (floorBUSImpl.updateEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
                     deleteAllTable();
                     loadData();
@@ -355,7 +353,7 @@ public class FloorGUI extends javax.swing.JPanel {
     }
 
     private void loadData() {
-        floorBUS.getAllEntities().stream().forEach(f -> {
+        floorBUSImpl.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getFloorId(), f.getName(), f.getCapacity()
             });

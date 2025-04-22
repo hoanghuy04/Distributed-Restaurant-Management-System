@@ -4,13 +4,12 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
-import dal.connectDB.ConnectDB;
 import model.OrderEntity;
 import gui.FormLoad;
 import gui.custom.RoundedPanel;
-import jakarta.persistence.EntityManager;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -47,7 +46,7 @@ import util.DatetimeFormatterUtil;
  */
 public class TabReservation extends javax.swing.JPanel {
 
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private List<OrderEntity> listOfAllReservations;
     private TreeMap<String, List<OrderEntity>> mapOfAllReservations;
     private MainGUI mainGUI;
@@ -59,9 +58,9 @@ public class TabReservation extends javax.swing.JPanel {
      */
     public TabReservation(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
-        this.orderBUS = FormLoad.orderBUS;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
 
-        this.listOfAllReservations = orderBUS.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
+        this.listOfAllReservations = orderBUSImpl.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
         this.mapOfAllReservations = getOrdersGroupByDate(listOfAllReservations);
 
         this.description = new panelDescription();
@@ -86,7 +85,7 @@ public class TabReservation extends javax.swing.JPanel {
             private void action() {
 //                JOptionPane.showMessageDialog(null, "Nội dung mới: " + txtQrContent.getText());
                 panelAllReservationsMouseClicked(null);
-                OrderEntity orderEntity = orderBUS.getEntityById(txtQrContent.getText().trim());
+                OrderEntity orderEntity = orderBUSImpl.getEntityById(txtQrContent.getText().trim());
                 if (orderEntity != null && orderEntity.getPaymentStatus().equals(PaymentStatusEnum.UNPAID) && orderEntity.getReservationStatus().equals(ReservationStatusEnum.PENDING)) {
                     setListOfReservationsByOption(List.of(orderEntity));
                 } else {
@@ -555,7 +554,7 @@ public class TabReservation extends javax.swing.JPanel {
     }//GEN-LAST:event_panelAllReservationsMouseClicked
 
     private void panelUpComingOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelUpComingOptionMouseClicked
-        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblUpComingRs.getText()));
+        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblUpComingRs.getText()));
         updatePanelBackground();
         this.panelUpComingOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfUpComingRs().setForeground(Color.white);
@@ -563,7 +562,7 @@ public class TabReservation extends javax.swing.JPanel {
     }//GEN-LAST:event_panelUpComingOptionMouseClicked
 
     private void panelPastOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPastOptionMouseClicked
-        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblPastRs.getText()));
+        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblPastRs.getText()));
         updatePanelBackground();
         this.panelPastOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfPastRs().setForeground(Color.white);

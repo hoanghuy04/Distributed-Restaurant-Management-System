@@ -4,23 +4,18 @@
  */
 package gui.manager;
 
-import bus.OrderBUS;
-import com.formdev.flatlaf.FlatLightLaf;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import gui.FormLoad;
 import gui.custom.chart.Chart;
-import gui.custom.chart.LineChart;
 import gui.custom.chart.ModelChart;
 import gui.custom.curvechart.CurveChart;
 import gui.custom.curvechart.ModelChart2;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import util.DoubleFormatUlti;
 
@@ -33,10 +28,10 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
     /**
      * Creates new form FrequencyStatsGUI
      */
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
 
     public FrequencyStatsGUI() {
-        orderBUS = FormLoad.orderBUS;
+        orderBUSImpl = FormLoad.orderBUSImpl;
         initComponents();
         setTextForReservation(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999));
         createChartByHours(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999), statsByHours);
@@ -534,13 +529,13 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_cboCurveActionPerformed
 
     private void setTextForReservation(LocalDateTime startDate, LocalDateTime endDate) {
-        lblQtyAll.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "ALL") + " đơn đã phục vụ");
-        lblQtyOff.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "IMMEDIATE") + " đơn đặt trực tiếp");
-        lblQtyOnl.setText(orderBUS.getQtyFrequencyByDate(startDate, endDate, "ADVANCE") + " đơn đặt trực tuyến");
+        lblQtyAll.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "ALL") + " đơn đã phục vụ");
+        lblQtyOff.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "IMMEDIATE") + " đơn đặt trực tiếp");
+        lblQtyOnl.setText(orderBUSImpl.getQtyFrequencyByDate(startDate, endDate, "ADVANCE") + " đơn đặt trực tuyến");
 
-        lblRevenueAll.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "ALL")) + " VNĐ");
-        lblRevenueOff.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "IMMEDIATE")) + " VNĐ");
-        lblRevenueOnl.setText(DoubleFormatUlti.format(orderBUS.getRevenueOfFrequencyByDate(startDate, endDate, "ADVANCE")) + " VNĐ");
+        lblRevenueAll.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "ALL")) + " VNĐ");
+        lblRevenueOff.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "IMMEDIATE")) + " VNĐ");
+        lblRevenueOnl.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueOfFrequencyByDate(startDate, endDate, "ADVANCE")) + " VNĐ");
     }
 
     private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
@@ -555,7 +550,7 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
     private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
-        Map<String, Integer> map = orderBUS.getTotalFrequencyByHours(startDate, endDate, "ALL");
+        Map<String, Integer> map = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "ALL");
 
         Map<String, Integer> completeMap = new TreeMap<>();
 
@@ -586,8 +581,8 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
         chart.clear();
         chart.addLegend("IMMEDIATE", Constants.COLOR_REVENUE, Constants.COLOR_REVENUE);
         chart.addLegend("ADVANCE", Constants.COLOR_CAPITAL, Constants.COLOR_CAPITAL);
-        Map<String, Integer> map1 = orderBUS.getTotalFrequencyByHours(startDate, endDate, "IMMEDIATE");
-        Map<String, Integer> map2 = orderBUS.getTotalFrequencyByHours(startDate, endDate, "ADVANCE");
+        Map<String, Integer> map1 = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "IMMEDIATE");
+        Map<String, Integer> map2 = orderBUSImpl.getTotalFrequencyByHours(startDate, endDate, "ADVANCE");
         
         Map<String, Map<Integer, Integer>> resultMap = new TreeMap<>();
 

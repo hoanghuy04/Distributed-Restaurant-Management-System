@@ -4,15 +4,17 @@
  */
 package gui.manager;
 
-import bus.ItemBUS;
-import bus.ItemToppingBUS;
-import bus.ToppingBUS;
+import bus.impl.ItemBUSImpl;
+import bus.impl.ItemToppingBUSImpl;
+import bus.impl.ToppingBUSImpl;
 import common.Constants;
 import dto.ToppingDTO;
 import model.*;
 import gui.FormLoad;
 import gui.custom.RoundedTextField;
 import gui.custom.TableDesign;
+
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,24 +32,24 @@ import util.*;
  *
  * @author Trần Ngọc Huyền
  */
-public class ToppingGUI extends javax.swing.JPanel {
+public class ToppingGUI extends javax.swing.JPanel  {
 
     private TableDesign tableDesign;
     private String[] headers;
     private List<Integer> tableWidth;
     private DefaultTableModel defaultTableModel;
     private TableColumnModel columnModel;
-    private ToppingBUS toppingBUS;
-    private ItemToppingBUS itemToppingBUS;
-    private ItemBUS itemBUS;
+    private ToppingBUSImpl toppingBUSImpl;
+    private ItemToppingBUSImpl itemToppingBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
     private DialogVoucherDetail dialog;
     private List<ItemEntity> items;
     private boolean isMouseClick = false;
 
     public ToppingGUI() {
-        this.toppingBUS = FormLoad.toppingBUS;
-        this.itemToppingBUS = FormLoad.itemToppingBUS;
-        this.itemBUS = FormLoad.itemBUS;
+        this.toppingBUSImpl = FormLoad.toppingBUSImpl;
+        this.itemToppingBUSImpl = FormLoad.itemToppingBUSImpl;
+        this.itemBUSImpl = FormLoad.itemBUSImpl;
         this.items = new ArrayList<>();
         dialog = new DialogVoucherDetail(this);
         initComponents();
@@ -441,8 +443,8 @@ public class ToppingGUI extends javax.swing.JPanel {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
             ToppingDTO tmp = convertEntityFromTable();
-            toppingBUS.addTopping(tmp);
-            loadData(toppingBUS.getAllEntities());
+            toppingBUSImpl.addTopping(tmp);
+            loadData(toppingBUSImpl.getAllEntities());
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -452,8 +454,8 @@ public class ToppingGUI extends javax.swing.JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 String id = table.getValueAt(row, 0).toString();
-                toppingBUS.updateTopping(tmp, id);
-                loadData(toppingBUS.getAllEntities());
+                toppingBUSImpl.updateTopping(tmp, id);
+                loadData(toppingBUSImpl.getAllEntities());
             } else {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần cập nhật");
             }
@@ -462,7 +464,7 @@ public class ToppingGUI extends javax.swing.JPanel {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         ToppingDTO tmp = convertEntityFromTable();
-        loadData(toppingBUS.findTopping(tmp));
+        loadData(toppingBUSImpl.findTopping(tmp));
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -476,7 +478,7 @@ public class ToppingGUI extends javax.swing.JPanel {
             String itemId = "";
             String name = table.getValueAt(row, 1).toString();
             String toppingId = table.getValueAt(row, 0).toString();
-            ToppingEntity topping = toppingBUS.getEntityById(toppingId);
+            ToppingEntity topping = toppingBUSImpl.getEntityById(toppingId);
             Set<ItemToppingEntity> itemToppings = topping.getItemToppings();
             if (!itemToppings.isEmpty()) {
                 StringBuilder itemCodes = new StringBuilder();
@@ -530,7 +532,7 @@ public class ToppingGUI extends javax.swing.JPanel {
         table.setModel(defaultTableModel);
         this.columnModel = tableDesign.getColumnModel();
         table.setColumnModel(columnModel);
-        loadData(toppingBUS.getAllEntities());
+        loadData(toppingBUSImpl.getAllEntities());
     }
 
     private void loadData(List<ToppingEntity> list) {

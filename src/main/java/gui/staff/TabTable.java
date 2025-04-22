@@ -4,9 +4,9 @@
  */
 package gui.staff;
 
-import bus.FloorBUS;
-import bus.OrderBUS;
-import bus.TableBUS;
+import bus.impl.FloorBUSImpl;
+import bus.impl.OrderBUSImpl;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import model.FloorEntity;
 import model.TableEntity;
@@ -35,17 +35,17 @@ public class TabTable extends javax.swing.JPanel {
     /**
      * Creates new form TabTable
      */
-    private FloorBUS floorBUS;
-    private TableBUS tableBUS;
+    private FloorBUSImpl floorBUSImpl;
+    private TableBUSImpl tableBUSImpl;
     private OrderGUI orderGUI;
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private JRadioButtonCustom rFirstFloor;
     private JRadioButtonCustom rFirstStatus;
     
     public TabTable(OrderGUI orderGUI) {
-        floorBUS = FormLoad.floorBUS;
-        tableBUS = FormLoad.tableBUS;
-        orderBUS = FormLoad.orderBUS;
+        floorBUSImpl = FormLoad.floorBUSImpl;
+        tableBUSImpl = FormLoad.tableBUSImpl;
+        orderBUSImpl = FormLoad.orderBUSImpl;
         this.orderGUI = orderGUI;
         initComponents();
         loadFloors();
@@ -360,7 +360,7 @@ public class TabTable extends javax.swing.JPanel {
         if (pnFloors.getComponentCount() == 0) {
             pnFloors.removeAll();
             
-            floorBUS.getAllEntities().forEach(x -> {
+            floorBUSImpl.getAllEntities().forEach(x -> {
                 JRadioButtonCustom r = new JRadioButtonCustom(x.getName(), x);
                 btnGroupFloor.add(r);
                 if (btnGroupFloor.getButtonCount() == 1) {
@@ -427,7 +427,7 @@ public class TabTable extends javax.swing.JPanel {
     }
     
     private void loadTable(FloorEntity floor, String status) {
-        List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), status);
+        List<TableEntity> tables = tableBUSImpl.getListTablesByStatus(floor.getFloorId(), status);
         tables.forEach(x -> loadPanelTables(x));
     }
     

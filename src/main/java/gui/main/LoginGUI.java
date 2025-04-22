@@ -4,7 +4,7 @@
  */
 package gui.main;
 
-import bus.EmployeeBUS;
+import bus.impl.EmployeeBUSImpl;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -14,7 +14,6 @@ import model.EmployeeEntity;
 import gui.menu.Application;
 import gui.custom.RoundedButton;
 import gui.custom.textfield.PasswordField;
-import gui.manager.RevenueStatsGUI;
 import gui.staff.DialogPasswordRecover;
 import gui.staff.MainGUI;
 import gui.staff.OverviewGUI;
@@ -35,7 +34,7 @@ import util.ResizeImage;
 public class LoginGUI extends javax.swing.JFrame {
 
     public static EmployeeEntity emp;
-    private EmployeeBUS empBUS;
+    private EmployeeBUSImpl empBUS;
     private MainMenu mainMenu;
     private DateTimeFormatter df = DateTimeFormatter.ofPattern("ddMMyy");
 
@@ -44,7 +43,7 @@ public class LoginGUI extends javax.swing.JFrame {
      *
      */
     public LoginGUI() {
-        empBUS = new EmployeeBUS(ConnectDB.getEntityManager());
+        empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
         initComponents();
         encryptPassword();
         setLocationRelativeTo(null);

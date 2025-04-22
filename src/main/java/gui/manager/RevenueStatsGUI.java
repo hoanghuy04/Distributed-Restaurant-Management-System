@@ -4,26 +4,23 @@
  */
 package gui.manager;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import dal.connectDB.ConnectDB;
 import gui.custom.TableDesign;
 import gui.custom.chart.ModelChart;
-import java.awt.Color;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JTable;
+
 import util.DoubleFormatUlti;
-import common.Constants;
 import gui.custom.chart.Chart;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 import java.time.format.DateTimeFormatter;
-import javax.management.Notification;
-import javax.swing.JOptionPane;
+
 import raven.toast.Notifications;
 
 /**
@@ -37,9 +34,9 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
      * Creates new form RevenueStatsGUI
      */
     private TableDesign tableDesign;
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     public RevenueStatsGUI() {
-        orderBUS = new OrderBUS(ConnectDB.getEntityManager());
+        orderBUSImpl = new OrderBUSImpl(ConnectDB.getEntityManager());
         String headers[] = {"Mã hóa đơn","Khách hàng","Nhân viên","Ngày lập","Tổng tiền"};
         List<Integer> tableWidth = Arrays.asList(50,80,80,120,150);
         tableDesign = new TableDesign(headers, tableWidth);
@@ -554,20 +551,20 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         chart.clear();
 
         if (year != null) {
-            lblRevenue.setText(DoubleFormatUlti.format(orderBUS.getRevenueByYear(year)) + " VND");
-            lblCapital.setText(DoubleFormatUlti.format(orderBUS.getCapitalByYear(year)) + " VND");
-            lblProfit.setText(DoubleFormatUlti.format(orderBUS.getRevenueByYear(year) - orderBUS.getCapitalByYear(year)) + " VND");
+            lblRevenue.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueByYear(year)) + " VND");
+            lblCapital.setText(DoubleFormatUlti.format(orderBUSImpl.getCapitalByYear(year)) + " VND");
+            lblProfit.setText(DoubleFormatUlti.format(orderBUSImpl.getRevenueByYear(year) - orderBUSImpl.getCapitalByYear(year)) + " VND");
         } else {
-            lblRevenue.setText(DoubleFormatUlti.format(orderBUS.getTotalRevenue(startDate, endDate)) + " VND");
-            lblCapital.setText(DoubleFormatUlti.format(orderBUS.getTotalCapital(startDate, endDate)) + " VND");
-            lblProfit.setText(DoubleFormatUlti.format(orderBUS.getTotalRevenue(startDate, endDate) - orderBUS.getTotalCapital(startDate, endDate)) + " VND");
+            lblRevenue.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(startDate, endDate)) + " VND");
+            lblCapital.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalCapital(startDate, endDate)) + " VND");
+            lblProfit.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(startDate, endDate) - orderBUSImpl.getTotalCapital(startDate, endDate)) + " VND");
         }
 
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
         chart.addLegend("Tiền vốn", Constants.COLOR_CAPITAL);
         chart.addLegend("Lợi nhuận", Constants.COLOR_PROFIT);
 
-        Map<String, Map<Double, Double>> map = orderBUS.getRevenueStatsByDateOrYear(startDate, endDate, year);
+        Map<String, Map<Double, Double>> map = orderBUSImpl.getRevenueStatsByDateOrYear(startDate, endDate, year);
         map.forEach((dateOrMonth, value) -> {
             double revenue = value.keySet().stream().findFirst().orElse(0.0);
             double capital = value.values().stream().findFirst().orElse(0.0);

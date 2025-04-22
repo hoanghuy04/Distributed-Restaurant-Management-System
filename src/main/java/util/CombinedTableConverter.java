@@ -4,9 +4,7 @@
  */
 package util;
 
-import bus.TableBUS;
 import model.TableEntity;
-import gui.FormLoad;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.ArrayList;

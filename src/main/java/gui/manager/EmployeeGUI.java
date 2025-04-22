@@ -4,8 +4,8 @@
  */
 package gui.manager;
 
-import bus.EmployeeBUS;
-import bus.RoleBUS;
+import bus.impl.EmployeeBUSImpl;
+import bus.impl.RoleBUSImpl;
 import dal.connectDB.ConnectDB;
 import model.EmployeeEntity;
 import model.RoleEntity;
@@ -27,14 +27,14 @@ public class EmployeeGUI extends javax.swing.JPanel {
     private TableColumnModel columnModel;
     private DefaultTableModel tableModel;
     private EmployeeEntity emp;
-    private EmployeeBUS empBUS;
-    private RoleBUS roleBUS;
+    private EmployeeBUSImpl empBUS;
+    private RoleBUSImpl roleBUSImpl;
     /**
      * Creates new form EmployeeGUI
      */
     public EmployeeGUI() {
-        empBUS = new EmployeeBUS(ConnectDB.getEntityManager());
-        roleBUS = new RoleBUS(ConnectDB.getEntityManager());
+        empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
+        roleBUSImpl = new RoleBUSImpl(ConnectDB.getEntityManager());
         emp = new EmployeeEntity();
         initComponents();
         txtId.setEditable(false);
@@ -66,7 +66,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
                                 emp.getRole().getRoleName(), emp.isActive() ? "true" : "false"});
         }
         
-        List<RoleEntity> roles = roleBUS.getAllEntities();
+        List<RoleEntity> roles = roleBUSImpl.getAllEntities();
         for(RoleEntity role : roles) {
             cbbRole.addItem(role.getRoleName());
         }
@@ -362,7 +362,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
         String address = txtAddress.getText();
         String email = txtEmail.getText();
         String pass = empBUS.hashPassword(txtPass.getText());
-        RoleEntity role = roleBUS.findByName(cbbRole.getSelectedItem().toString());
+        RoleEntity role = roleBUSImpl.findByName(cbbRole.getSelectedItem().toString());
 
         EmployeeEntity empNew = new EmployeeEntity(pass, name, phone, email, address, role);
         empBUS.insertEntity(empNew);
@@ -383,7 +383,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
         emp.setAddress(new Address(txtAddress.getText(), "", "", ""));
         emp.setEmail(txtEmail.getText());
         emp.setPassword(txtPass.getText());
-        emp.setRole(roleBUS.findByName(cbbRole.getSelectedItem().toString()));
+        emp.setRole(roleBUSImpl.findByName(cbbRole.getSelectedItem().toString()));
         emp.setActive(chkActive.isSelected());
         
         empBUS.updateEntity(emp);
@@ -411,7 +411,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
         String address = txtAddress.getText();
         String email = txtEmail.getText();
         String pass = txtPass.getText();
-        RoleEntity role = roleBUS.findByName(cbbRole.getSelectedItem().toString());
+        RoleEntity role = roleBUSImpl.findByName(cbbRole.getSelectedItem().toString());
         boolean active = chkActive.isSelected();
         
         tableModel.setRowCount(0);

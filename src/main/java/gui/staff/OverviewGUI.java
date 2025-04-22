@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.ItemBUS;
-import bus.OrderBUS;
+import bus.impl.ItemBUSImpl;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import gui.FormLoad;
 import gui.custom.chart.Chart;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import util.DoubleFormatUlti;
 
@@ -26,8 +25,8 @@ public class OverviewGUI extends javax.swing.JPanel {
 
     private final LocalDateTime start;
     private final LocalDateTime end;
-    private OrderBUS orderBUS;
-    private ItemBUS itemBUS;
+    private OrderBUSImpl orderBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
 
     /**
      * Creates new form OverviewGUI
@@ -37,8 +36,8 @@ public class OverviewGUI extends javax.swing.JPanel {
         LocalDate localDateEnd = LocalDate.now();
         start = localDateStart.atStartOfDay();
         end = localDateEnd.atTime(23, 59, 59, 999999999);
-        orderBUS = FormLoad.orderBUS;
-        itemBUS = FormLoad.itemBUS;
+        orderBUSImpl = FormLoad.orderBUSImpl;
+        itemBUSImpl = FormLoad.itemBUSImpl;
         initComponents();
         setTextForPanel();
         createChartByHours(start, end, statsByHours);
@@ -420,10 +419,10 @@ public class OverviewGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void setTextForPanel() {
-        lblRevenue.setText(""+DoubleFormatUlti.format(orderBUS.getTotalRevenue(start, end)) + " VND");
-        lblProfits.setText(""+DoubleFormatUlti.format(orderBUS.getTotalRevenue(start, end) - orderBUS.getTotalCapital(start, end)) + "VND");
-        lblQtyCustomer.setText(""+orderBUS.getTotalCustomers(start, end));
-        lblQtyOrder.setText(""+orderBUS.getTotalOrder(start, end)+" đơn đã phục vụ");
+        lblRevenue.setText(""+DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(start, end)) + " VND");
+        lblProfits.setText(""+DoubleFormatUlti.format(orderBUSImpl.getTotalRevenue(start, end) - orderBUSImpl.getTotalCapital(start, end)) + "VND");
+        lblQtyCustomer.setText(""+ orderBUSImpl.getTotalCustomers(start, end));
+        lblQtyOrder.setText(""+ orderBUSImpl.getTotalOrder(start, end)+" đơn đã phục vụ");
     }
     
     private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
@@ -438,7 +437,7 @@ public class OverviewGUI extends javax.swing.JPanel {
     private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
-        Map<String, Double> map = orderBUS.getTotalRevenueByHours(startDate, endDate);
+        Map<String, Double> map = orderBUSImpl.getTotalRevenueByHours(startDate, endDate);
         
         Map<String, Double> completeMap = new TreeMap<>();
 
@@ -468,7 +467,7 @@ public class OverviewGUI extends javax.swing.JPanel {
     private void updateChartQuantity(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
         chart.clear();
         chart.addLegend("Số Lượng", Constants.COLOR_REVENUE);
-        Map<String, Integer> map = itemBUS.getTop5ItemHaveBestQuantityForAllCategories(startDate, endDate);
+        Map<String, Integer> map = itemBUSImpl.getTop5ItemHaveBestQuantityForAllCategories(startDate, endDate);
         map.entrySet().forEach(x -> chart.addData(new ModelChart(x.getKey(), new double[]{x.getValue()})));
         chart.start();
     }

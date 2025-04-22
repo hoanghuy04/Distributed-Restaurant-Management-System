@@ -4,13 +4,11 @@
  */
 package gui.manager;
 
-import bus.CategoryBUS;
-import bus.FloorBUS;
+import bus.impl.CategoryBUSImpl;
 import model.CategoryEntity;
-import model.FloorEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
-import java.time.LocalDateTime;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,14 +26,14 @@ public class CategoryGUI extends javax.swing.JPanel {
     private final List<Integer> len;
     private final TableDesign tableDesign;
     private DefaultTableModel modelTable = new DefaultTableModel();
-    private final CategoryBUS categoryBUS;
+    private final CategoryBUSImpl categoryBUSImpl;
 
     /**
      * Creates new form FloorGUI
      */
     public CategoryGUI() {
 
-        categoryBUS = FormLoad.categoryBUS;
+        categoryBUSImpl = FormLoad.categoryBUSImpl;
         headers = new String[]{"Mã danh mục", "Tên danh mục", "Mô tả", "Trạng thái"};
         len = Arrays.asList(100, 200, 50, 100);
         tableDesign = new TableDesign(headers, len);
@@ -301,7 +299,7 @@ public class CategoryGUI extends javax.swing.JPanel {
                     active = false;
                 }
                 CategoryEntity f = new CategoryEntity(null, name, desc, active);
-                if (categoryBUS.insertEntity(f)) {
+                if (categoryBUSImpl.insertEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                     deleteAllTable();
                     loadData();
@@ -320,7 +318,7 @@ public class CategoryGUI extends javax.swing.JPanel {
             deleteAllTable();
             loadData();
         } else {
-            CategoryEntity f = categoryBUS.findByName(name);
+            CategoryEntity f = categoryBUSImpl.findByName(name);
             if (f != null) {
                 deleteAllTable();
                 modelTable.addRow(new Object[]{
@@ -351,7 +349,7 @@ public class CategoryGUI extends javax.swing.JPanel {
                 try {
                     f = new CategoryEntity(id, name, desc, active);
 
-                    if (categoryBUS.updateEntity(f)) {
+                    if (categoryBUSImpl.updateEntity(f)) {
                         JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
                         deleteAllTable();
                         loadData();
@@ -388,7 +386,7 @@ public class CategoryGUI extends javax.swing.JPanel {
     }
 
     private void loadData() {
-        categoryBUS.getAllEntities().stream().forEach(f -> {
+        categoryBUSImpl.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getCategoryId(), f.getName(), f.getDescription(), f.isActive() ? "Đang hoạt động" : "Không hoạt động"
             });

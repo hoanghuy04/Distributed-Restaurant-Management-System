@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.*;
+import bus.impl.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import common.*;
 import dto.CartDTO;
@@ -42,17 +42,17 @@ public class OrderGUI extends javax.swing.JPanel {
     /**
      * Creates new form OrderGUI
      */
-    private CategoryBUS categoryBUS;
-    private ItemBUS itemBUS;
-    private FloorBUS floorBUS;
-    private TableBUS tableBUS;
-    private CustomerBUS customerBUS;
-    private OrderBUS orderBUS;
-    private OrderDetailBUS orderDetailBUS;
-    private EmployeeBUS employeeBUS;
-    private PromotionBUS promotionBUS;
-    private ItemToppingBUS itemToppingBUS;
-    private ToppingBUS toppingBUS;
+    private CategoryBUSImpl categoryBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
+    private FloorBUSImpl floorBUSImpl;
+    private TableBUSImpl tableBUSImpl;
+    private CustomerBUSImpl customerBUSImpl;
+    private OrderBUSImpl orderBUSImpl;
+    private OrderDetailBUSImpl orderDetailBUSImpl;
+    private EmployeeBUSImpl employeeBUS;
+    private PromotionBUSImpl promotionBUSImpl;
+    private ItemToppingBUSImpl itemToppingBUSImpl;
+    private ToppingBUSImpl toppingBUSImpl;
     private CustomerEntity dfCus;
     private TableEntity table;
     private MainGUI mainGUI;
@@ -71,20 +71,20 @@ public class OrderGUI extends javax.swing.JPanel {
     public OrderGUI(Application app, MainGUI mainGUI) {
         this.app = app;
         cartDTO = new CartDTO();
-        this.categoryBUS = FormLoad.categoryBUS;
-        this.itemBUS = FormLoad.itemBUS;
-        this.floorBUS = FormLoad.floorBUS;
-        this.tableBUS = FormLoad.tableBUS;
-        this.customerBUS = FormLoad.customerBUS;
-        this.orderBUS = FormLoad.orderBUS;
-        this.orderDetailBUS = FormLoad.orderDetailBUS;
+        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
+        this.itemBUSImpl = FormLoad.itemBUSImpl;
+        this.floorBUSImpl = FormLoad.floorBUSImpl;
+        this.tableBUSImpl = FormLoad.tableBUSImpl;
+        this.customerBUSImpl = FormLoad.customerBUSImpl;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
+        this.orderDetailBUSImpl = FormLoad.orderDetailBUSImpl;
         this.employeeBUS = FormLoad.employeeBUS;
-        this.promotionBUS = FormLoad.promotionBUS;
-        this.itemToppingBUS = FormLoad.itemToppingBUS;
-        this.toppingBUS = FormLoad.toppingBUS;
+        this.promotionBUSImpl = FormLoad.promotionBUSImpl;
+        this.itemToppingBUSImpl = FormLoad.itemToppingBUSImpl;
+        this.toppingBUSImpl = FormLoad.toppingBUSImpl;
         this.mainGUI = mainGUI;
 
-        dfCus = customerBUS.getAllEntities().get(0);
+        dfCus = customerBUSImpl.getAllEntities().get(0);
         this.combinedTables = new ArrayList<>();
 
         this.set = new HashSet<>();
@@ -934,7 +934,7 @@ public class OrderGUI extends javax.swing.JPanel {
     private void txtSearchItemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchItemKeyReleased
         String nameItem = txtSearchItem.getText();
         String nameCat = tabCategory.getTitleAt(tabCategory.getSelectedIndex());
-        List<ItemEntity> items = itemBUS.findByName(nameItem, nameCat);
+        List<ItemEntity> items = itemBUSImpl.findByName(nameItem, nameCat);
         loadItems(items);
     }//GEN-LAST:event_txtSearchItemKeyReleased
 
@@ -942,8 +942,8 @@ public class OrderGUI extends javax.swing.JPanel {
         cbbTable.clearSelectedItems();
         cbbTable.removeAllItems();
         String floorName = cbbFloor.getSelectedItem().toString();
-        FloorEntity floor = floorBUS.findByName(floorName);
-        List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), "Tất cả");
+        FloorEntity floor = floorBUSImpl.findByName(floorName);
+        List<TableEntity> tables = tableBUSImpl.getListTablesByStatus(floor.getFloorId(), "Tất cả");
         for (TableEntity table : tables) {
             cbbTable.addItem(table.getName());
         }
@@ -986,7 +986,7 @@ public class OrderGUI extends javax.swing.JPanel {
                 for (TableEntity tablee : this.o.getCombinedTables()) {
                     combinedTables.remove(tablee);
                 }
-                tableBUS.updateEntity(table);
+                tableBUSImpl.updateEntity(table);
                 DialogReceipt dialog = new DialogReceipt(mainGUI, o);
                 dialog.setVisible(true);
             }
@@ -1017,8 +1017,8 @@ public class OrderGUI extends javax.swing.JPanel {
 
     private List<ItemEntity> getItemsFromNameTab() {
         String nameCat = tabCategory.getTitleAt(tabCategory.getSelectedIndex());
-        CategoryEntity category = categoryBUS.findByName(nameCat);
-        return itemBUS.getFilteredItems(category, getDataFromCbbFilter());
+        CategoryEntity category = categoryBUSImpl.findByName(nameCat);
+        return itemBUSImpl.getFilteredItems(category, getDataFromCbbFilter());
     }
 
     private void updateInfoCustomer(CustomerEntity cus) {
@@ -1035,9 +1035,9 @@ public class OrderGUI extends javax.swing.JPanel {
     }
 
     public void addTabCategory() {
-        List<CategoryEntity> categories = categoryBUS.getAllEntities();
+        List<CategoryEntity> categories = categoryBUSImpl.getAllEntities();
         for (CategoryEntity category : categories) {
-            List<ItemEntity> items = itemBUS.getFilteredItems(category, "promotion");
+            List<ItemEntity> items = itemBUSImpl.getFilteredItems(category, "promotion");
             PanelCategoryDetail pnCD = new PanelCategoryDetail(items, this);
             tabCategory.add(pnCD, category.getName());
         }
@@ -1049,7 +1049,7 @@ public class OrderGUI extends javax.swing.JPanel {
     }
 
     private void loadFloors() {
-        List<FloorEntity> floors = floorBUS.getAllEntities();
+        List<FloorEntity> floors = floorBUSImpl.getAllEntities();
         for (FloorEntity floor : floors) {
             cbbFloor.addItem(floor.getName());
         }
@@ -1092,7 +1092,7 @@ public class OrderGUI extends javax.swing.JPanel {
             return false;
         }
         item.setStockQuantity(newStock);
-        return itemBUS.updateEntity(item);
+        return itemBUSImpl.updateEntity(item);
     }
 
     public void removePanelOrderDetail(PanelOrderDetail pnOD) {
@@ -1108,30 +1108,30 @@ public class OrderGUI extends javax.swing.JPanel {
     }
 
     public boolean createOrder(PaymentStatusEnum paymentStatus) {
-        TableEntity tableCBB = tableBUS.findByName(cbbTable.getSelectedItems().get(0).toString(), floorBUS.findByName(cbbFloor.getSelectedItem().toString()).getFloorId());
-        FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
-        this.o = orderBUS.findByTableId(tableCBB.getTableId());
+        TableEntity tableCBB = tableBUSImpl.findByName(cbbTable.getSelectedItems().get(0).toString(), floorBUSImpl.findByName(cbbFloor.getSelectedItem().toString()).getFloorId());
+        FloorEntity floor = floorBUSImpl.findByName(cbbFloor.getSelectedItem().toString());
+        this.o = orderBUSImpl.findByTableId(tableCBB.getTableId());
         boolean isNewOrder = false;
         if (o == null) {
             if (table.equals(tableCBB)
-                    || (orderBUS.findByTableId(table.getTableId()) == null
-                    && orderBUS.findByTableId(tableCBB.getTableId()) == null)) {
+                    || (orderBUSImpl.findByTableId(table.getTableId()) == null
+                    && orderBUSImpl.findByTableId(tableCBB.getTableId()) == null)) {
                 isNewOrder = true;
                 o = new OrderEntity();
             } else {
-                o = orderBUS.findByTableId(table.getTableId());
+                o = orderBUSImpl.findByTableId(table.getTableId());
             }
         }
 
         o.setPaymentMethod(PaymentMethodEnum.convertToEnum(cbbPayment.getSelectedItem().toString()));
         o.setPaymentStatus(paymentStatus);
         if (isNewOrder) {
-            CustomerEntity c = customerBUS.getEntityById("Cust0101010001");
+            CustomerEntity c = customerBUSImpl.getEntityById("Cust0101010001");
             o.setCustomer(c);
             o.setEmployee(LoginGUI.emp);
             o.setTable(tableCBB);
             o.setNumberOfCustomer(1);
-            orderBUS.insertEntity(o);
+            orderBUSImpl.insertEntity(o);
         }
 
         boolean isSwitched = true;
@@ -1151,7 +1151,7 @@ public class OrderGUI extends javax.swing.JPanel {
         }
         List<TableEntity> listCombinedTables = (List<TableEntity>) cbbTable.getSelectedItems()
                 .stream()
-                .map(x -> (TableEntity) tableBUS.findByName(x.toString(), floor.getFloorId()))
+                .map(x -> (TableEntity) tableBUSImpl.findByName(x.toString(), floor.getFloorId()))
                 .filter(Objects::nonNull)
                 .filter(x -> !x.equals(tableCBB))
                 .collect(Collectors.toList());
@@ -1165,7 +1165,7 @@ public class OrderGUI extends javax.swing.JPanel {
         for (TableEntity t : tabless) {
             if (!listCombinedTables.contains(t)) {
                 t.setTableStatus(TableStatusEnum.AVAILABLE);
-                tableBUS.updateEntity(t);
+                tableBUSImpl.updateEntity(t);
                 combinedTables.remove(t);
             }
         }
@@ -1182,7 +1182,7 @@ public class OrderGUI extends javax.swing.JPanel {
             updateOrderWithoutOrderDetails(o);
             if (!isNewOrder) {
                 o.getOrderDetails().forEach(od -> {
-                    orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId()));
+                    orderDetailBUSImpl.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId()));
                     updateItemStock(od.getItem(), od.getQuantity());
                 });
             }
@@ -1199,14 +1199,14 @@ public class OrderGUI extends javax.swing.JPanel {
                     processPaidOrder(o);
                 }
             }
-            orderBUS.updateEntity(o);
+            orderBUSImpl.updateEntity(o);
         }
         return isSwitched;
     }
 
     private void updateTableStatus(TableEntity table, TableStatusEnum status) {
         table.setTableStatus(status);
-        tableBUS.updateEntity(table);
+        tableBUSImpl.updateEntity(table);
     }
 
     private void processPaidOrder(OrderEntity o) {
@@ -1215,10 +1215,10 @@ public class OrderGUI extends javax.swing.JPanel {
             updateTableStatus(o.getTable(), TableStatusEnum.AVAILABLE);
             o.getCombinedTables().forEach(t -> {
                 updateTableStatus(t, TableStatusEnum.AVAILABLE);
-                OrderEntity order = orderBUS.findByTableId(t.getTableId());
+                OrderEntity order = orderBUSImpl.findByTableId(t.getTableId());
                 if (order != null) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
-                    orderBUS.updateEntity(order);
+                    orderBUSImpl.updateEntity(order);
                 }
             });
         }
@@ -1231,7 +1231,7 @@ public class OrderGUI extends javax.swing.JPanel {
             o.getCustomer().setOrders(orders);
             o.getCustomer().setRewardedPoint();
             o.getCustomer().setCustomerLevel();
-            customerBUS.updateEntity(o.getCustomer());
+            customerBUSImpl.updateEntity(o.getCustomer());
         }
     }
 
@@ -1246,7 +1246,7 @@ public class OrderGUI extends javax.swing.JPanel {
     private void insertOrderDetail(OrderDetailEntity od) {
         od.setLineTotal();
         od.setDiscount();
-        orderDetailBUS.insertEntity(od);
+        orderDetailBUSImpl.insertEntity(od);
     }
 
     private Set<OrderDetailEntity> getListOrderDetail(OrderEntity o) {
@@ -1257,7 +1257,7 @@ public class OrderGUI extends javax.swing.JPanel {
             ItemToppingEntity itemTopping = entry.getKey().getItemTopping();
             ToppingEntity topping = null;
             if (itemTopping == null) {
-                topping = toppingBUS.getAllEntities().get(0);
+                topping = toppingBUSImpl.getAllEntities().get(0);
             } else {
                 topping = itemTopping.getTopping();
             }
@@ -1279,7 +1279,7 @@ public class OrderGUI extends javax.swing.JPanel {
         if (txtSearchCustomer.getText().trim().equals("") || txtSearchCustomer.getText() == null) {
             return dfCus;
         } else {
-            return customerBUS.findByPhone(txtSearchCustomer.getText());
+            return customerBUSImpl.findByPhone(txtSearchCustomer.getText());
         }
     }
 
@@ -1304,37 +1304,37 @@ public class OrderGUI extends javax.swing.JPanel {
     private void applyOrderDiscount(OrderEntity o) {
         CustomerEntity customer = getCustomer();
         PromotionEntity promotionEntity = null;
-        promotionEntity = promotionBUS.getBestPromotionByCustomerLevelAndTotalPrice(totalPrice - itemDiscount - deposit, customer.getCustomerLevel());
+        promotionEntity = promotionBUSImpl.getBestPromotionByCustomerLevelAndTotalPrice(totalPrice - itemDiscount - deposit, customer.getCustomerLevel());
         o.setPromotion(promotionEntity);
     }
 
     private void mergeTable(OrderEntity o0, List<TableEntity> combineTables) {
         Map<ItemCartDTO, Integer> mergedODs = new HashMap<>();
         //Bàn nguồn 
-        FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
-        TableEntity t0 = tableBUS.findByName(cbbTable.getSelectedItems().get(0).toString(), floor.getFloorId());
+        FloorEntity floor = floorBUSImpl.findByName(cbbFloor.getSelectedItem().toString());
+        TableEntity t0 = tableBUSImpl.findByName(cbbTable.getSelectedItems().get(0).toString(), floor.getFloorId());
 
         if (!o0.getOrderDetails().isEmpty()) {
             o0.getOrderDetails()
                     .forEach(x -> mergedODs.merge(new ItemCartDTO(x.getItem(),
-                                    itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
+                                    itemToppingBUSImpl.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
                             x.getQuantity(), Integer::sum));
         }
 
         List<OrderEntity> orderOfCombineTables = combineTables.stream()
-                .map(x -> (OrderEntity) orderBUS.findByTableId(x.getTableId()))
+                .map(x -> (OrderEntity) orderBUSImpl.findByTableId(x.getTableId()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         orderOfCombineTables.stream()
                 .flatMap(o -> o.getOrderDetails().stream())
                 .forEach(x -> mergedODs.merge(new ItemCartDTO(x.getItem(),
-                                itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
+                                itemToppingBUSImpl.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
                         x.getQuantity(), Integer::sum));
 
         orderOfCombineTables.forEach(o -> {
             o.setOrderStatus(OrderStatusEnum.MERGED);
-            orderBUS.updateEntity(o);
+            orderBUSImpl.updateEntity(o);
         });
 
         //OrderDetails mới
@@ -1344,7 +1344,7 @@ public class OrderGUI extends javax.swing.JPanel {
                 .collect(Collectors.toSet());
 
         o0.getOrderDetails()
-                .forEach(x -> orderDetailBUS.deleteEntity(new OrderDetailId(x.getItem().getItemId(), x.getOrder().getOrderId(), x.getTopping().getToppingId())));
+                .forEach(x -> orderDetailBUSImpl.deleteEntity(new OrderDetailId(x.getItem().getItemId(), x.getOrder().getOrderId(), x.getTopping().getToppingId())));
 
         newODs.forEach(od -> {
             insertOrderDetail(od);
@@ -1352,16 +1352,16 @@ public class OrderGUI extends javax.swing.JPanel {
         loadPrice(newODs);
         updatePriceOrder(newODs, o0);
         o0.setExpectedCompletionTime(LocalDateTime.now().plusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES));
-        orderBUS.updateEntity(o0);
+        orderBUSImpl.updateEntity(o0);
 
         orderOfCombineTables.stream()
                 .flatMap(o -> o.getOrderDetails().stream())
-                .forEach(od -> orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId())));
+                .forEach(od -> orderDetailBUSImpl.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId())));
 
         orderOfCombineTables.stream()
                 .forEach(o -> {
                     updatePriceOrder(null, o);
-                    orderBUS.updateEntity(o);
+                    orderBUSImpl.updateEntity(o);
                 });
         cartDTO.setCart(mergedODs);
     }
@@ -1384,7 +1384,7 @@ public class OrderGUI extends javax.swing.JPanel {
         Set<TableEntity> listOfCombinedTable = new HashSet<>();
 
         for (TableEntity t : o.getCombinedTables()) {
-            listOfCombinedTable.add(tableBUS.getEntityById(t.getTableId()));
+            listOfCombinedTable.add(tableBUSImpl.getEntityById(t.getTableId()));
         }
 
         tables.addAll(o.getCombinedTables().stream().map(x -> x.getName()).toList());
@@ -1403,7 +1403,7 @@ public class OrderGUI extends javax.swing.JPanel {
 
         //PanelOrderDetails
         for (OrderDetailEntity od : o.getOrderDetails()) {
-            ItemToppingEntity topping = itemToppingBUS.findByItemAndToppingId(od.getItem(), od.getTopping());
+            ItemToppingEntity topping = itemToppingBUSImpl.findByItemAndToppingId(od.getItem(), od.getTopping());
             ItemCartDTO itemCartDTO = new ItemCartDTO(od.getItem(), topping, od.getDescription());
             cartDTO.insert(itemCartDTO);
             cartDTO.updateQty(itemCartDTO, od.getQuantity());
@@ -1460,7 +1460,7 @@ public class OrderGUI extends javax.swing.JPanel {
             levelCustomerStr = LevelCustomer.NEW.getLevelCustomer();
         }
         totalPaid = cartDTO.getTotalPaid(deposit, 0);
-        PromotionEntity p = promotionBUS.getBestPromotionByCustomerLevelAndTotalPrice(totalPaid, CustomerLevelEnum.convertToEnum(levelCustomerStr));
+        PromotionEntity p = promotionBUSImpl.getBestPromotionByCustomerLevelAndTotalPrice(totalPaid, CustomerLevelEnum.convertToEnum(levelCustomerStr));
         if (p != null) {
             String notice = "Áp dụng khuyến mãi " + String.format("%.0f", p.getDiscountPercentage() * 100) + "% " + " với tổng hoá đơn trên " + DoubleFormatUlti.format(p.getMinPrice());
             if (!set.contains(notice)) {

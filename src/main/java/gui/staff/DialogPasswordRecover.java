@@ -4,21 +4,17 @@
  */
 package gui.staff;
 
-import bus.EmployeeBUS;
-import com.google.zxing.WriterException;
+import bus.impl.EmployeeBUSImpl;
 import common.Constants;
 import model.EmployeeEntity;
 import gui.FormLoad;
 import gui.main.LoginGUI;
-import jakarta.mail.MessagingException;
+
 import java.awt.Frame;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
-import raven.toast.Notifications;
+
 import util.*;
 
 /**
@@ -30,7 +26,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     private LoginGUI loginGUI;
     private EmployeeEntity emp;
     private String confirmCode;
-    private EmployeeBUS employeeBUS;
+    private EmployeeBUSImpl employeeBUS;
 
     /**
      * Creates new form DialogPasswordRecover

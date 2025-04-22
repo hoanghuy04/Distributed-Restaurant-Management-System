@@ -5,18 +5,19 @@
  */
 package gui;
 
-import bus.CategoryBUS;
-import bus.CustomerBUS;
-import bus.EmployeeBUS;
-import bus.FloorBUS;
-import bus.ItemBUS;
-import bus.ItemToppingBUS;
-import bus.OrderBUS;
-import bus.OrderDetailBUS;
-import bus.PromotionBUS;
-import bus.PromotionDetailBUS;
-import bus.TableBUS;
-import bus.ToppingBUS;
+import bus.*;
+import bus.impl.CategoryBUSImpl;
+import bus.impl.CustomerBUSImpl;
+import bus.impl.EmployeeBUSImpl;
+import bus.impl.FloorBUSImpl;
+import bus.impl.ItemBUSImpl;
+import bus.impl.ItemToppingBUSImpl;
+import bus.impl.OrderBUSImpl;
+import bus.impl.OrderDetailBUSImpl;
+import bus.impl.PromotionBUSImpl;
+import bus.impl.PromotionDetailBUSImpl;
+import bus.impl.TableBUSImpl;
+import bus.impl.ToppingBUSImpl;
 import com.formdev.flatlaf.FlatLightLaf;
 import common.Constants;
 import dal.connectDB.ConnectDB;
@@ -29,23 +30,23 @@ import javax.swing.JDialog;
  *
  * @author RAVEN
  */
-public class FormLoad extends javax.swing.JDialog {
+public class FormLoad extends javax.swing.JDialog  {
 
     /**
      * Creates new form Application
      */
-    public static CategoryBUS categoryBUS;
-    public static ItemBUS itemBUS;
-    public static FloorBUS floorBUS;
-    public static TableBUS tableBUS;
-    public static CustomerBUS customerBUS;
-    public static OrderBUS orderBUS;
-    public static OrderDetailBUS orderDetailBUS;
-    public static EmployeeBUS employeeBUS;
-    public static PromotionBUS promotionBUS;
-    public static PromotionDetailBUS promotionDetailBUS;
-    public static ToppingBUS toppingBUS;
-    public static ItemToppingBUS itemToppingBUS;
+    public static CategoryBUS categoryBUS ;
+    public static ItemBUS  itemBUS ;
+    public static FloorBUS  floorBUS ;
+    public static TableBUS  tableBUS ;
+    public static CustomerBUS  customerBUS ;
+    public static OrderBUS  orderBUS ;
+    public static OrderDetailBUS  orderDetailBUS ;
+    public static EmployeeBUS  employeeBUS;
+    public static PromotionBUS  promotionBUS ;
+    public static PromotionDetailBUS  promotionDetailBUS ;
+    public static ToppingBUS  toppingBUS ;
+    public static ItemToppingBUS  itemToppingBUS ;
 
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -144,18 +145,18 @@ public class FormLoad extends javax.swing.JDialog {
 
                     doTask("Loading...", 5);
                     ConnectDB.connect();
-                    categoryBUS = new CategoryBUS(ConnectDB.getEntityManager());
-                    itemBUS = new ItemBUS(ConnectDB.getEntityManager());
-                    floorBUS = new FloorBUS(ConnectDB.getEntityManager());
-                    tableBUS = new TableBUS(ConnectDB.getEntityManager());
-                    customerBUS = new CustomerBUS(ConnectDB.getEntityManager());
-                    orderBUS = new OrderBUS(ConnectDB.getEntityManager());
-                    orderDetailBUS = new OrderDetailBUS(ConnectDB.getEntityManager());
-                    employeeBUS = new EmployeeBUS(ConnectDB.getEntityManager());
-                    promotionBUS = new PromotionBUS(ConnectDB.getEntityManager());
-                    toppingBUS = new ToppingBUS(ConnectDB.getEntityManager());
-                    itemToppingBUS = new ItemToppingBUS(ConnectDB.getEntityManager());
-                    promotionDetailBUS = new PromotionDetailBUS(ConnectDB.getEntityManager());
+                    categoryBUS  = new CategoryBUSImpl(ConnectDB.getEntityManager());
+                    itemBUS  = new ItemBUSImpl(ConnectDB.getEntityManager());
+                    floorBUS  = new FloorBUSImpl (ConnectDB.getEntityManager());
+                    tableBUS  = new TableBUSImpl(ConnectDB.getEntityManager());
+                    customerBUS  = new CustomerBUSImpl(ConnectDB.getEntityManager());
+                    orderBUS  = new OrderBUSImpl(ConnectDB.getEntityManager());
+                    orderDetailBUS  = new OrderDetailBUSImpl(ConnectDB.getEntityManager());
+                    employeeBUS = new EmployeeBUSImpl (ConnectDB.getEntityManager());
+                    promotionBUS  = new PromotionBUSImpl(ConnectDB.getEntityManager());
+                    toppingBUS  = new ToppingBUSImpl(ConnectDB.getEntityManager());
+                    itemToppingBUS  = new ItemToppingBUSImpl(ConnectDB.getEntityManager());
+                    promotionDetailBUS  = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
                     
                     doTask("Loading...", 50);
                     
@@ -184,7 +185,7 @@ public class FormLoad extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

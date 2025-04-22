@@ -4,17 +4,15 @@
  */
 package gui.manager;
 
-import bus.ItemBUS;
-import bus.PromotionBUS;
-import bus.PromotionDetailBUS;
+import bus.impl.ItemBUSImpl;
+import bus.impl.PromotionBUSImpl;
+import bus.impl.PromotionDetailBUSImpl;
 import model.*;
 import gui.FormLoad;
 import gui.custom.TableDesign;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,7 +26,6 @@ import javax.swing.table.TableColumnModel;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 import raven.toast.Notifications;
-import util.*;
 
 /**
  *
@@ -39,9 +36,9 @@ public class PromotionGUI extends javax.swing.JPanel {
     private TableDesign tableDesign;
     private TableColumnModel columnModel;
     private DefaultTableModel tableModel;
-    private PromotionBUS proBUS;
-    private PromotionDetailBUS proDetailBUS;
-    private ItemBUS itemBUS;
+    private PromotionBUSImpl proBUS;
+    private PromotionDetailBUSImpl proDetailBUS;
+    private ItemBUSImpl itemBUSImpl;
     private PromotionEntity pro;
     private DialogVoucherDetail dialogVoucherDetail;
     private List<ItemEntity> items;
@@ -51,9 +48,9 @@ public class PromotionGUI extends javax.swing.JPanel {
      * Creates new form PromotionGUI
      */
     public PromotionGUI() {
-        proBUS = FormLoad.promotionBUS;
-        proDetailBUS = FormLoad.promotionDetailBUS;
-        itemBUS = FormLoad.itemBUS;
+        proBUS = FormLoad.promotionBUSImpl;
+        proDetailBUS = FormLoad.promotionDetailBUSImpl;
+        itemBUSImpl = FormLoad.itemBUSImpl;
         pro = new PromotionEntity();
         dialogVoucherDetail = new DialogVoucherDetail(this);
         initComponents();
@@ -157,7 +154,7 @@ public class PromotionGUI extends javax.swing.JPanel {
             for (String itemID : itemIDs) {
                 itemID = itemID.trim();
                 if (!itemID.isEmpty()) {
-                    ItemEntity item = itemBUS.getEntityById(itemID);
+                    ItemEntity item = itemBUSImpl.getEntityById(itemID);
                     PromotionDetailEntity promotionDetail = new PromotionDetailEntity(proNEW, item);
                     promotionDetails.add(promotionDetail);
                     item.setPromotionDetails(promotionDetails);
@@ -688,13 +685,13 @@ public class PromotionGUI extends javax.swing.JPanel {
             ItemEntity item = null;
             pro.setPromotionDetails(null);
             for (String itemID : itemIDs) {
-                item = itemBUS.getEntityById(itemID);
+                item = itemBUSImpl.getEntityById(itemID);
                 PromotionDetailEntity promotionDetail = new PromotionDetailEntity(pro, item);
                 proDetailBUS.insertEntity(promotionDetail);
                 promotionDetails.add(promotionDetail);
             }
             item.setPromotionDetails(promotionDetails);
-            itemBUS.updateEntity(item);
+            itemBUSImpl.updateEntity(item);
             pro.setPromotionDetails(promotionDetails);
         }
         proBUS.updateEntity(pro);

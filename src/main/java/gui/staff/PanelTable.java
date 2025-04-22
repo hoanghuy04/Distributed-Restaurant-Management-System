@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
-import bus.TableBUS;
+import bus.impl.OrderBUSImpl;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import dto.CartDTO;
 import model.*;
@@ -35,18 +35,18 @@ public class PanelTable extends javax.swing.JPanel {
     private TableEntity table;
     private FloorEntity floor;
     private OrderGUI orderGUI;
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private OrderEntity o;
     
-    private TableBUS tableBUS;
+    private TableBUSImpl tableBUSImpl;
     
     public PanelTable(TableEntity table, OrderGUI orderGUI) {
         initComponents();
         setOpaque(false);
         this.table = table;
         this.orderGUI = orderGUI;
-        orderBUS = FormLoad.orderBUS;
-        tableBUS = FormLoad.tableBUS;
+        orderBUSImpl = FormLoad.orderBUSImpl;
+        tableBUSImpl = FormLoad.tableBUSImpl;
         setOpaque(false);
         
         fillContent();
@@ -105,11 +105,11 @@ public class PanelTable extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
+        List<OrderEntity> list = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
         if (o == null || (o.getOrderDetails().isEmpty() && o.getOrderType().equals(OrderTypeEnum.IMMEDIATE) && o.getOrderStatus().equals(OrderStatusEnum.MERGED))) {
-            o = orderBUS.getMergedOrderByCombineTable(table);
+            o = orderBUSImpl.getMergedOrderByCombineTable(table);
         }
         
         boolean check = true;
@@ -140,7 +140,7 @@ public class PanelTable extends javax.swing.JPanel {
     }
     
     public void fillContent() {
-        List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
+        List<OrderEntity> list = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
         if(o != null && (o.getReservationTime().isBefore(LocalDateTime.now().minusHours(1)) || o.getReservationTime().isAfter(LocalDateTime.now().plusHours(1)))) {

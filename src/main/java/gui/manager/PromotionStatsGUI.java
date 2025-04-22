@@ -4,7 +4,7 @@
  */
 package gui.manager;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import gui.FormLoad;
 import common.Constants;
 import gui.custom.curvechart.CurveChart;
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import raven.toast.Notifications;
 import util.DoubleFormatUlti;
@@ -24,13 +23,13 @@ import util.DoubleFormatUlti;
  */
 public class PromotionStatsGUI extends javax.swing.JPanel {
 
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
 
     /**
      * Creates new form PromotionStatsGUI
      */
     public PromotionStatsGUI() {
-        orderBUS = FormLoad.orderBUS;
+        orderBUSImpl = FormLoad.orderBUSImpl;
         initComponents();
     }
 
@@ -523,7 +522,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         chart.addLegend("ORDER", Constants.COLOR_REVENUE, Constants.COLOR_REVENUE);
         chart.addLegend("ITEM", Constants.COLOR_CAPITAL, Constants.COLOR_CAPITAL);
         
-        Map<String, Map<Integer,Integer>> map = orderBUS.getFrequencyPromotionStatsbyDatetime(startDate, endDate);
+        Map<String, Map<Integer,Integer>> map = orderBUSImpl.getFrequencyPromotionStatsbyDatetime(startDate, endDate);
         map.forEach((key, values) -> {
             double order = values.getOrDefault(1, 0); 
             double item = values.getOrDefault(2, 0); 
@@ -535,7 +534,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         
         lblOrder.setText(map.entrySet().stream().mapToInt(entry -> entry.getValue().getOrDefault(1, 0)).sum() +" lần");
         lblItem.setText(map.entrySet().stream().mapToInt(entry -> entry.getValue().getOrDefault(2, 0)).sum() +" lần");
-        lblTotalDiscount.setText(DoubleFormatUlti.format(orderBUS.getTotalDiscount(startDate, endDate)) + " VNĐ");
+        lblTotalDiscount.setText(DoubleFormatUlti.format(orderBUSImpl.getTotalDiscount(startDate, endDate)) + " VNĐ");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PromotionStatsPanel;

@@ -4,8 +4,8 @@
  */
 package gui.manager;
 
-import bus.CategoryBUS;
-import bus.ItemBUS;
+import bus.impl.CategoryBUSImpl;
+import bus.impl.ItemBUSImpl;
 import model.CategoryEntity;
 import model.ItemEntity;
 import gui.FormLoad;
@@ -24,15 +24,15 @@ public class DialogVoucherDetail extends javax.swing.JDialog {
     /**
      * Creates new form DialogVoucherDetail
      */
-    private CategoryBUS categoryBUS;
-    private ItemBUS itemBUS;
+    private CategoryBUSImpl categoryBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
     private PromotionGUI promotionGUI;
     private ToppingGUI toppingGUI;
 
     public DialogVoucherDetail(JPanel parentGUI) {
         super(new JFrame(), true);
-        this.categoryBUS = FormLoad.categoryBUS;
-        this.itemBUS = FormLoad.itemBUS;
+        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
+        this.itemBUSImpl = FormLoad.itemBUSImpl;
         if (parentGUI instanceof PromotionGUI) {
             this.promotionGUI = (PromotionGUI) parentGUI;
         } else if (parentGUI instanceof ToppingGUI) {
@@ -72,9 +72,9 @@ public class DialogVoucherDetail extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public void addTabCategory() {
-        List<CategoryEntity> categories = categoryBUS.getAllEntities();
+        List<CategoryEntity> categories = categoryBUSImpl.getAllEntities();
         for (CategoryEntity category : categories) {
-            List<ItemEntity> items = itemBUS.findByCategoryName(category.getName());
+            List<ItemEntity> items = itemBUSImpl.findByCategoryName(category.getName());
             if (promotionGUI != null) {
                 PanelCategoryDetail pnCD = new PanelCategoryDetail(items, promotionGUI);
                 tabCategory.add(pnCD, category.getName());

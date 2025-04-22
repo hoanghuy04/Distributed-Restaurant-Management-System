@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
-import bus.TableBUS;
+import bus.impl.OrderBUSImpl;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import model.OrderEntity;
 import model.TableEntity;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import model.enums.PaymentStatusEnum;
 import model.enums.ReservationStatusEnum;
@@ -32,8 +31,8 @@ import util.DatetimeFormatterUtil;
  */
 public class PanelReservation extends RoundedPanel {
 
-    private OrderBUS orderBUS;
-    private TableBUS tableBUS;
+    private OrderBUSImpl orderBUSImpl;
+    private TableBUSImpl tableBUSImpl;
     private PanelReservationByDate panelReservationByDate;
     private Color color;
     private MainGUI mainGUI;
@@ -55,8 +54,8 @@ public class PanelReservation extends RoundedPanel {
         this.color = getColor();
         this.mainGUI = mainGUI;
         initComponents();
-        this.orderBUS = FormLoad.orderBUS;
-        this.tableBUS = FormLoad.tableBUS;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
+        this.tableBUSImpl = FormLoad.tableBUSImpl;
         this.panelReservationByDate = p;
         setLblCusTotal();
         setLblDeposit();
@@ -324,7 +323,7 @@ public class PanelReservation extends RoundedPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-        List<OrderEntity> servingOrders = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), -1);
+        List<OrderEntity> servingOrders = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), -1);
 
         OrderEntity tempO = new OrderEntity();
         for (OrderEntity or : servingOrders) {
@@ -345,11 +344,11 @@ public class PanelReservation extends RoundedPanel {
                 this.order.getCombinedTables()
                         .forEach(t -> {
                             t.setTableStatus(TableStatusEnum.OCCUPIED);
-                            tableBUS.updateEntity(t);
+                            tableBUSImpl.updateEntity(t);
                         });
 
-                tableBUS.updateEntity(this.order.getTable());
-                orderBUS.updateEntity(order);
+                tableBUSImpl.updateEntity(this.order.getTable());
+                orderBUSImpl.updateEntity(order);
                 panelReservationByDate.removePanelReservation(this);
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, 3000, "Khách hàng: " + this.order.getCustomer().getName() + " - Đã nhận bàn thành công!");
 
@@ -411,7 +410,7 @@ public class PanelReservation extends RoundedPanel {
         if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa đơn đặt này?", "Cảnh báo", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             this.order.setReservationStatus(ReservationStatusEnum.CANCELED);
             this.order.setPaymentStatus(PaymentStatusEnum.PAID);
-            orderBUS.updateEntity(order);
+            orderBUSImpl.updateEntity(order);
             panelReservationByDate.removePanelReservation(this);
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, 3000, "Đã hủy đơn đặt của khách hàng: " + this.order.getCustomer().getName());
         }

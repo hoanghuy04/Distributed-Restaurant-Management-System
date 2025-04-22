@@ -4,31 +4,20 @@
  */
 package gui.staff;
 
-import bus.CustomerBUS;
+import bus.impl.CustomerBUSImpl;
 import common.Constants;
-import common.LevelCustomer;
-import dal.connectDB.ConnectDB;
-import model.CategoryEntity;
 import model.CustomerEntity;
-import model.ItemEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import raven.toast.Notifications;
 import util.ResizeImage;
-import gui.custom.RoundedButton;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -36,14 +25,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import util.DatetimeFormatterUtil;
 
@@ -61,7 +47,7 @@ public class CustomerGUI extends javax.swing.JPanel {
     private DefaultTableModel defaultTableModel;
     private TableColumnModel columnModel;
 
-    private CustomerBUS customerBUS;
+    private CustomerBUSImpl customerBUSImpl;
 
     /**
      * Creates new form CustomerGUI
@@ -81,13 +67,13 @@ public class CustomerGUI extends javax.swing.JPanel {
         this.columnModel = tableDesign.getColumnModel();
         table.setColumnModel(columnModel);
 
-        this.customerBUS = FormLoad.customerBUS;
+        this.customerBUSImpl = FormLoad.customerBUSImpl;
         loadData();
 
     }
 
     private void loadData() {
-        customerBUS.getAllEntities().stream()
+        customerBUSImpl.getAllEntities().stream()
                 .forEach(c -> {
                     FillOneRow(c);
                 });
@@ -596,7 +582,7 @@ public class CustomerGUI extends javax.swing.JPanel {
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH-mm");
-        exportItemsToExcel(customerBUS.getAllEntities(), Constants.REPORT_FILE_PATH + "/customers/" + "report_customers_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
+        exportItemsToExcel(customerBUSImpl.getAllEntities(), Constants.REPORT_FILE_PATH + "/customers/" + "report_customers_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
         JOptionPane.showMessageDialog(
                 null,
                 "Export thành công ra file: " + "report_customers_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx",
@@ -631,9 +617,9 @@ public class CustomerGUI extends javax.swing.JPanel {
                 LocalDate date = LocalDate.parse(dOB, DatetimeFormatterUtil.getDateFormatter());
 //                customerEntity = new CustomerEntity(name, email, phoneNumber, address, date.atStartOfDay()); //Sửa chổ này
                 customerEntity = new CustomerEntity(); //Sửa chổ này
-                customerBUS.insertEntity(customerEntity);
+                customerBUSImpl.insertEntity(customerEntity);
 
-                customerEntity = customerBUS.findByPhone(phoneNumber);
+                customerEntity = customerBUSImpl.findByPhone(phoneNumber);
 
                 FillOneRow(customerEntity);
                 clear();
@@ -653,7 +639,7 @@ public class CustomerGUI extends javax.swing.JPanel {
 //            c.setAddress(txtAddress.getText());//Sửa chổ này
             LocalDate date = LocalDate.parse(txtDOB.getText().trim(), DatetimeFormatterUtil.getDateFormatter());
             c.setDayOfBirth(date.atStartOfDay());
-            customerBUS.updateEntity(c);
+            customerBUSImpl.updateEntity(c);
             // Cập nhật vào bảng
             int selectedRow = table.getSelectedRow(); // Lấy hàng được chọn
             if (selectedRow != -1) { // Nếu có hàng nào đang được chọn
@@ -693,7 +679,7 @@ public class CustomerGUI extends javax.swing.JPanel {
         String address = txtAddress.getText();
 
         defaultTableModel.setRowCount(0);
-        customerBUS.getCustomersByKeyword(name, phoneNumber, email, dOB, address)
+        customerBUSImpl.getCustomersByKeyword(name, phoneNumber, email, dOB, address)
                 .forEach(c -> {
                     FillOneRow(c);
                 });
@@ -702,7 +688,7 @@ public class CustomerGUI extends javax.swing.JPanel {
     private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
         clear();
         defaultTableModel.setRowCount(0);
-        customerBUS.getAllEntities()
+        customerBUSImpl.getAllEntities()
                 .forEach(c -> {
                     FillOneRow(c);
                 });
@@ -737,7 +723,7 @@ public class CustomerGUI extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }
-        this.c = customerBUS.findByPhone(txtPhoneNumber.getText());
+        this.c = customerBUSImpl.findByPhone(txtPhoneNumber.getText());
     }//GEN-LAST:event_tableMouseClicked
 
     private void txtNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusLost

@@ -1,101 +1,45 @@
 package bus;
 
-import dal.PromotionDAL;
 import model.CustomerEntity;
-import model.OrderEntity;
 import model.PromotionEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 
-public class PromotionBUS implements BaseBUS<PromotionEntity, String> {
+import java.rmi.RemoteException;
+import java.time.LocalDateTime;
+import java.util.List;
 
-    private PromotionDAL promotionDAL;
-
-    public PromotionBUS(EntityManager entityManager) {
-        this.promotionDAL = new PromotionDAL(entityManager);
-    }
+public interface PromotionBUS extends BaseBUS<PromotionEntity, String> {
+    @Override
+    boolean insertEntity(PromotionEntity promotion) throws RemoteException;
 
     @Override
-    public boolean insertEntity(PromotionEntity promotion) {
-        return promotionDAL.insert(promotion);
-    }
+    boolean updateEntity(PromotionEntity promotion) throws RemoteException;
 
     @Override
-    public boolean updateEntity(PromotionEntity promotion) {
-        return promotionDAL.update(promotion);
-    }
+    boolean deleteEntity(String id) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(String id) {
-        return promotionDAL.deleteById(id);
-    }
+    PromotionEntity getEntityById(String id) throws RemoteException;
 
     @Override
-    public PromotionEntity getEntityById(String id) {
-        return promotionDAL.findById(id);
-    }
+    List<PromotionEntity> getAllEntities() throws RemoteException;
 
-    @Override
-    public List<PromotionEntity> getAllEntities() {
-        return promotionDAL.findAll();
-    }
-
-//    public double getPromotionByCustomer(OrderEntity orderEntity) {
-//        LevelCustomer levelCustomer = orderEntity.getCustomer().getLevelCustomer();
-//        double totalPrice = orderEntity.getTotalPrice();
-//
-//        double discountRate = 0.0;
-//        switch (levelCustomer) {
-//            case LevelCustomer.VIP:
-//                if (totalPrice >= 500000.0) {
-//                    discountRate = 0.05;
-//                }
-//                break;
-//            case LevelCustomer.POTENTIAL:
-//                if (isFirstOrderOfMonth(orderEntity.getCustomer())) {
-//                    discountRate = 0.07;
-//                }
-//                break;
-//            case LevelCustomer.NEW:
-//                if (isFirstOrder(orderEntity.getCustomer())) {
-//                    discountRate = 0.1;
-//                }
-//                break;
-//            default:
-//                discountRate = 0.0;
-//        }
-//        return discountRate;
-//    }
-
-    private boolean isFirstOrderOfMonth(CustomerEntity customerEntity) {
+    default boolean isFirstOrderOfMonth(CustomerEntity customerEntity)  throws RemoteException{
         return customerEntity.getOrders().stream()
                 .filter(o -> o.getReservationTime().getMonth() == LocalDateTime.now().getMonth())
                 .count() == 1;
 
     }
 
-    private boolean isFirstOrder(CustomerEntity customerEntity) {
+    default boolean isFirstOrder(CustomerEntity customerEntity)  throws RemoteException{
         return customerEntity.getOrders().size() == 1;
 
     }
 
-    public PromotionEntity getBestPromotionByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
-        PromotionEntity promotionEntity = promotionDAL.getPromotionsByCustomerLevelAndTotalPrice(totalPaid, customerLevelEnum);
-        return promotionEntity;
-    }
-    
-    public List<PromotionEntity> getListPromotionActive(String active) {
-        return promotionDAL.findAll().stream().filter(x -> x.isActive()).collect(Collectors.toList());
-    }
-    
-    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
-        return promotionDAL.getPromotionsWithKeywordfit(startDate, endDate, scrip, discount, minPrice, rank, type, active);
-    }
+    PromotionEntity getBestPromotionByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) throws RemoteException;
+
+    List<PromotionEntity> getListPromotionActive(String active) throws RemoteException;
+
+    List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) throws RemoteException;
 }

@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import model.OrderEntity;
 import gui.FormLoad;
@@ -14,7 +14,6 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 import javax.swing.JLabel;
 import model.enums.OrderTypeEnum;
 
@@ -30,7 +29,7 @@ public class PanelDate extends RoundedPanel {
      */
     private LocalDate date;
     private EntityManager em;
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private TabReservation tabReservation;
 
     public PanelDate() {
@@ -70,7 +69,7 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        this.orderBUS = FormLoad.orderBUS;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
         this.date = d;
         this.tabReservation = tab;
     }
@@ -78,10 +77,10 @@ public class PanelDate extends RoundedPanel {
     public void fillContent() {
 
         if (lblDate.getText().contains("Hôm nay")) {
-            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         } else {
-            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         }
 

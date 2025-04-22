@@ -4,8 +4,8 @@
  */
 package gui.manager;
 
-import bus.FloorBUS;
-import bus.TableBUS;
+import bus.impl.FloorBUSImpl;
+import bus.impl.TableBUSImpl;
 import model.FloorEntity;
 import model.TableEntity;
 import gui.FormLoad;
@@ -27,16 +27,16 @@ public class TableGUI extends javax.swing.JPanel {
     private TableDesign tableDesign;
     private TableColumnModel columnModel;
     private DefaultTableModel tableModel;
-    private TableBUS tableBUS;
-    private FloorBUS floorBUS;
+    private TableBUSImpl tableBUSImpl;
+    private FloorBUSImpl floorBUSImpl;
     private TableEntity tbl;
 
     /**
      * Creates new form TableGUI
      */
     public TableGUI() {
-        tableBUS = FormLoad.tableBUS;
-        floorBUS = FormLoad.floorBUS;
+        tableBUSImpl = FormLoad.tableBUSImpl;
+        floorBUSImpl = FormLoad.floorBUSImpl;
         tbl = new TableEntity();
         initComponents();
     }
@@ -55,8 +55,8 @@ public class TableGUI extends javax.swing.JPanel {
 
     private void loadData() {
         tableModel.setRowCount(0);
-        List<TableEntity> tabs = tableBUS.getAllEntities();
-        floorBUS.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
+        List<TableEntity> tabs = tableBUSImpl.getAllEntities();
+        floorBUSImpl.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
         for (TableEntity tab : tabs) {
             addOneLine(tab);
         }
@@ -82,7 +82,7 @@ public class TableGUI extends javax.swing.JPanel {
             capacity = Integer.parseInt(capacityStr);
         }
         
-        return new TableEntity(name, capacity, TableStatusEnum.AVAILABLE, floorBUS.findByName(floorStr));
+        return new TableEntity(name, capacity, TableStatusEnum.AVAILABLE, floorBUSImpl.findByName(floorStr));
         
     }
     /**
@@ -297,7 +297,7 @@ public class TableGUI extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         TableEntity tableNew = getTable();
-        tableBUS.insertEntity(tableNew);
+        tableBUSImpl.insertEntity(tableNew);
         addOneLine(tableNew);
         JOptionPane.showMessageDialog(this, "Thêm thành công");
         
@@ -309,13 +309,13 @@ public class TableGUI extends javax.swing.JPanel {
             return;
         }
         
-        tbl = tableBUS.getEntityById(table.getValueAt(row, 0).toString());
+        tbl = tableBUSImpl.getEntityById(table.getValueAt(row, 0).toString());
         
         tbl.setCapacity(Integer.parseInt(txtCapacity.getText()));
         tbl.setName(txtName.getText());
-        tbl.setFloor(floorBUS.findByName(cbbFloor.getSelectedItem().toString()));
+        tbl.setFloor(floorBUSImpl.findByName(cbbFloor.getSelectedItem().toString()));
         
-        tableBUS.updateEntity(tbl);
+        tableBUSImpl.updateEntity(tbl);
         
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) { 
@@ -341,12 +341,12 @@ public class TableGUI extends javax.swing.JPanel {
             return;
         }
         String Name = txtName.getText();
-        FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
+        FloorEntity floor = floorBUSImpl.findByName(cbbFloor.getSelectedItem().toString());
         
         tableModel.setRowCount(0);
-        List<TableEntity> tbls = tableBUS.getTablesWithKeyword(floor.getFloorId(), Capacity, Name);
+        List<TableEntity> tbls = tableBUSImpl.getTablesWithKeyword(floor.getFloorId(), Capacity, Name);
         if(tbls.isEmpty()) {
-            tbls = tableBUS.getAllEntities();
+            tbls = tableBUSImpl.getAllEntities();
         }
         for(TableEntity tbl : tbls) {
             addOneLine(tbl);

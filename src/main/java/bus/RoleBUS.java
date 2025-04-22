@@ -1,49 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package bus;
 
-import dal.RoleDAL;
-import jakarta.persistence.EntityManager;
 import model.RoleEntity;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
-public class RoleBUS implements BaseBUS<RoleEntity, String>{
-    private RoleDAL roleDAL;
-
-    public RoleBUS(EntityManager em) {
-        this.roleDAL = new RoleDAL(em);
-    }
-    
+public interface RoleBUS extends BaseBUS<RoleEntity, String> {
     @Override
-    public boolean insertEntity(RoleEntity t) {
-        return roleDAL.insert(t);
-    }
+    boolean insertEntity(RoleEntity t) throws RemoteException;
 
     @Override
-    public boolean updateEntity(RoleEntity t) {
-        return roleDAL.update(t);
-    }
+    boolean updateEntity(RoleEntity t) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(String id) {
-        return roleDAL.deleteById(id);
-    }
+    boolean deleteEntity(String id) throws RemoteException;
 
     @Override
-    public RoleEntity getEntityById(String id) {
-        return roleDAL.findById(id);
-    }
+    RoleEntity getEntityById(String id) throws RemoteException;
 
     @Override
-    public List<RoleEntity> getAllEntities() {
-        return roleDAL.findAll();
-    }
-    
-    public RoleEntity findByName(String name) {
-        return roleDAL.findByName(name);
-    }
-    
+    List<RoleEntity> getAllEntities() throws RemoteException;
+
+    RoleEntity findByName(String name) throws RemoteException;
 }

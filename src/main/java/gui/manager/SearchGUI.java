@@ -4,10 +4,10 @@
  */
 package gui.manager;
 
-import bus.CustomerBUS;
+import bus.impl.CustomerBUSImpl;
 import dal.connectDB.ConnectDB;
-import bus.EmployeeBUS;
-import bus.OrderBUS;
+import bus.impl.EmployeeBUSImpl;
+import bus.impl.OrderBUSImpl;
 import model.EmployeeEntity;
 import model.OrderEntity;
 import gui.custom.TableActionCellView;
@@ -36,9 +36,9 @@ import util.DoubleFormatUlti;
 public class SearchGUI extends javax.swing.JPanel {
 
     private TableDesign tableDesign;
-    private EmployeeBUS empBUS;
-    private CustomerBUS customerBUS;
-    private OrderBUS orderBUS;
+    private EmployeeBUSImpl empBUS;
+    private CustomerBUSImpl customerBUSImpl;
+    private OrderBUSImpl orderBUSImpl;
     private DefaultTableModel tableModel;
     private TableColumnModel comlumnModel;
 
@@ -46,9 +46,9 @@ public class SearchGUI extends javax.swing.JPanel {
      * Creates new form SearchGUI
      */
     public SearchGUI() {
-        empBUS = new EmployeeBUS(ConnectDB.getEntityManager());
-        orderBUS = new OrderBUS(ConnectDB.getEntityManager());
-        customerBUS = new CustomerBUS(ConnectDB.getEntityManager());
+        empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
+        orderBUSImpl = new OrderBUSImpl(ConnectDB.getEntityManager());
+        customerBUSImpl = new CustomerBUSImpl(ConnectDB.getEntityManager());
         initComponents();
         loadEmployees();
         loadRank();
@@ -75,7 +75,7 @@ public class SearchGUI extends javax.swing.JPanel {
             @Override
             public void onView(int row) {
                 String orderID = table.getValueAt(row, 0).toString();
-                OrderEntity o = orderBUS.getEntityById(orderID);
+                OrderEntity o = orderBUSImpl.getEntityById(orderID);
                 new DialogOrderDetail(o).setVisible(true);
             }
 
@@ -103,7 +103,7 @@ public class SearchGUI extends javax.swing.JPanel {
         tableModel.setRowCount(0);
         int total = 0;
         double price = 0;
-        List<OrderEntity> orders = orderBUS.getListOrder(startDateTime, endDateTime, staff, rank);
+        List<OrderEntity> orders = orderBUSImpl.getListOrder(startDateTime, endDateTime, staff, rank);
         if (orders.isEmpty()) {
 
             return false;

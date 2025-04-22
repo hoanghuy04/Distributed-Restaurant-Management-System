@@ -5,11 +5,12 @@
 package gui.staff;
 //Duong Hoang Huy
 
-import bus.CustomerBUS;
-import bus.EmployeeBUS;
-import bus.FloorBUS;
-import bus.OrderBUS;
-import bus.TableBUS;
+import  bus.*;
+import bus.impl.CustomerBUSImpl;
+import bus.impl.EmployeeBUSImpl;
+import bus.impl.FloorBUSImpl;
+import bus.impl.OrderBUSImpl;
+import bus.impl.TableBUSImpl;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.zxing.WriterException;
@@ -19,7 +20,6 @@ import model.EmployeeEntity;
 import model.FloorEntity;
 import model.OrderEntity;
 import model.TableEntity;
-import gui.menu.Application;
 import gui.FormLoad;
 import gui.custom.combo_suggestion.ComboBoxSuggestion;
 import gui.main.LoginGUI;
@@ -130,7 +130,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         availableTables = new ArrayList<>();
         // availableTables = tableBUS.getAllEntities().stream().map(t -> ("Bàn " + Integer.parseInt(t.getTableId().substring(1)))).collect(Collectors.toList());
 
-        floors = floorBus.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
+        floors = floorBus .getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
         paymentMethods = Arrays.stream(PaymentMethodEnum.values())
                 .map(PaymentMethodEnum::getPaymentMethod)
                 .toArray(String[]::new);
@@ -169,14 +169,14 @@ public class DialogAddReservation extends javax.swing.JDialog {
         this.oldDate = LocalDate.now();
         this.orderEntity = preOrder;
         em = ConnectDB.getEntityManager();
-        customerBUS = new CustomerBUS(em);
-        employeeBUS = new EmployeeBUS(em);
-        floorBus = new FloorBUS(em);
-        tableBUS = new TableBUS(em);
-        orderBUS = new OrderBUS(em);
+        customerBUS  = new CustomerBUS (em);
+        employeeBUS = new EmployeeBUSImpl(em);
+        floorBusImpl = new FloorBUSImpl(em);
+        tableBUSImpl = new TableBUSImpl(em);
+        orderBUSImpl = new OrderBUSImpl(em);
         this.mapOfAllReservations = mapOfAllReservations;
         availableTables = new ArrayList<>();
-        floors = floorBus.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
+        floors = floorBusImpl.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
 
         preNumberOfCust = "0";
         paymentMethods = Arrays.stream(PaymentMethodEnum.values())
@@ -270,7 +270,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
             this.cbbFloor.setSelectedItem(this.orderEntity.getTable().getFloor().getName());
             this.txtDeposit.setText(this.orderEntity.getDeposit() + "");
 
-            List<String> listOfCombinedTableName = this.orderEntity.getCombinedTables().stream().map(t -> tableBUS.getEntityById(t.getTableId()).getName()).toList();
+            List<String> listOfCombinedTableName = this.orderEntity.getCombinedTables().stream().map(t -> tableBUSImpl.getEntityById(t.getTableId()).getName()).toList();
             listOfCombinedTableName.stream()
                     .forEach(tableName -> {
                         this.cbbCombinedTables.addItemObject(tableName);
@@ -317,7 +317,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         reservationDateTime = LocalDateTime.of(LocalDate.parse(txtDate.getText(), DatetimeFormatterUtil.getDateFormatter()), LocalTime.parse(cbbTime.getSelectedItem().toString(), DatetimeFormatterUtil.getTimeFormatter()));
         String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
 
-        availableTables = tableBUS.getListOfAvailableTables(floorId, reservationDateTime, 0).stream().map(t -> t.getName()).collect(Collectors.toList());
+        availableTables = tableBUSImpl.getListOfAvailableTables(floorId, reservationDateTime, 0).stream().map(t -> t.getName()).collect(Collectors.toList());
 
         if (this.orderEntity != null) {
             defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -363,22 +363,22 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
             String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
 
-            TableEntity table = tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId);
+            TableEntity table = tableBUSImpl.findByName(cbbTable.getSelectedItem().toString(), floorId);
 
             List<TableEntity> listOfCombinedTable = new ArrayList<>();
 
             List<String> strs = cbbCombinedTables.getSelectedItems();
 
             for (String tableName : strs) {
-                TableEntity t = tableBUS.findByName(tableName, floorId);
+                TableEntity t = tableBUSImpl.findByName(tableName, floorId);
                 listOfCombinedTable.add(t);
             }
 
             if (this.orderEntity == null) {
-                this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE, 
-                        OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()), 
+                this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE,
+                        OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
                         PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
-                orderBUS.insertEntity(orderEntity);
+                orderBUSImpl.insertEntity(orderEntity);
                 tabReservation.getListOfAllReservations().add(orderEntity);
                 this.tabReservation.addToMapOfAllReservations(orderEntity);
             } else {
@@ -408,7 +408,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 }
 
                 this.orderEntity.setCombinedTables(listOfCombinedTable);
-                orderBUS.updateEntity(orderEntity);
+                orderBUSImpl.updateEntity(orderEntity);
                 this.tabReservation.addToMapOfAllReservations(orderEntity);
             }
             return true;
@@ -931,7 +931,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
             txtPhoneNumber.requestFocus();
         } else if (!checkAvailableSeats()) {
             boolean check = false;
-            List<TableEntity> list = tableBUS.getListOfAvailableTables(null, reservationDateTime, 0);
+            List<TableEntity> list = tableBUSImpl.getListOfAvailableTables(null, reservationDateTime, 0);
             Map<FloorEntity, Integer> map = list.stream().collect(Collectors.groupingBy(TableEntity::getFloor, Collectors.summingInt(table -> 1)));
 
             for (Map.Entry<FloorEntity, Integer> entry : map.entrySet()) {
@@ -1062,7 +1062,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         if (!checkPhoneNumber()) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được để trống hoặc độ dài phải từ 10 đến 15 ký số", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
+            this.customerEntity = customerBUSImpl.findByPhone(txtPhoneNumber.getText().trim());
             if (customerEntity == null) {
                 JOptionPane.showMessageDialog(null, "Khách hàng chưa tồn tại");
             } else {
@@ -1090,7 +1090,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
     private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
+            this.customerEntity = customerBUSImpl.findByPhone(txtPhoneNumber.getText().trim());
             if (customerEntity == null) {
                 JOptionPane.showMessageDialog(null, "Khách hàng chưa tồn tại");
             } else {
@@ -1122,10 +1122,10 @@ public class DialogAddReservation extends javax.swing.JDialog {
         int totalSeats = 0;
 
         String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
-        totalSeats += tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId).getCapacity();
+        totalSeats += tableBUSImpl.findByName(cbbTable.getSelectedItem().toString(), floorId).getCapacity();
 
         for (Object t : cbbCombinedTables.getSelectedItems()) {
-            totalSeats += tableBUS.findByName(t.toString(), floorId).getCapacity();
+            totalSeats += tableBUSImpl.findByName(t.toString(), floorId).getCapacity();
         }
 
         return Integer.parseInt(txtNumberOfCust.getText()) <= totalSeats;

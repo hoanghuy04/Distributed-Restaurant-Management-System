@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.ItemToppingBUS;
+import bus.impl.ItemToppingBUSImpl;
 import common.Constants;
 import dto.ItemCartDTO;
 import model.ItemEntity;
@@ -33,14 +33,14 @@ public class DialogItemInformation extends javax.swing.JDialog {
     private ItemEntity item;
     private ItemToppingEntity itemTopping;
     private OrderGUI orderGUI;
-    private ItemToppingBUS itemToppingBUS;
+    private ItemToppingBUSImpl itemToppingBUSImpl;
 
     public DialogItemInformation(ItemEntity item, ItemToppingEntity itemTopping, OrderGUI orderGUI) {
         super(new JFrame(), true);
         this.itemTopping = itemTopping;
         this.item = item;
         this.orderGUI = orderGUI;
-        itemToppingBUS = FormLoad.itemToppingBUS;
+        itemToppingBUSImpl = FormLoad.itemToppingBUSImpl;
         initComponents();
         fillContent();
         ReloadComponentUlti.reload(this);

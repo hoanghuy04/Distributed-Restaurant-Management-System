@@ -1,42 +1,24 @@
 package bus;
 
-import dal.OrderDetailDAL;
 import model.OrderDetailEntity;
 import model.OrderDetailId;
-import jakarta.persistence.EntityManager;
+
+import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Optional;
 
-public class OrderDetailBUS implements BaseBUS<OrderDetailEntity, OrderDetailId> {
-
-    private OrderDetailDAL orderDetailDAL;
-
-    public OrderDetailBUS(EntityManager entityManager) {
-        this.orderDetailDAL = new OrderDetailDAL(entityManager);
-    }
+public interface OrderDetailBUS extends BaseBUS<OrderDetailEntity, OrderDetailId> {
+    @Override
+    boolean insertEntity(OrderDetailEntity orderDetail) throws RemoteException;
 
     @Override
-    public boolean insertEntity(OrderDetailEntity orderDetail) {
-        return orderDetailDAL.insert(orderDetail);
-    }
+    boolean updateEntity(OrderDetailEntity orderDetail) throws RemoteException;
 
     @Override
-    public boolean updateEntity(OrderDetailEntity orderDetail) {
-        return orderDetailDAL.update(orderDetail);
-    }
+    boolean deleteEntity(OrderDetailId id) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(OrderDetailId id) {
-        return orderDetailDAL.deleteById(id);
-    }
+    OrderDetailEntity getEntityById(OrderDetailId id) throws RemoteException;
 
     @Override
-    public OrderDetailEntity getEntityById(OrderDetailId id) {
-       return orderDetailDAL.findById(id);
-    }
-
-    @Override
-    public List<OrderDetailEntity> getAllEntities() {
-        return orderDetailDAL.findAll();
-    }
+    List<OrderDetailEntity> getAllEntities() throws RemoteException;
 }

@@ -1,88 +1,38 @@
 package bus;
 
-import common.Constants;
-import dal.EmployeeDAL;
-import jakarta.persistence.EntityManager;
 import model.EmployeeEntity;
-import org.mindrot.jbcrypt.BCrypt;
 
+import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Random;
 
-public class EmployeeBUS implements BaseBUS<EmployeeEntity, String> {
-
-    private EmployeeDAL employeeDAL;
-    private EntityManager em;
-
-    public EmployeeBUS(EntityManager entityManager) {
-        this.employeeDAL = new EmployeeDAL(entityManager);
-    }
+public interface EmployeeBUS extends BaseBUS<EmployeeEntity, String> {
+    @Override
+    boolean insertEntity(EmployeeEntity employee) throws RemoteException;
 
     @Override
-    public boolean insertEntity(EmployeeEntity employee) {
-        return employeeDAL.insert(employee);
-    }
+    boolean updateEntity(EmployeeEntity employee) throws RemoteException;
 
     @Override
-    public boolean updateEntity(EmployeeEntity employee) {
-        return employeeDAL.update(employee);
-    }
+    boolean deleteEntity(String id) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(String id) {
-        return employeeDAL.deleteById(id);
-    }
+    EmployeeEntity getEntityById(String id) throws RemoteException;
 
     @Override
-    public EmployeeEntity getEntityById(String id) {
-        return employeeDAL.findById(id);
-    }
+    List<EmployeeEntity> getAllEntities() throws RemoteException;
 
-    @Override
-    public List<EmployeeEntity> getAllEntities() {
-        return employeeDAL.findAll();
-    }
+    List<EmployeeEntity> getListEmployeeActive() throws RemoteException;
 
-    public List<EmployeeEntity> getListEmployeeActive() {
-        return employeeDAL.getListEmployeeActive();
-    }
+    EmployeeEntity checkLogin(String username, String password) throws RemoteException;
 
-    public EmployeeEntity checkLogin(String username, String password) {
-        return employeeDAL.findAll().stream().filter(e -> e.getEmployeeId().equals(username) && varifyPassword(password, e.getPassword()))
-                .findFirst()
-                .orElse(null);
-    }
+    List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active) throws RemoteException;
 
-    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active) {
-        return employeeDAL.getEmployeesWithKeyword(name, phone, address, email, pass, roleId, active);
-    }
+    EmployeeEntity findByEmail(String email) throws RemoteException;
 
-    public EmployeeEntity findByEmail(String email) {
-        return employeeDAL.findAll().stream().filter(e -> e.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
-    }
+    String hashPassword(String plainPassword) throws RemoteException;
 
-    public String hashPassword(String plainPassword) {
-        return BCrypt.hashpw(plainPassword, Constants.SALT);
-    }
-
-    public boolean varifyPassword(String plainPassword, String hashedPassword) {
-        return BCrypt.checkpw(plainPassword, hashedPassword);
-    }
+    boolean varifyPassword(String plainPassword, String hashedPassword) throws RemoteException;
 
     // Hàm tạo mã xác nhận gồm 6 ký tự và số
-    public String generateConfirmationCode() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // Tập hợp ký tự và số
-        StringBuilder code = new StringBuilder();
-        Random random = new Random();
-
-        // Tạo mã gồm 6 ký tự
-        for (int i = 0; i < 6; i++) {
-            int index = random.nextInt(characters.length()); // Chọn ngẫu nhiên một chỉ số
-            code.append(characters.charAt(index)); // Thêm ký tự vào mã
-        }
-
-        return code.toString(); // Trả về mã xác nhận
-    }
+    String generateConfirmationCode() throws RemoteException;
 }

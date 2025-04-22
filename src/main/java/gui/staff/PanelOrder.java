@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.TableBUS;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import model.OrderEntity;
 import gui.menu.Application;
@@ -27,12 +27,12 @@ public class PanelOrder extends javax.swing.JPanel {
      */
     private OrderEntity o;
     private OrderGUI orderGUI;
-    private TableBUS tableBUS;
+    private TableBUSImpl tableBUSImpl;
 
     public PanelOrder(OrderGUI orderGUI, OrderEntity o) {
         this.o = o;
         this.orderGUI = orderGUI;
-        this.tableBUS = FormLoad.tableBUS;
+        this.tableBUSImpl = FormLoad.tableBUSImpl;
         initComponents();
         startTimeCounter(o.getReservationTime());
         fillContent();
