@@ -110,7 +110,7 @@ public class OrderEntity extends BaseEntity implements Serializable {
     private ReservationStatusEnum reservationStatus;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order")
     private Set<OrderDetailEntity> orderDetails;
 
     @Override

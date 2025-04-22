@@ -148,6 +148,7 @@ public class PanelTable extends javax.swing.JPanel {
         }
         
         ImageIcon icon = new ImageIcon(getClass().getResource("/img/icon/png/available-table.png"));
+        System.out.println(this.orderGUI.getCombinedTables());
         
         if (o != null) {
             o.getCombinedTables().stream()
