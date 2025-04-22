@@ -1,10 +1,7 @@
 package dal;
 
 import dal.connectDB.ConnectDB;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import model.PromotionEntity;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
@@ -75,25 +72,27 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
     //NEED FIXING
     public PromotionEntity getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
-        String sql = "select top 1 p.* "
-                + "from promotions p "
-                + "where p.active = 'true' "
-                + "and GETDATE() between started_date and ended_date "
-                + "and p.min_price <= ?1 "
-                + "and p.promotion_type = 'ORDER' "
-                + "and (',' + p.applicable_customer_levels + ',' like '%,' + ?2 + ',%') "
-                + "order by p.discount_rate desc";
+        String jpql = "SELECT p FROM PromotionEntity p "
+                + "WHERE p.active = true "
+                + "AND CURRENT_DATE BETWEEN p.startedDate AND p.endedDate "
+                + "AND p.minPrice <= :totalPaid "
+                + "AND p.promotionType = :promotionType "
+                + "AND :customerLevel MEMBER OF p.customerLevels "
+                + "ORDER BY p.discountPercentage DESC";
 
-        Query q = em.createNativeQuery(sql, PromotionEntity.class);
-        q.setParameter(1, totalPaid);
-        q.setParameter(2, customerLevelEnum.toString());
+        TypedQuery<PromotionEntity> q = em.createQuery(jpql, PromotionEntity.class);
+        q.setParameter("totalPaid", totalPaid);
+        q.setParameter("promotionType", PromotionTypeEnum.ORDER);  // Assuming PromotionTypeEnum exists
+        q.setParameter("customerLevel", customerLevelEnum);
+        q.setMaxResults(1);
 
         try {
-            return (PromotionEntity) q.getSingleResult();
+            return q.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
+
 
     public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String des, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
         StringBuilder queryBuilder = new StringBuilder("SELECT p FROM PromotionEntity p WHERE 1=1 ");
