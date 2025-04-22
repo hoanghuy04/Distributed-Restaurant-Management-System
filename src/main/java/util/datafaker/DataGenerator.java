@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /*
  * @description: DataGenerator
@@ -110,7 +109,7 @@ public class DataGenerator {
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
-        if(itemDAL.findByName(name)   != null) {
+        if(itemDAL.findByName(name) != null) {
             return null;
         }
         try {
@@ -307,7 +306,7 @@ public class DataGenerator {
         // Lấy customer ngẫu nhiên
         List<CustomerEntity> customers = customerDAL.findAll();
         order.setCustomer(customers.isEmpty() ? null : customers.get(rand.nextInt(customers.size())));
-        
+
 
         // Lấy employee ngẫu nhiên
         List<EmployeeEntity> employees = employeeDAL.findAll();
@@ -416,7 +415,7 @@ public class DataGenerator {
                 }
             }
         }
-        
+
         //Role entity
         roleDAL.insert(new RoleEntity("R0001", "MANAGER", LocalDate.now()));
         roleDAL.insert(new RoleEntity("R0002", "STAFF", LocalDate.now()));

@@ -89,7 +89,7 @@ public class OrderBUS implements BaseBUS<OrderEntity, String> {
     }
 
     public OrderEntity findByTableId(String tableId) {
-        OrderEntity od = orderDAL.findByTableId(tableId).orElse(null);
+        OrderEntity od = orderDAL.findByTableId(tableId);
         if (od == null) {
             return od;
         }
