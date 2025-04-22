@@ -4,6 +4,7 @@
  */
 package gui.manager;
 
+import bus.OrderBUS;
 import bus.impl.OrderBUSImpl;
 import common.Constants;
 import gui.FormLoad;
@@ -28,10 +29,10 @@ public class FrequencyStatsGUI extends javax.swing.JPanel {
     /**
      * Creates new form FrequencyStatsGUI
      */
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
 
     public FrequencyStatsGUI() {
-        orderBUSImpl = FormLoad.orderBUSImpl;
+        orderBUS = FormLoad.orderBUS;
         initComponents();
         setTextForReservation(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999));
         createChartByHours(LocalDate.now().atStartOfDay(), LocalDate.now().atTime(23, 59, 59, 999999999), statsByHours);

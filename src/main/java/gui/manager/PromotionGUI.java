@@ -10,6 +10,8 @@ import bus.impl.PromotionDetailBUSImpl;
 import model.*;
 import gui.FormLoad;
 import gui.custom.TableDesign;
+
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -111,7 +113,7 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadDialog() {
+    private void loadDialog() throws RemoteException {
         dialogVoucherDetail.getTabCategory().removeAll();
         dialogVoucherDetail.addTabCategory();
         dialogVoucherDetail.getTabCategory().revalidate();

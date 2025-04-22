@@ -4,10 +4,13 @@
  */
 package gui.manager;
 
+import bus.FloorBUS;
 import bus.impl.FloorBUSImpl;
 import model.FloorEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
+
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -22,14 +25,14 @@ public class FloorGUI extends javax.swing.JPanel {
     private final String[] headers;
     private final List<Integer> len;
     private final TableDesign tableDesign;
-    private final FloorBUSImpl floorBUSImpl;
+    private final FloorBUS floorBUS;
     private DefaultTableModel modelTable = new DefaultTableModel();
 
     /**
      * Creates new form FloorGUI
      */
-    public FloorGUI() {
-        floorBUSImpl = FormLoad.floorBUSImpl;
+    public FloorGUI() throws RemoteException {
+        floorBUS = FormLoad.floorBUS;
         headers = new String[]{"Mã lầu", "Tên lầu", "Sức chứa"};
         len = Arrays.asList(100, 200, 50);
         tableDesign = new TableDesign(headers, len);
@@ -132,7 +135,11 @@ public class FloorGUI extends javax.swing.JPanel {
         btnFind.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFindActionPerformed(evt);
+                try {
+                    btnFindActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnFind);
@@ -142,7 +149,11 @@ public class FloorGUI extends javax.swing.JPanel {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 52));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnAdd);
@@ -152,7 +163,11 @@ public class FloorGUI extends javax.swing.JPanel {
         btnUpdate.setPreferredSize(new java.awt.Dimension(102, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnUpdate);
@@ -272,7 +287,7 @@ public class FloorGUI extends javax.swing.JPanel {
         clearText();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
             String name = lblName.getText().trim();
             int capacity = 0;
@@ -282,7 +297,7 @@ public class FloorGUI extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             FloorEntity f = new FloorEntity(null, name, capacity);
-            if (floorBUSImpl.insertEntity(f)) {
+            if (floorBUS.insertEntity(f)) {
                 JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                 deleteAllTable();
                 loadData();
@@ -292,13 +307,13 @@ public class FloorGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnFindActionPerformed
         String name = lblName.getText().trim();
         if (name.isBlank() || name.isEmpty()) {
             deleteAllTable();
             loadData();
         } else {
-            FloorEntity f = floorBUSImpl.findByName(name);
+            FloorEntity f = floorBUS.findByName(name);
             if (f != null) {
                 deleteAllTable();
                 modelTable.addRow(new Object[]{
@@ -310,7 +325,7 @@ public class FloorGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnFindActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnUpdateActionPerformed
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
@@ -325,7 +340,7 @@ public class FloorGUI extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 FloorEntity f = new FloorEntity(id, name, capacity);
-                if (floorBUSImpl.updateEntity(f)) {
+                if (floorBUS.updateEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
                     deleteAllTable();
                     loadData();
@@ -352,8 +367,8 @@ public class FloorGUI extends javax.swing.JPanel {
         
     }
 
-    private void loadData() {
-        floorBUSImpl.getAllEntities().stream().forEach(f -> {
+    private void loadData() throws RemoteException {
+        floorBUS.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getFloorId(), f.getName(), f.getCapacity()
             });

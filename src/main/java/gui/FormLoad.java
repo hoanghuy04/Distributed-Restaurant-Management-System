@@ -6,18 +6,7 @@
 package gui;
 
 import bus.*;
-import bus.impl.CategoryBUSImpl;
-import bus.impl.CustomerBUSImpl;
-import bus.impl.EmployeeBUSImpl;
-import bus.impl.FloorBUSImpl;
-import bus.impl.ItemBUSImpl;
-import bus.impl.ItemToppingBUSImpl;
-import bus.impl.OrderBUSImpl;
-import bus.impl.OrderDetailBUSImpl;
-import bus.impl.PromotionBUSImpl;
-import bus.impl.PromotionDetailBUSImpl;
-import bus.impl.TableBUSImpl;
-import bus.impl.ToppingBUSImpl;
+import bus.impl.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import common.Constants;
 import dal.connectDB.ConnectDB;
@@ -47,6 +36,7 @@ public class FormLoad extends javax.swing.JDialog  {
     public static PromotionDetailBUS  promotionDetailBUS ;
     public static ToppingBUS  toppingBUS ;
     public static ItemToppingBUS  itemToppingBUS ;
+    public static RoleBUS roleBUS;
 
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -157,6 +147,7 @@ public class FormLoad extends javax.swing.JDialog  {
                     toppingBUS  = new ToppingBUSImpl(ConnectDB.getEntityManager());
                     itemToppingBUS  = new ItemToppingBUSImpl(ConnectDB.getEntityManager());
                     promotionDetailBUS  = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
+                    roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
                     
                     doTask("Loading...", 50);
                     
