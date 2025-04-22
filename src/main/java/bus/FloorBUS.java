@@ -30,9 +30,8 @@ public class FloorBUS implements BaseBUS<FloorEntity, String> {
 
     @Override
     public FloorEntity getEntityById(String id) {
-       return floorDAL.findById(id);
+        return floorDAL.findById(id);
     }
-
     @Override
     public List<FloorEntity> getAllEntities() {
         return floorDAL.findAll();

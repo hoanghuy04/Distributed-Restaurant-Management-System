@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import model.enums.TableStatusEnum;
 import util.IDGeneratorUtility;
 
 public class TableDAL implements BaseDAL<TableEntity, String> {
@@ -61,78 +63,82 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
 
     @Override
     public List<TableEntity> findAll() {
-        return em.createNamedQuery("TableEntity.findAll", TableEntity.class).getResultList();
+        return em.createQuery("from TableEntity", TableEntity.class).getResultList();
     }
 
     public TableEntity findByName(String name, String floorId) {
-        return em.createNamedQuery("TableEntity.findByName", TableEntity.class).setParameter("name", name).setParameter("floorId", floorId).getSingleResult();
+        return em.createQuery("select t from TableEntity  t " +
+                " where t.name = :name " +
+                " and t.floor.id = :floorId",TableEntity.class)
+                .setParameter("name", name)
+                .setParameter("floorId", floorId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
 
     public List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime) {
-        String sql = "SELECT t.* "
-                + "FROM tables t "
-                + "WHERE 1 = 1 ";
+        String jpql = "SELECT t FROM TableEntity t WHERE 1 = 1 ";
         if (floorId != null) {
-            sql += "AND t.floor_id = :floorId ";
+            jpql += "AND t.floor.floorId = :floorId ";
         }
-        sql += "  AND t.table_id NOT IN ( "
-                + "        SELECT o.table_id "
-                + "        FROM orders o "
-                + "        WHERE o.reservation_time <= :reservationDateTime "
-                + "        AND o.expected_completion_time >= :reservationDateTime "
-                + "        AND o.reservation_status in ('PENDING', 'RECEIVED'))";
+        jpql += "AND t.tableId NOT IN ( "
+                + "SELECT o.table.tableId FROM OrderEntity o "
+                + "WHERE o.reservationTime <= :reservationDateTime "
+                + "AND o.expectedCompletionTime >= :reservationDateTime "
+                + "AND o.reservationStatus IN ('PENDING', 'RECEIVED'))";
 
-        Query q = em.createNativeQuery(sql, TableEntity.class);
+        Query query = em.createQuery(jpql, TableEntity.class);
 
         if (floorId != null) {
-            q.setParameter("floorId", floorId);
+            query.setParameter("floorId", floorId);
         }
-        q.setParameter("reservationDateTime", reservationDateTime);
+        query.setParameter("reservationDateTime", reservationDateTime);
 
-        return q.getResultList();
+        return query.getResultList();
     }
 
     public List<TableEntity> getListTablesByStatus(String floorId, String status) {
-        String sql = "select t.* "
-                + "from tables t "
-                + "where t.floor_id = ?1 ";
+        String jpql = "SELECT t FROM TableEntity t WHERE t.floor.floorId = :floorId ";
+        if (!status.equals("Tất cả")) {
+            jpql += "AND t.tableStatus = :status ";
+        }
+
+        Query query = em.createQuery(jpql, TableEntity.class);
+        query.setParameter("floorId", floorId);
 
         if (!status.equals("Tất cả")) {
-            sql += " AND t.table_status = '" + status + "' ";
+            query.setParameter("status", TableStatusEnum.valueOf(status));
         }
-        Query q = em.createNativeQuery(sql, TableEntity.class);
-        q.setParameter(1, floorId);
 
-        return q.getResultList();
+        return query.getResultList();
     }
 
     public List<TableEntity> getTablesWithKeyword(String floorId, Integer capacity, String tableName) {
-        List<TableEntity> tables = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM tables WHERE 1=1");
-        List<Object> parameters = new ArrayList<>();
-
+        StringBuilder jpql = new StringBuilder("SELECT t FROM TableEntity t WHERE 1 = 1");
         if (floorId != null && !floorId.trim().isEmpty()) {
-            queryBuilder.append(" AND floor_id = ?");
-            parameters.add(floorId);
+            jpql.append(" AND t.floor.floorId = :floorId");
         }
         if (capacity != null) {
-            queryBuilder.append(" AND capacity = ?");
-            parameters.add(capacity);
+            jpql.append(" AND t.capacity = :capacity");
         }
         if (tableName != null && !tableName.trim().isEmpty()) {
-            queryBuilder.append(" AND table_name LIKE ?");
-            parameters.add("%" + tableName + "%");
+            jpql.append(" AND t.name LIKE :tableName");
         }
 
-        Query query = em.createNativeQuery(queryBuilder.toString(), TableEntity.class);
+        Query query = em.createQuery(jpql.toString(), TableEntity.class);
 
-        for (int i = 0; i < parameters.size(); i++) {
-            query.setParameter(i + 1, parameters.get(i));
+        if (floorId != null && !floorId.trim().isEmpty()) {
+            query.setParameter("floorId", floorId);
+        }
+        if (capacity != null) {
+            query.setParameter("capacity", capacity);
+        }
+        if (tableName != null && !tableName.trim().isEmpty()) {
+            query.setParameter("tableName", "%" + tableName + "%");
         }
 
-        tables = query.getResultList();
-
-        return tables;
+        return query.getResultList();
     }
 
 }

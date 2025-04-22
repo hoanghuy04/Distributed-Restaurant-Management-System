@@ -40,7 +40,7 @@ public class TableBUS implements BaseBUS<TableEntity, String> {
 
     @Override
     public TableEntity getEntityById(String id) {
-       return tableDAL.findById(id);
+        return tableDAL.findById(id);
     }
 
     @Override
