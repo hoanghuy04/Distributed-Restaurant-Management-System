@@ -191,9 +191,11 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
         String jpql = "SELECT o FROM OrderEntity o WHERE o.table.tableId = :tableId AND o.paymentStatus = 'UNPAID'";
         Query query = em.createQuery(jpql, OrderEntity.class);
         query.setParameter("tableId", tableId);
-        Optional<OrderEntity> orderEntity = Optional.ofNullable((OrderEntity) query.getSingleResult());
-
-        return orderEntity.orElse(null);
+        try {
+            return (OrderEntity) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<OrderEntity> getOrdersByYear(int year) {

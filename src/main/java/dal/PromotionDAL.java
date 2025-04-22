@@ -77,13 +77,13 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
                 + "AND CURRENT_DATE BETWEEN p.startedDate AND p.endedDate "
                 + "AND p.minPrice <= :totalPaid "
                 + "AND p.promotionType = :promotionType "
-                + "AND :customerLevel MEMBER OF p.customerLevels "
+                + "AND CONCAT(',', p.customerLevels, ',') LIKE :customerLevel "
                 + "ORDER BY p.discountPercentage DESC";
 
         TypedQuery<PromotionEntity> q = em.createQuery(jpql, PromotionEntity.class);
         q.setParameter("totalPaid", totalPaid);
         q.setParameter("promotionType", PromotionTypeEnum.ORDER);  // Assuming PromotionTypeEnum exists
-        q.setParameter("customerLevel", customerLevelEnum);
+        q.setParameter("customerLevel", customerLevelEnum.name());
         q.setMaxResults(1);
 
         try {
