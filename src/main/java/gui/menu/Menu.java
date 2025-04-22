@@ -7,7 +7,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -56,12 +55,12 @@ public class Menu extends JPanel {
     protected final int menuMinWidth = 100;
     protected final int headerFullHgap = 5;
 
-    public Menu(int option) throws RemoteException {
+    public Menu(int option) throws Exception {
         this.option = option;
         init(option);
     }
 
-    private void init(int option) throws RemoteException {
+    private void init(int option) throws Exception {
         if (option == 1) {
             menuItems = new String[][]{
                 {"Hoá đơn"},
@@ -131,7 +130,7 @@ public class Menu extends JPanel {
         add(panelClock);
     }
 
-    private void createMenu() throws RemoteException {
+    private void createMenu() throws Exception {
         int index = 0;
         for (int i = 0; i < menuItems.length; i++) {
             String menuName = menuItems[i][0];
@@ -153,7 +152,7 @@ public class Menu extends JPanel {
         return lbTitle;
     }
 
-    public void setSelectedMenu(int index, int subIndex) throws RemoteException {
+    public void setSelectedMenu(int index, int subIndex) throws Exception {
         runEvent(index, subIndex);
     }
 
@@ -172,7 +171,7 @@ public class Menu extends JPanel {
         }
     }
 
-    protected void runEvent(int index, int subIndex) throws RemoteException {
+    protected void runEvent(int index, int subIndex) throws Exception {
         MenuAction menuAction = new MenuAction();
         for (MenuEvent event : events) {
             event.menuSelected(index, subIndex, menuAction);

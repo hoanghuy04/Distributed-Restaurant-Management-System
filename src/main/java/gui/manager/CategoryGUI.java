@@ -10,7 +10,8 @@ import model.CategoryEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
+import java.rmi.Exception;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,7 +34,7 @@ public class CategoryGUI extends javax.swing.JPanel {
     /**
      * Creates new form FloorGUI
      */
-    public CategoryGUI() throws RemoteException {
+    public CategoryGUI() throws Exception {
 
         categoryBUS = FormLoad.categoryBUS;
         headers = new String[]{"Mã danh mục", "Tên danh mục", "Mô tả", "Trạng thái"};
@@ -151,7 +152,7 @@ public class CategoryGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnFindActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -318,7 +319,7 @@ public class CategoryGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnFindActionPerformed
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnFindActionPerformed
         String name = lblName.getText().trim();
         if (name.isBlank() || name.isEmpty()) {
             deleteAllTable();
@@ -391,7 +392,7 @@ public class CategoryGUI extends javax.swing.JPanel {
         isActiveBTN.setSelected(false);
     }
 
-    private void loadData() throws RemoteException {
+    private void loadData() throws Exception {
         categoryBUS.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getCategoryId(), f.getName(), f.getDescription(), f.isActive() ? "Đang hoạt động" : "Không hoạt động"

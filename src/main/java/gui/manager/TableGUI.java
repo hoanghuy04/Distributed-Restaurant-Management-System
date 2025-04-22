@@ -9,7 +9,7 @@ import gui.custom.TableDesign;
 import model.*;
 import gui.*;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -35,14 +35,14 @@ public class TableGUI extends javax.swing.JPanel {
     /**
      * Creates new form TableGUI
      */
-    public TableGUI() throws RemoteException {
+    public TableGUI() throws Exception {
         tableBUS = FormLoad.tableBUS;
         floorBUS = FormLoad.floorBUS;
         tbl = new TableEntity();
         initComponents();
     }
 
-    private void customTable() throws RemoteException {
+    private void customTable() throws Exception {
         String[] headers = {"Mã bàn", "Mã tầng", "Tên bàn", "Sức chứa", "Trạng thái"};
         List<Integer> tableWidth = Arrays.asList(100, 100, 100, 100, 100);
         tableDesign = new TableDesign(headers, tableWidth);
@@ -54,7 +54,7 @@ public class TableGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadData() throws RemoteException {
+    private void loadData() throws Exception {
         tableModel.setRowCount(0);
         List<TableEntity> tabs = tableBUS.getAllEntities();
         floorBUS.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
@@ -72,7 +72,7 @@ public class TableGUI extends javax.swing.JPanel {
         txtCapacity.setText("");
     }
     
-    private TableEntity getTable() throws RemoteException {
+    private TableEntity getTable() throws Exception {
         String capacityStr = txtCapacity.getText();
         String name = txtName.getText();
         String floorStr = cbbFloor.getSelectedItem().toString();
@@ -93,7 +93,7 @@ public class TableGUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() throws RemoteException {
+    private void initComponents() throws Exception {
 
         panelInfo = new javax.swing.JPanel();
         panelImgTbl = new javax.swing.JPanel();
@@ -160,7 +160,7 @@ public class TableGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnAddActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -174,7 +174,7 @@ public class TableGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnUpdateActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -188,7 +188,7 @@ public class TableGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnSearchActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -308,7 +308,7 @@ public class TableGUI extends javax.swing.JPanel {
         clear();
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         TableEntity tableNew = getTable();
         tableBUS.insertEntity(tableNew);
         addOneLine(tableNew);
@@ -316,7 +316,7 @@ public class TableGUI extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         int row = table.getSelectedRow();
         if (row == -1) {
             return;
@@ -341,7 +341,7 @@ public class TableGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         int Capacity = 0;
         try {
             String capacityText = txtCapacity.getText().trim();

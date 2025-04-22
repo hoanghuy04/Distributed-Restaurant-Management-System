@@ -35,7 +35,6 @@ import gui.staff.OverviewGUI;
 import java.awt.Desktop;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.rmi.RemoteException;
 
 /**
  *
@@ -47,14 +46,14 @@ public class MainMenu extends JLayeredPane {
     private MainGUI mainGUI;
     private int option;
 
-    public MainMenu(Application application, int option) throws RemoteException {
+    public MainMenu(Application application, int option) throws Exception {
         this.application = application;
         this.mainGUI = new MainGUI(application);
         this.option = option;
         init(option);
     }
 
-    private void init(int option) throws RemoteException {
+    private void init(int option) throws Exception {
         setLayout(new MainFormLayout());
         menu = new Menu(option);
         panelBody = new JPanel(new BorderLayout());
@@ -197,7 +196,7 @@ public class MainMenu extends JLayeredPane {
         panelBody.revalidate();
     }
 
-    public void setSelectedMenu(int index, int subIndex) throws RemoteException {
+    public void setSelectedMenu(int index, int subIndex) throws Exception {
         menu.setSelectedMenu(index, subIndex);
     }
 

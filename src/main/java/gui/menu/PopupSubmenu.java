@@ -15,7 +15,6 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Path2D;
-import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -58,7 +57,7 @@ public class PopupSubmenu extends JPanel {
             button.addActionListener((ActionEvent e) -> {
                 try {
                     menu.runEvent(menuIndex, subIndex);
-                } catch (RemoteException ex) {
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
                 popup.setVisible(false);

@@ -11,7 +11,7 @@ import gui.custom.datechooser.DateChooser;
 import model.*;
 import gui.custom.*;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,7 +42,7 @@ public class SearchGUI extends javax.swing.JPanel {
     /**
      * Creates new form SearchGUI
      */
-    public SearchGUI() throws RemoteException {
+    public SearchGUI() throws Exception {
         empBUS = FormLoad.employeeBUS;
         orderBUS = FormLoad.orderBUS;
         customerBUS = FormLoad.customerBUS;
@@ -70,7 +70,7 @@ public class SearchGUI extends javax.swing.JPanel {
 //        table.setModel(tableModel);
         TableActionEvent actionEvent = new TableActionEvent() {
             @Override
-            public void onView(int row) throws RemoteException {
+            public void onView(int row) throws Exception {
                 String orderID = table.getValueAt(row, 0).toString();
                 OrderEntity o = orderBUS.getEntityById(orderID);
                 new DialogOrderDetail(o).setVisible(true);
@@ -82,7 +82,7 @@ public class SearchGUI extends javax.swing.JPanel {
 //        tableModel.addRow(new Object[] {"1", "2","3","4", "5" });
     }
 
-    private void loadEmployees() throws RemoteException {
+    private void loadEmployees() throws Exception {
         cbbStaff.addItem("Chọn nhân viên");
         List<EmployeeEntity> employees = empBUS.getListEmployeeActive();
         for (EmployeeEntity employee : employees) {
@@ -96,7 +96,7 @@ public class SearchGUI extends javax.swing.JPanel {
         cbbRank.setModel(model);
     }
 
-    private boolean loadTable(LocalDateTime startDateTime, LocalDateTime endDateTime, String staff, String rank) throws RemoteException {
+    private boolean loadTable(LocalDateTime startDateTime, LocalDateTime endDateTime, String staff, String rank) throws Exception {
         tableModel.setRowCount(0);
         int total = 0;
         double price = 0;
@@ -385,7 +385,7 @@ public class SearchGUI extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
                     btnFilterMouseClicked(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -491,7 +491,7 @@ public class SearchGUI extends javax.swing.JPanel {
         // TODO add your handling code here:ccs
     }//GEN-LAST:event_cbbRankMouseClicked
 
-    private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_btnFilterMouseClicked
+    private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_btnFilterMouseClicked
         if (valiData()) {
             LocalDate startedDate = LocalDate.parse(txtDateFrist.getText(), DatetimeFormatterUtil.getDateFormatter());
             LocalDateTime startedDateTime = LocalDateTime.of(startedDate, LocalTime.of(0, 0, 1));

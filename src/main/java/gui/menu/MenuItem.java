@@ -20,7 +20,6 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Path2D;
-import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -70,7 +69,7 @@ public class MenuItem extends JPanel {
 
     private PopupSubmenu popup;
 
-    public MenuItem(Menu menu, String menus[], int menuIndex, List<MenuEvent> events) throws RemoteException {
+    public MenuItem(Menu menu, String menus[], int menuIndex, List<MenuEvent> events) throws Exception {
         this.menu = menu;
         this.menus = menus;
         this.menuIndex = menuIndex;
@@ -97,7 +96,7 @@ public class MenuItem extends JPanel {
         return ResizeImage.resizeImage(icon, 50, 50);
     }
 
-    private void init(int option) throws RemoteException {
+    private void init(int option) throws Exception {
         setLayout(new MenuLayout());
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:$Menu.background;"
@@ -117,7 +116,7 @@ public class MenuItem extends JPanel {
                     } else {
                         try {
                             menu.runEvent(menuIndex, 0);
-                        } catch (RemoteException ex) {
+                        } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
                     }
@@ -127,7 +126,7 @@ public class MenuItem extends JPanel {
                 menuItem.addActionListener((ActionEvent e) -> {
                     try {
                         menu.runEvent(menuIndex, subIndex);
-                    } catch (RemoteException ex) {
+                    } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
                 });
