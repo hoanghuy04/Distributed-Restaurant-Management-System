@@ -1,5 +1,5 @@
 package util.datafaker;
-
+//Huy
 import dal.*;
 import dal.connectDB.ConnectDB;
 import jakarta.persistence.EntityManager;
@@ -47,7 +47,7 @@ public class DataGenerator {
 
     // CategoryEntity
     public CategoryEntity generateCategoryEntity(String name) {
-        if(categoryDAL.findByName(name).orElse(null) != null) {
+        if(categoryDAL.findByName(name) != null) {
             return null;
         }
         String description = "Danh mục " + name + " - " + faker.lorem().sentence();
@@ -82,7 +82,7 @@ public class DataGenerator {
                     break;
             }
         }
-        if(itemDAL.findByName(name).orElse(null) != null) {
+        if(itemDAL.findByName(name) != null) {
             return null;
         }
 
@@ -109,7 +109,7 @@ public class DataGenerator {
         double costPrice = rand.nextDouble() * 50 + 10;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
-        if(itemDAL.findByName(name).orElse(null) != null) {
+        if(itemDAL.findByName(name) != null) {
             return null;
         }
         try {
@@ -123,7 +123,7 @@ public class DataGenerator {
 
     //ItemToppingEntity
     public ItemToppingEntity generateItemToppingEntity(ToppingEntity toppingEntity, ItemEntity itemEntity) {
-        if(itemToppingDAL.findByItemAndTopping(itemEntity, toppingEntity).orElse(null) != null) {
+        if(itemToppingDAL.findByItemAndTopping(itemEntity, toppingEntity) != null) {
             return null;
         }
         return new ItemToppingEntity(itemEntity, toppingEntity);
@@ -188,13 +188,16 @@ public class DataGenerator {
         promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
         promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
 
-        LocalDate startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
-        LocalDate endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
+        LocalDate startDateTmp = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
+        LocalDate endDateTmp = startDateTmp.plusDays(faker.number().numberBetween(7, 30));
+
+        LocalDateTime startDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 30)).atStartOfDay();
+        LocalDateTime endDate = startDate.plusDays(faker.number().numberBetween(7, 30));
         promotion.setStartedDate(startDate);
         promotion.setEndedDate(endDate);
 
         LocalDate today = LocalDate.now();
-        boolean isActive = (today.isAfter(startDate) || today.isEqual(startDate)) && (today.isBefore(endDate) || today.isEqual(endDate));
+        boolean isActive = (today.isAfter(startDateTmp) || today.isEqual(startDateTmp)) && (today.isBefore(endDateTmp) || today.isEqual(endDateTmp));
 
 
         PromotionTypeEnum[] promotionTypes = PromotionTypeEnum.values();
@@ -418,7 +421,7 @@ public class DataGenerator {
 
         //Role entity
         roleDAL.insert(new RoleEntity("R0001", "MANAGER", LocalDate.now()));
-        roleDAL.insert(new RoleEntity("R0002", "MANAGER", LocalDate.now()));
+        roleDAL.insert(new RoleEntity("R0002", "STAFF", LocalDate.now()));
 
         //Employee entity
         for (int i = 0; i < 10; i++) {

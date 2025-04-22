@@ -125,14 +125,14 @@ public class PromotionGUI extends javax.swing.JPanel {
         String proId = txtId.getText();
         String startDateStr = txtStartDate.getText();
         String endDateStr = txtEndDate.getText();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String startDateTimeStr = startDateStr + " 00:00:00";
         String endDateTimeStr = endDateStr + " 23:59:59";
-        LocalDate startDate = null;
-        LocalDate endDate = null;
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
 
-        startDate = LocalDate.parse(startDateTimeStr, dateTimeFormatter);
-        endDate = LocalDate.parse(endDateTimeStr, dateTimeFormatter);
+        startDate = LocalDateTime.parse(startDateTimeStr, dateTimeFormatter);
+        endDate = LocalDateTime.parse(endDateTimeStr, dateTimeFormatter);
         String scrip = txtScrip.getText();
         double discount = Double.parseDouble(txtDiscount.getText());
         double minPrice = Double.parseDouble(txtMinPrice.getText());
@@ -158,10 +158,9 @@ public class PromotionGUI extends javax.swing.JPanel {
                 itemID = itemID.trim();
                 if (!itemID.isEmpty()) {
                     ItemEntity item = itemBUS.getEntityById(itemID);
-                    PromotionDetailEntity PromotionDetail = new PromotionDetailEntity(proNEW, item);
-                    promotionDetails.add(PromotionDetail);
+                    PromotionDetailEntity promotionDetail = new PromotionDetailEntity(proNEW, item);
+                    promotionDetails.add(promotionDetail);
                     item.setPromotionDetails(promotionDetails);
-
                 }
             }
             proNEW.setPromotionDetails(promotionDetails);
@@ -654,14 +653,11 @@ public class PromotionGUI extends javax.swing.JPanel {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String startDateTimeStr = startDateStr + " 00:00:00";
         String endDateTimeStr = endDateStr + " 23:59:59";
-        LocalDate startDate = null;
-        LocalDate endDate = null;
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
 
-        startDate = LocalDate.parse(startDateTimeStr, dateTimeFormatter);
-        endDate = LocalDate.parse(endDateTimeStr, dateTimeFormatter);
-
-        pro.setStartedDate(startDate);
-        pro.setEndedDate(endDate);
+        startDate = LocalDateTime.parse(startDateTimeStr, dateTimeFormatter);
+        endDate = LocalDateTime.parse(endDateTimeStr, dateTimeFormatter);
         pro.setDescription(txtScrip.getText());
         pro.setDiscountPercentage(Double.parseDouble(txtDiscount.getText()));
         pro.setMinPrice(Double.parseDouble(txtMinPrice.getText()));

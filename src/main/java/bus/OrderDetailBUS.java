@@ -32,25 +32,11 @@ public class OrderDetailBUS implements BaseBUS<OrderDetailEntity, OrderDetailId>
 
     @Override
     public OrderDetailEntity getEntityById(OrderDetailId id) {
-        Optional<OrderDetailEntity> optionalOrderDetail = orderDetailDAL.findById(id);
-        return optionalOrderDetail.orElse(null); // Return null if not found
+       return orderDetailDAL.findById(id);
     }
 
     @Override
     public List<OrderDetailEntity> getAllEntities() {
         return orderDetailDAL.findAll();
     }
-
-    public List<OrderDetailEntity> getOrderDetailsByOrderId(String orderId) {
-        return orderDetailDAL.findByOrderId(orderId);
-    }
-
-    public List<OrderDetailEntity> getOrderDetailsByItemId(String itemId) {
-        return orderDetailDAL.findByItemId(itemId);
-    }
-
-//    public Optional<OrderDetailEntity> getOrderDetailByOrderIdAndItemId(String orderId, String itemId) {
-//        return orderDetailDAL.findByOrderIdAndItemId(orderId, itemId);
-//    }
-
 }

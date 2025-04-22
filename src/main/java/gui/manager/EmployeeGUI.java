@@ -59,7 +59,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
         
     private void loadData() {
         tableModel.setRowCount(0);
-        List<EmployeeEntity> emps = empBUS.getListEmployeeActive("True");
+        List<EmployeeEntity> emps = empBUS.getListEmployeeActive();
         for(EmployeeEntity emp : emps) {
             tableModel.addRow(new Object[] {emp.getEmployeeId(), emp.getFullname(), emp.getCreatedDate(), emp.getPhoneNumber(), 
                                 emp.getAddress(), emp.getEmail(), emp.getPassword(), 

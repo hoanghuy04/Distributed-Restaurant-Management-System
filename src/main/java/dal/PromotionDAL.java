@@ -1,20 +1,21 @@
 package dal;
 
-import model.OrderEntity;
-import model.PromotionEntity;
+import dal.connectDB.ConnectDB;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
+import model.PromotionEntity;
 import model.enums.CustomerLevelEnum;
 import model.enums.PromotionTypeEnum;
 import util.IDGeneratorUtility;
+
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
 
@@ -62,8 +63,8 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     }
 
     @Override
-    public Optional<PromotionEntity> findById(String id) {
-        return Optional.ofNullable(em.find(PromotionEntity.class, id));
+    public PromotionEntity findById(String id) {
+        return em.find(PromotionEntity.class, id);
     }
 
     @Override
@@ -71,13 +72,15 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         return em.createNamedQuery("PromotionEntity.findAll", PromotionEntity.class).getResultList();
     }
 
-    public Optional<PromotionEntity> getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
+
+    //NEED FIXING
+    public PromotionEntity getPromotionsByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
         String sql = "select top 1 p.* "
                 + "from promotions p "
                 + "where p.active = 'true' "
                 + "and GETDATE() between started_date and ended_date "
-                + "and min_price <= ?1 "
-                + "and promotion_type = 'ORDER' "
+                + "and p.min_price <= ?1 "
+                + "and p.promotion_type = 'ORDER' "
                 + "and (',' + p.applicable_customer_levels + ',' like '%,' + ?2 + ',%') "
                 + "order by p.discount_rate desc";
 
@@ -86,59 +89,67 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         q.setParameter(2, customerLevelEnum.toString());
 
         try {
-            return Optional.ofNullable((PromotionEntity) q.getSingleResult());
+            return (PromotionEntity) q.getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
-    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
-        List<PromotionEntity> promotions = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM promotions WHERE 1=1 ");
-        List<Object> parameters = new ArrayList<>();
+    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String des, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT p FROM PromotionEntity p WHERE 1=1 ");
+        Map<String, Object> parameters = new HashMap<>();
 
         if (startDate != null) {
-            queryBuilder.append(" AND started_date >= ?");
-//            parameters.add(Timestamp.valueOf(startDate.truncatedTo(ChronoUnit.SECONDS)));
-            parameters.add(Timestamp.valueOf(startDate));
+            queryBuilder.append(" AND p.startedDate >= :startDate");
+            parameters.put("startDate", startDate);
         }
         if (endDate != null) {
-            queryBuilder.append(" AND ended_date <= ?");
-            parameters.add(Timestamp.valueOf(endDate));
+            queryBuilder.append(" AND p.endedDate <= :endDate");
+            parameters.put("endDate", endDate);
         }
-        if (scrip != null && !scrip.trim().isEmpty()) {
-            queryBuilder.append(" AND description LIKE ?");
-            parameters.add("%" + scrip + "%");
+        if (des != null && !des.trim().isEmpty()) {
+            queryBuilder.append(" AND p.description LIKE :description");
+            parameters.put("description", "%" + des + "%");
         }
         if (discount != null) {
-            queryBuilder.append(" AND discount_rate = ?");
-            parameters.add(discount);
+            queryBuilder.append(" AND p.discountRate = :discountRate");
+            parameters.put("discountRate", discount);
         }
         if (minPrice != null) {
-            queryBuilder.append(" AND min_price = ?");
-            parameters.add(minPrice);
+            queryBuilder.append(" AND p.minPrice = :minPrice");
+            parameters.put("minPrice", minPrice);
         }
         if (rank != null && !rank.trim().isEmpty()) {
-            queryBuilder.append(" AND applicable_customer_levels = ?");
-            parameters.add(rank);
+            queryBuilder.append(" AND p.applicableCustomerLevels = :applicableCustomerLevels");
+            parameters.put("applicableCustomerLevels", rank);
         }
         if (type != null) {
-            queryBuilder.append(" AND promotion_type = ?");
-
-            parameters.add(type.name());
+            queryBuilder.append(" AND p.promotionType = :promotionType");
+            parameters.put("promotionType", type);
         }
-        queryBuilder.append(" AND active = ?");
-        parameters.add(active);
+        queryBuilder.append(" AND p.active = :active");
+        parameters.put("active", active);
 
-        Query query = em.createNativeQuery(queryBuilder.toString(), PromotionEntity.class);
-
-        for (int i = 0; i < parameters.size(); i++) {
-            query.setParameter(i + 1, parameters.get(i));
+        Query query = em.createQuery(queryBuilder.toString(), PromotionEntity.class);
+        
+        // Set parameters
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
 
-        promotions = query.getResultList();
+        return query.getResultList();
+    }
 
-        return promotions;
+    //test getPromotionsWithKeywordfit
+    public static void main(String[] args) {
+        ConnectDB.connect();
+        EntityManager em = ConnectDB.getEntityManager();
+        PromotionDAL promotionDAL = new PromotionDAL(em);
+        List<PromotionEntity> promotions = promotionDAL.getPromotionsWithKeywordfit(LocalDate.of(2025,4,11).atStartOfDay(), null, null, null, null, null, null, true);
+        for (PromotionEntity promotion : promotions) {
+            System.out.println(promotion);
+        }
     }
 
 }
+

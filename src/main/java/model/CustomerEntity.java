@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "customers")
 @NamedQueries({
-        @NamedQuery(name = "CustomerEntity.findAll", query = "select c from CustomerEntity c")
+        @NamedQuery(name = "CustomerEntity.findAll", query = "select c from CustomerEntity c"),
+        @NamedQuery(name = "CustomerEntity.findByPhone", query = "select c from CustomerEntity c where c.phone = :phone"),
 })
 public class CustomerEntity extends BaseEntity{
     @Id

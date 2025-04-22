@@ -4,20 +4,15 @@
  */
 package dal;
 
-import bus.PromotionBUS;
-import common.LevelCustomer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import model.ItemEntity;
-import model.OrderEntity;
 import model.PromotionDetailEntity;
 import model.PromotionDetailId;
 import model.PromotionEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+
 import java.util.List;
-import java.util.Optional;
-import util.CustomerLevelConverter;
 
 /**
  *
@@ -72,8 +67,8 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity, Promot
     }
 
     @Override
-    public Optional<PromotionDetailEntity> findById(PromotionDetailId id) {
-        return Optional.ofNullable(em.find(PromotionDetailEntity.class, id));
+    public PromotionDetailEntity findById(PromotionDetailId id) {
+        return em.find(PromotionDetailEntity.class, id);
     }
 
     @Override
@@ -125,35 +120,35 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity, Promot
         });
     }
 
-    public Optional<PromotionDetailEntity> getTopDiscountPercentageOnItem(double totalPrice, ItemEntity it) {
-        String sql = "select top 1 pd.* "
-                + "from promotion_details pd "
-                + "join promotions p on pd.promotion_id = p.promotion_id "
-                + "join items i on i.item_id = pd.item_id "
-                + "where p.active = 'true' "
-                + "and GETDATE() between started_date and ended_date "
-                + "and min_price <= ?1 "
-                + "and pd.item_id = ?2 "
-                + "order by p.discount_rate desc";
+//    public Optional<PromotionDetailEntity> getTopDiscountPercentageOnItem(double totalPrice, ItemEntity it) {
+//        String sql = "select top 1 pd.* "
+//                + "from promotion_details pd "
+//                + "join promotions p on pd.promotion_id = p.promotion_id "
+//                + "join items i on i.item_id = pd.item_id "
+//                + "where p.active = 'true' "
+//                + "and GETDATE() between started_date and ended_date "
+//                + "and min_price <= ?1 "
+//                + "and pd.item_id = ?2 "
+//                + "order by p.discount_rate desc";
+//
+//        Query q = em.createNativeQuery(sql, PromotionDetailEntity.class);
+//        q.setParameter(1, totalPrice);
+//        q.setParameter(2, it.getItemId());
+//
+//        try {
+//            return Optional.ofNullable((PromotionDetailEntity) q.getSingleResult());
+//        } catch (NoResultException e) {
+//            return Optional.empty();
+//        }
+//    }
 
-        Query q = em.createNativeQuery(sql, PromotionDetailEntity.class);
-        q.setParameter(1, totalPrice);
-        q.setParameter(2, it.getItemId());
-
-        try {
-            return Optional.ofNullable((PromotionDetailEntity) q.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
-    }
-
-    public boolean deleteEntitiesByPromotionId(String promotionId) {
-        return executeTransaction(() -> {
-            String sql = "DELETE FROM promotion_details WHERE promotion_id = ?1";
-            Query q = em.createNativeQuery(sql);
-            q.setParameter(1, promotionId);
-            q.executeUpdate();
-        });
-    }
+//    public boolean deleteEntitiesByPromotionId(String promotionId) {
+//        return executeTransaction(() -> {
+//            String sql = "DELETE FROM promotion_details WHERE promotion_id = ?1";
+//            Query q = em.createNativeQuery(sql);
+//            q.setParameter(1, promotionId);
+//            q.executeUpdate();
+//        });
+//    }
 
 }

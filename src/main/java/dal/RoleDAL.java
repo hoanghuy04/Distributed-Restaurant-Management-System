@@ -4,12 +4,12 @@
  */
 package dal;
 
-import model.RoleEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import java.util.List;
-import java.util.Optional;
+import model.RoleEntity;
 import util.IDGeneratorUtility;
+
+import java.util.List;
 
 
 public class RoleDAL implements BaseDAL<RoleEntity, String>{
@@ -55,16 +55,16 @@ public class RoleDAL implements BaseDAL<RoleEntity, String>{
     }
 
     @Override
-    public Optional<RoleEntity> findById(String id) {
-        return Optional.ofNullable(em.find(RoleEntity.class, id));
+    public RoleEntity findById(String id) {
+        return em.find(RoleEntity.class, id);
     }
 
     @Override
     public List<RoleEntity> findAll() {
         return em.createNamedQuery("RoleEntity.findAll", RoleEntity.class).getResultList();
     }
-    
+
     public RoleEntity findByName(String roleName) {
-        return em.createNamedQuery("RoleEntity.findByName", RoleEntity.class).setParameter("roleName", roleName).getSingleResult();
+        return em.createNamedQuery("RoleEntity.findByName", RoleEntity.class).setParameter("name", roleName).getSingleResult();
     }
 }

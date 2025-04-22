@@ -7,6 +7,7 @@ import model.PromotionEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,8 +39,7 @@ public class PromotionBUS implements BaseBUS<PromotionEntity, String> {
 
     @Override
     public PromotionEntity getEntityById(String id) {
-        Optional<PromotionEntity> optionalPromotion = promotionDAL.findById(id);
-        return optionalPromotion.orElse(null);
+        return promotionDAL.findById(id);
     }
 
     @Override
