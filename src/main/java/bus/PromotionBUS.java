@@ -87,8 +87,8 @@ public class PromotionBUS implements BaseBUS<PromotionEntity, String> {
     }
 
     public PromotionEntity getBestPromotionByCustomerLevelAndTotalPrice(double totalPaid, CustomerLevelEnum customerLevelEnum) {
-        Optional<PromotionEntity> optionalPromotionEntity = promotionDAL.getPromotionsByCustomerLevelAndTotalPrice(totalPaid, customerLevelEnum);
-        return optionalPromotionEntity.orElse(null);
+        PromotionEntity promotionEntity = promotionDAL.getPromotionsByCustomerLevelAndTotalPrice(totalPaid, customerLevelEnum);
+        return promotionEntity;
     }
     
     public List<PromotionEntity> getListPromotionActive(String active) {

@@ -2,13 +2,12 @@ package bus;
 
 import common.Constants;
 import dal.EmployeeDAL;
-import model.EmployeeEntity;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import model.EmployeeEntity;
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.List;
+import java.util.Random;
 
 public class EmployeeBUS implements BaseBUS<EmployeeEntity, String> {
 
