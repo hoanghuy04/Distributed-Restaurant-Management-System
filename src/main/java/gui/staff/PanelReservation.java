@@ -273,7 +273,11 @@ public class PanelReservation extends RoundedPanel {
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-edit-30.png"))); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                try {
+                    jButton3ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -311,7 +315,7 @@ public class PanelReservation extends RoundedPanel {
 
         add(panelReservationBot, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
-    private void loadMainGUI() {
+    private void loadMainGUI() throws Exception {
 //        JPanel pnAllOrders = mainGUI.getTabOrder().getPanelAllOrders();
 //        pnAllOrders.removeAll();
 //        pnAllOrders.revalidate();

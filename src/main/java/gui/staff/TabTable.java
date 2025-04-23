@@ -436,10 +436,16 @@ public class TabTable extends JPanel {
     
     private void loadTable(FloorEntity floor, String status) throws Exception {
         List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), status);
-        tables.forEach(x -> loadPanelTables(x));
+        tables.forEach(x -> {
+            try {
+                loadPanelTables(x);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
     
-    public void loadPanelTables(TableEntity table) {
+    public void loadPanelTables(TableEntity table) throws Exception {
         PanelTable pnTable = new PanelTable(table, orderGUI);
         panelTables.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 50));
         panelTables.add(pnTable);

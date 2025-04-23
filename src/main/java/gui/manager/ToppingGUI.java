@@ -269,7 +269,11 @@ public class ToppingGUI extends javax.swing.JPanel  {
         txtItem.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtItemMouseClicked(evt);
+                try {
+                    txtItemMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

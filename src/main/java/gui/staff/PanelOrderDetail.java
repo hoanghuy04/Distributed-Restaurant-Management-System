@@ -188,7 +188,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnPlus.setPreferredSize(new java.awt.Dimension(40, 40));
         btnPlus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPlusActionPerformed(evt);
+                try {
+                    btnPlusActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -198,7 +202,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnMinus.setPreferredSize(new java.awt.Dimension(40, 40));
         btnMinus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMinusActionPerformed(evt);
+                try {
+                    btnMinusActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -226,7 +234,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnDelete.setPreferredSize(new java.awt.Dimension(40, 40));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                try {
+                    btnDeleteActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -309,18 +321,18 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinusActionPerformed
+    private void btnMinusActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnMinusActionPerformed
         updateQty(-1, -1);
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnMinusActionPerformed
 
-    private void btnPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlusActionPerformed
+    private void btnPlusActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnPlusActionPerformed
         updateQty(1, -1);
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnPlusActionPerformed
 
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnDeleteActionPerformed
         deleteItemCart();
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnDeleteActionPerformed
@@ -361,7 +373,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
                 updateQty(0, newQty);
                 orderGUI.calcPrice();
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
             txtQty.setText(String.valueOf(qty));
         }

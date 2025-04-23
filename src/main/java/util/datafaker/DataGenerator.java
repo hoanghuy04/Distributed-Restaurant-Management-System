@@ -203,7 +203,7 @@ public class DataGenerator {
     public PromotionEntity generatePromotionEntity() {
         PromotionEntity promotion = new PromotionEntity();
         promotion.setDescription("Khuyến mãi " + faker.commerce().productName());
-        promotion.setDiscountPercentage(faker.number().randomDouble(2, 5, 50));
+        promotion.setDiscountPercentage(faker.number().randomDouble(0, 5, 50) / 100);
 
         LocalDate startDateTmp = LocalDate.now().minusDays(faker.number().numberBetween(1, 30));
         LocalDate endDateTmp = startDateTmp.plusDays(faker.number().numberBetween(7, 30));

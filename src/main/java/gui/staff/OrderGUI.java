@@ -692,7 +692,11 @@ public class OrderGUI extends JPanel {
         btnExit.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
+                try {
+                    btnExitActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         pnBtn.add(btnExit);
@@ -1004,7 +1008,7 @@ public class OrderGUI extends JPanel {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnExitActionPerformed
         mainGUI.loadMainGUI();
     }//GEN-LAST:event_btnExitActionPerformed
 

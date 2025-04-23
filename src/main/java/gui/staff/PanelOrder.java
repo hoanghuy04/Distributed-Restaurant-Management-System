@@ -75,7 +75,11 @@ public class PanelOrder extends JPanel {
         setPreferredSize(new java.awt.Dimension(250, 200));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
+                try {
+                    formMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         setLayout(new java.awt.BorderLayout());
@@ -190,7 +194,7 @@ public class PanelOrder extends JPanel {
         add(panelOrderBot, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+    private void formMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_formMouseClicked
         orderGUI.setTable(o.getTable());
         orderGUI.loadOrder(o);
         displayOrderGUI();
