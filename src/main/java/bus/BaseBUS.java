@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author hoang
  */
-public interface BaseBUS <T, ID>{
+public interface BaseBUS <T, ID> {
     boolean insertEntity(T t);
     boolean updateEntity(T t);
     boolean deleteEntity(ID id);
