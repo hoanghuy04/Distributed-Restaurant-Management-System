@@ -23,7 +23,7 @@ import static util.HostNameUtil.*;
  * @author RAVEN
  */
 public class FormLoad extends javax.swing.JDialog {
-    private static final String SERVER_HOST_NAME = "DuongHoangHuy";
+    private static final String SERVER_HOST_NAME = "MSI";
 
     /**
      * Creates new form Application
@@ -154,6 +154,7 @@ public class FormLoad extends javax.swing.JDialog {
                     itemToppingBUS = (ItemToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemToppingBUS.class));
                     promotionDetailBUS = (PromotionDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionDetailBUS.class));
                     roleBUS = (RoleBUS) Naming.lookup(getURI(SERVER_HOST_NAME, RoleBUS.class));
+
 
                     doTask("Loading...", 50);
 

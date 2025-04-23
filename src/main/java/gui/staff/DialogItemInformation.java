@@ -443,7 +443,7 @@ public class DialogItemInformation extends JDialog {
 
     private void fillContent() {
         lblName.setText(item.getName());
-        
+
         if (item.getDescription() != null) {
             lblDesc.setText(item.getDescription());
         }
@@ -467,7 +467,7 @@ public class DialogItemInformation extends JDialog {
                 200));
             for (ItemToppingEntity it : itemToppings) {
                 if (itemToppings.size() == 1) {
-                    size = 30;
+                    size = 50;
                 }
                 String initialText = it.getTopping().getName();
                 JRadioButtonCustom r = createRadio(initialText, it);
@@ -477,7 +477,7 @@ public class DialogItemInformation extends JDialog {
                     r.setSelected(true);
                     SwingUtilities.invokeLater(() -> r.doClick());
                 }
-                size += 50;
+                size += 55;
                 radioActionPerform(r, initialText, it);
                 r.setActionCommand(initialText);
             }

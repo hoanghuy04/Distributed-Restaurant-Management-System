@@ -1,8 +1,9 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ToppingDTO {
+public class ToppingDTO implements Serializable {
     private String name ;
     private int stockQty ;
     private double costPrice;
