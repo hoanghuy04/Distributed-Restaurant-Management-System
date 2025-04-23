@@ -6,8 +6,7 @@ package dal;
 
 import common.Constants;
 import dal.connectDB.ConnectDB;
-import model.OrderEntity;
-import model.PromotionDetailEntity;
+import model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -46,10 +45,25 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
 
     @Override
     public boolean insert(OrderEntity orderEntity) {
-        orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate("O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
-        System.out.println("Order ID: " + orderEntity.getOrderId());
-        return executeTransaction(() -> em.persist(orderEntity));
+        return executeTransaction(() -> {
+            orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate(
+                    "O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
+
+            if (orderEntity.getOrderDetails() != null) {
+                for (OrderDetailEntity detail : orderEntity.getOrderDetails()) {
+                    detail.setOrder(orderEntity);
+                    detail.setItem(detail.getItem());
+                    detail.setTopping(detail.getTopping());
+                    detail.setLineTotal();
+                    detail.setDiscount();
+                }
+            }
+
+            em.persist(orderEntity);
+        });
     }
+
+
 
     @Override
     public boolean update(OrderEntity orderEntity) {
