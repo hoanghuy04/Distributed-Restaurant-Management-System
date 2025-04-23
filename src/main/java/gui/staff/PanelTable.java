@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.impl.OrderBUSImpl;
-import bus.impl.TableBUSImpl;
+import bus.OrderBUS;
+import bus.TableBUS;
 import common.Constants;
 import dto.CartDTO;
 import model.*;
@@ -35,18 +35,18 @@ public class PanelTable extends javax.swing.JPanel {
     private TableEntity table;
     private FloorEntity floor;
     private OrderGUI orderGUI;
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
     private OrderEntity o;
     
-    private TableBUSImpl tableBUSImpl;
+    private TableBUS tableBUS;
     
-    public PanelTable(TableEntity table, OrderGUI orderGUI) {
+    public PanelTable(TableEntity table, OrderGUI orderGUI) throws Exception {
         initComponents();
         setOpaque(false);
         this.table = table;
         this.orderGUI = orderGUI;
-        orderBUSImpl = FormLoad.orderBUSImpl;
-        tableBUSImpl = FormLoad.tableBUSImpl;
+        orderBUS = FormLoad.orderBUS;
+        tableBUS = FormLoad.tableBUS;
         setOpaque(false);
         
         fillContent();
@@ -83,7 +83,11 @@ public class PanelTable extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(200, 200));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
+                try {
+                    formMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -104,12 +108,12 @@ public class PanelTable extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        List<OrderEntity> list = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
+    private void formMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_formMouseClicked
+        List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
         if (o == null || (o.getOrderDetails().isEmpty() && o.getOrderType().equals(OrderTypeEnum.IMMEDIATE) && o.getOrderStatus().equals(OrderStatusEnum.MERGED))) {
-            o = orderBUSImpl.getMergedOrderByCombineTable(table);
+            o = orderBUS.getMergedOrderByCombineTable(table);
         }
         
         boolean check = true;
@@ -139,8 +143,8 @@ public class PanelTable extends javax.swing.JPanel {
         Application.app.showForm(orderGUI);
     }
     
-    public void fillContent() {
-        List<OrderEntity> list = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
+    public void fillContent() throws Exception {
+        List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
         if(o != null && (o.getReservationTime().isBefore(LocalDateTime.now().minusHours(1)) || o.getReservationTime().isAfter(LocalDateTime.now().plusHours(1)))) {

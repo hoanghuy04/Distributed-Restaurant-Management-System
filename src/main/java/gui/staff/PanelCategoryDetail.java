@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.impl.CategoryBUSImpl;
-import bus.impl.ItemBUSImpl;
+import bus.CategoryBUS;
+import bus.ItemBUS;
 import common.Constants;
 import model.ItemEntity;
 import java.util.List;
@@ -25,8 +25,8 @@ public class PanelCategoryDetail extends JPanel {
     /**
      * Creates new form PanelCategoryDetail
      */
-    private CategoryBUSImpl categoryBUSImpl;
-    private ItemBUSImpl itemBUSImpl;
+    private CategoryBUS categoryBUS;
+    private ItemBUS itemBUS;
     private OrderGUI orderGUI;
     private PromotionGUI promotionGUI;
     private ToppingGUI toppingGUI;
@@ -36,8 +36,8 @@ public class PanelCategoryDetail extends JPanel {
     }
 
     public PanelCategoryDetail(List<ItemEntity> items, JPanel parentGUI) {
-        this.itemBUSImpl = FormLoad.itemBUSImpl;
-        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
+        this.itemBUS = FormLoad.itemBUS;
+        this.categoryBUS = FormLoad.categoryBUS;
         if (parentGUI instanceof OrderGUI) {
             this.orderGUI = (OrderGUI) parentGUI;
         } else if (parentGUI instanceof PromotionGUI) {

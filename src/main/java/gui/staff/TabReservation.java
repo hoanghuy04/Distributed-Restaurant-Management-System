@@ -4,6 +4,7 @@
  */
 package gui.staff;
 
+import bus.OrderBUS;
 import bus.impl.OrderBUSImpl;
 import common.Constants;
 import model.OrderEntity;
@@ -15,6 +16,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,7 +48,7 @@ import util.DatetimeFormatterUtil;
  */
 public class TabReservation extends JPanel {
 
-    private OrderBUSImpl orderBUSImpl;
+    private final OrderBUS orderBUS;
     private List<OrderEntity> listOfAllReservations;
     private TreeMap<String, List<OrderEntity>> mapOfAllReservations;
     private MainGUI mainGUI;
@@ -56,11 +58,11 @@ public class TabReservation extends JPanel {
     /**
      * Creates new form TabReservation
      */
-    public TabReservation(MainGUI mainGUI) {
+    public TabReservation(MainGUI mainGUI) throws Exception {
         this.mainGUI = mainGUI;
-        this.orderBUSImpl = FormLoad.orderBUSImpl;
+        this.orderBUS = FormLoad.orderBUS;
 
-        this.listOfAllReservations = orderBUSImpl.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
+        this.listOfAllReservations = orderBUS.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
         this.mapOfAllReservations = getOrdersGroupByDate(listOfAllReservations);
 
         this.description = new panelDescription();
@@ -69,7 +71,11 @@ public class TabReservation extends JPanel {
         txtQrContent.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                action();
+                try {
+                    action();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
             @Override
@@ -82,10 +88,10 @@ public class TabReservation extends JPanel {
                 // Dùng khi văn bản có định dạng (không cần thiết cho JTextField cơ bản)
             }
 
-            private void action() {
+            private void action()  throws Exception{
 //                JOptionPane.showMessageDialog(null, "Nội dung mới: " + txtQrContent.getText());
                 panelAllReservationsMouseClicked(null);
-                OrderEntity orderEntity = orderBUSImpl.getEntityById(txtQrContent.getText().trim());
+                OrderEntity orderEntity = orderBUS.getEntityById(txtQrContent.getText().trim());
                 if (orderEntity != null && orderEntity.getPaymentStatus().equals(PaymentStatusEnum.UNPAID) && orderEntity.getReservationStatus().equals(ReservationStatusEnum.PENDING)) {
                     setListOfReservationsByOption(List.of(orderEntity));
                 } else {
@@ -404,7 +410,11 @@ public class TabReservation extends JPanel {
         panelUpComingOption.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
         panelUpComingOption.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                panelUpComingOptionMouseClicked(evt);
+                try {
+                    panelUpComingOptionMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -440,7 +450,11 @@ public class TabReservation extends JPanel {
         panelPastOption.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
         panelPastOption.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                panelPastOptionMouseClicked(evt);
+                try {
+                    panelPastOptionMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -557,16 +571,16 @@ public class TabReservation extends JPanel {
         getLblAllReservations().setForeground(Color.white);
     }//GEN-LAST:event_panelAllReservationsMouseClicked
 
-    private void panelUpComingOptionMouseClicked(MouseEvent evt) {//GEN-FIRST:event_panelUpComingOptionMouseClicked
-        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblUpComingRs.getText()));
+    private void panelUpComingOptionMouseClicked(MouseEvent evt) throws Exception {//GEN-FIRST:event_panelUpComingOptionMouseClicked
+        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblUpComingRs.getText()));
         updatePanelBackground();
         this.panelUpComingOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfUpComingRs().setForeground(Color.white);
         getLblUpComingRs().setForeground(Color.white);
     }//GEN-LAST:event_panelUpComingOptionMouseClicked
 
-    private void panelPastOptionMouseClicked(MouseEvent evt) {//GEN-FIRST:event_panelPastOptionMouseClicked
-        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblPastRs.getText()));
+    private void panelPastOptionMouseClicked(MouseEvent evt)  throws Exception{//GEN-FIRST:event_panelPastOptionMouseClicked
+        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblPastRs.getText()));
         updatePanelBackground();
         this.panelPastOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfPastRs().setForeground(Color.white);
