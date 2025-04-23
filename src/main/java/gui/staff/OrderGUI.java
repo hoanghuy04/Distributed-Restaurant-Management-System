@@ -18,6 +18,7 @@ import gui.FormLoad;
 import gui.custom.RoundedButton;
 import gui.main.LoginGUI;
 
+import java.rmi.RemoteException;
 import java.util.*;
 import java.awt.Component;
 import java.awt.Font;
@@ -68,7 +69,7 @@ public class OrderGUI extends JPanel {
     public CartDTO cartDTO;
     private OrderEntity o;
 
-    public OrderGUI(Application app, MainGUI mainGUI) {
+    public OrderGUI(Application app, MainGUI mainGUI) throws Exception {
         this.app = app;
         cartDTO = new CartDTO();
         this.categoryBUS = FormLoad.categoryBUS;
@@ -241,7 +242,11 @@ public class OrderGUI extends JPanel {
         cbbFloor.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         cbbFloor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbbFloorItemStateChanged(evt);
+                try {
+                    cbbFloorItemStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel4.add(cbbFloor);
@@ -255,7 +260,11 @@ public class OrderGUI extends JPanel {
         txtSearchCustomer.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         txtSearchCustomer.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
-                txtSearchCustomerKeyReleased(evt);
+                try {
+                    txtSearchCustomerKeyReleased(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel4.add(txtSearchCustomer);
@@ -694,7 +703,11 @@ public class OrderGUI extends JPanel {
         btnSave.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
+                try {
+                    btnSaveActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         pnBtn.add(btnSave);
@@ -705,7 +718,11 @@ public class OrderGUI extends JPanel {
         btnPay.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         btnPay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPayActionPerformed(evt);
+                try {
+                    btnPayActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         pnBtn.add(btnPay);
@@ -881,7 +898,11 @@ public class OrderGUI extends JPanel {
         txtSearchItem.setMaximumSize(new java.awt.Dimension(2147483647, 70));
         txtSearchItem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
-                txtSearchItemKeyReleased(evt);
+                try {
+                    txtSearchItemKeyReleased(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel7.add(txtSearchItem);
@@ -889,7 +910,11 @@ public class OrderGUI extends JPanel {
         cbbFilter.setModel(new DefaultComboBoxModel<>(new String[]{"Mặc định", "Giảm giá nhiều", "Giá từ cao đến thấp", "Giá từ thấp đến cao"}));
         cbbFilter.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbbFilterItemStateChanged(evt);
+                try {
+                    cbbFilterItemStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel7.add(cbbFilter);
@@ -904,7 +929,11 @@ public class OrderGUI extends JPanel {
         tabCategory.setPreferredSize(new java.awt.Dimension(2000, 2000));
         tabCategory.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                tabCategoryStateChanged(evt);
+                try {
+                    tabCategoryStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel2.add(tabCategory, java.awt.BorderLayout.CENTER);
@@ -931,14 +960,14 @@ public class OrderGUI extends JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtSearchItemKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtSearchItemKeyReleased
+    private void txtSearchItemKeyReleased(KeyEvent evt) throws Exception {//GEN-FIRST:event_txtSearchItemKeyReleased
         String nameItem = txtSearchItem.getText();
         String nameCat = tabCategory.getTitleAt(tabCategory.getSelectedIndex());
         List<ItemEntity> items = itemBUS.findByName(nameItem, nameCat);
         loadItems(items);
     }//GEN-LAST:event_txtSearchItemKeyReleased
 
-    private void cbbFloorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbFloorItemStateChanged
+    private void cbbFloorItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_cbbFloorItemStateChanged
         cbbTable.clearSelectedItems();
         cbbTable.removeAllItems();
         String floorName = cbbFloor.getSelectedItem().toString();
@@ -949,7 +978,7 @@ public class OrderGUI extends JPanel {
         }
     }//GEN-LAST:event_cbbFloorItemStateChanged
 
-    private void txtSearchCustomerKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtSearchCustomerKeyReleased
+    private void txtSearchCustomerKeyReleased(KeyEvent evt) throws Exception {//GEN-FIRST:event_txtSearchCustomerKeyReleased
         String search = txtSearchCustomer.getText();
         CustomerEntity cus = getCustomer();
 
@@ -968,7 +997,7 @@ public class OrderGUI extends JPanel {
         }
     }//GEN-LAST:event_txtSearchCustomerKeyReleased
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSaveActionPerformed
         if (createOrder(PaymentStatusEnum.UNPAID)) {
             JOptionPane.showMessageDialog(null, "Lưu đơn thành công");
             mainGUI.loadMainGUI();
@@ -979,7 +1008,7 @@ public class OrderGUI extends JPanel {
         mainGUI.loadMainGUI();
     }//GEN-LAST:event_btnExitActionPerformed
 
-    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnPayActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Xác nhận thanh toán?") == JOptionPane.YES_OPTION) {
             if (createOrder(PaymentStatusEnum.PAID)) {
                 table.setTableStatus(TableStatusEnum.AVAILABLE);
@@ -995,11 +1024,11 @@ public class OrderGUI extends JPanel {
 
     }//GEN-LAST:event_btnPayActionPerformed
 
-    private void cbbFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbFilterItemStateChanged
+    private void cbbFilterItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_cbbFilterItemStateChanged
         loadItems(getItemsFromNameTab());
     }//GEN-LAST:event_cbbFilterItemStateChanged
 
-    private void tabCategoryStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabCategoryStateChanged
+    private void tabCategoryStateChanged(javax.swing.event.ChangeEvent evt) throws Exception {//GEN-FIRST:event_tabCategoryStateChanged
         loadItems(getItemsFromNameTab());
     }//GEN-LAST:event_tabCategoryStateChanged
 
@@ -1015,7 +1044,7 @@ public class OrderGUI extends JPanel {
         return "";
     }
 
-    private List<ItemEntity> getItemsFromNameTab() {
+    private List<ItemEntity> getItemsFromNameTab() throws Exception {
         String nameCat = tabCategory.getTitleAt(tabCategory.getSelectedIndex());
         CategoryEntity category = categoryBUS.findByName(nameCat);
         return itemBUS.getFilteredItems(category, getDataFromCbbFilter());
@@ -1034,7 +1063,7 @@ public class OrderGUI extends JPanel {
         txtNumberOfCustomer.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "4");
     }
 
-    public void addTabCategory() {
+    public void addTabCategory() throws Exception {
         List<CategoryEntity> categories = categoryBUS.getAllEntities();
         for (CategoryEntity category : categories) {
             List<ItemEntity> items = itemBUS.getFilteredItems(category, "promotion");
@@ -1048,14 +1077,14 @@ public class OrderGUI extends JPanel {
         pnCD.loadItemSearch(items);
     }
 
-    private void loadFloors() {
+    private void loadFloors() throws Exception {
         List<FloorEntity> floors = floorBUS.getAllEntities();
         for (FloorEntity floor : floors) {
             cbbFloor.addItem(floor.getName());
         }
     }
 
-    public void addPanelOrderDetail(PanelOrderDetail pnOD) {
+    public void addPanelOrderDetail(PanelOrderDetail pnOD) throws Exception {
         PanelOrderDetail existingPNOD = findPanelOrderDetail(pnOD.getItemCartDTO());
         if (existingPNOD != null) {
             existingPNOD.updateLineTotal();
@@ -1080,7 +1109,7 @@ public class OrderGUI extends JPanel {
         return null;
     }
 
-    public boolean updateItemStock(ItemEntity item, int delta) {
+    public boolean updateItemStock(ItemEntity item, int delta) throws Exception {
         int newStock = item.getStockQuantity() + delta;
         if (newStock < 0) {
             Notifications.getInstance().show(
@@ -1107,7 +1136,7 @@ public class OrderGUI extends JPanel {
         }
     }
 
-    public boolean createOrder(PaymentStatusEnum paymentStatus) {
+    public boolean createOrder(PaymentStatusEnum paymentStatus) throws Exception {
         TableEntity tableCBB = tableBUS.findByName(cbbTable.getSelectedItems().get(0).toString(), floorBUS.findByName(cbbFloor.getSelectedItem().toString()).getFloorId());
         FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
         this.o = orderBUS.findByTableId(tableCBB.getTableId());
@@ -1151,7 +1180,13 @@ public class OrderGUI extends JPanel {
         }
         List<TableEntity> listCombinedTables = (List<TableEntity>) cbbTable.getSelectedItems()
                 .stream()
-                .map(x -> (TableEntity) tableBUS.findByName(x.toString(), floor.getFloorId()))
+                .map(x -> {
+                    try {
+                        return (TableEntity) tableBUS.findByName(x.toString(), floor.getFloorId());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .filter(Objects::nonNull)
                 .filter(x -> !x.equals(tableCBB))
                 .collect(Collectors.toList());
@@ -1182,8 +1217,16 @@ public class OrderGUI extends JPanel {
             updateOrderWithoutOrderDetails(o);
             if (!isNewOrder) {
                 o.getOrderDetails().forEach(od -> {
-                    orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId()));
-                    updateItemStock(od.getItem(), od.getQuantity());
+                    try {
+                        orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId()));
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        updateItemStock(od.getItem(), od.getQuantity());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 });
             }
             updatePriceOrder(getListOrderDetail(o), o);
@@ -1204,27 +1247,40 @@ public class OrderGUI extends JPanel {
         return isSwitched;
     }
 
-    private void updateTableStatus(TableEntity table, TableStatusEnum status) {
+    private void updateTableStatus(TableEntity table, TableStatusEnum status) throws Exception {
         table.setTableStatus(status);
         tableBUS.updateEntity(table);
     }
 
-    private void processPaidOrder(OrderEntity o) {
+    private void processPaidOrder(OrderEntity o) throws Exception {
         if (o.getPaymentStatus() == PaymentStatusEnum.PAID) {
             updateCustomerWhenPayOrder(o);
             updateTableStatus(o.getTable(), TableStatusEnum.AVAILABLE);
             o.getCombinedTables().forEach(t -> {
-                updateTableStatus(t, TableStatusEnum.AVAILABLE);
-                OrderEntity order = orderBUS.findByTableId(t.getTableId());
+                try {
+                    updateTableStatus(t, TableStatusEnum.AVAILABLE);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                OrderEntity order = null;
+                try {
+                    order = orderBUS.findByTableId(t.getTableId());
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
                 if (order != null) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
-                    orderBUS.updateEntity(order);
+                    try {
+                        orderBUS.updateEntity(order);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }
     }
 
-    private void updateCustomerWhenPayOrder(OrderEntity o) {
+    private void updateCustomerWhenPayOrder(OrderEntity o) throws Exception {
         if (!o.getCustomer().getPhone().equals(dfCus)) {
             Set<OrderEntity> orders = new HashSet<>();
             orders.add(o);
@@ -1235,7 +1291,7 @@ public class OrderGUI extends JPanel {
         }
     }
 
-    private void updatePriceOrder(Set<OrderDetailEntity> orderDetails, OrderEntity o) {
+    private void updatePriceOrder(Set<OrderDetailEntity> orderDetails, OrderEntity o) throws Exception {
         o.setOrderDetails(orderDetails);
         applyOrderDiscount(o);
         o.setTotalPrice();
@@ -1243,13 +1299,13 @@ public class OrderGUI extends JPanel {
         o.setTotalPaid();
     }
 
-    private void insertOrderDetail(OrderDetailEntity od) {
+    private void insertOrderDetail(OrderDetailEntity od) throws Exception {
         od.setLineTotal();
         od.setDiscount();
         orderDetailBUS.insertEntity(od);
     }
 
-    private Set<OrderDetailEntity> getListOrderDetail(OrderEntity o) {
+    private Set<OrderDetailEntity> getListOrderDetail(OrderEntity o) throws Exception {
         Set<OrderDetailEntity> orderDetails = new HashSet<>();
         for (Map.Entry<ItemCartDTO, Integer> entry : cartDTO.getCart().entrySet()) {
             int qty = entry.getValue();
@@ -1275,7 +1331,7 @@ public class OrderGUI extends JPanel {
         return orderDetails;
     }
 
-    private CustomerEntity getCustomer() {
+    private CustomerEntity getCustomer() throws Exception {
         if (txtSearchCustomer.getText().trim().equals("") || txtSearchCustomer.getText() == null) {
             return dfCus;
         } else {
@@ -1283,7 +1339,7 @@ public class OrderGUI extends JPanel {
         }
     }
 
-    private void updateOrderWithoutOrderDetails(OrderEntity o) {
+    private void updateOrderWithoutOrderDetails(OrderEntity o) throws Exception {
         String numberOfCustomerStr = txtNumberOfCustomer.getText();
         int numberOfCustomer = 1;
         if (NumberUltis.isInt(numberOfCustomerStr)) {
@@ -1301,14 +1357,14 @@ public class OrderGUI extends JPanel {
         }
     }
 
-    private void applyOrderDiscount(OrderEntity o) {
+    private void applyOrderDiscount(OrderEntity o) throws Exception {
         CustomerEntity customer = getCustomer();
         PromotionEntity promotionEntity = null;
         promotionEntity = promotionBUS.getBestPromotionByCustomerLevelAndTotalPrice(totalPrice - itemDiscount - deposit, customer.getCustomerLevel());
         o.setPromotion(promotionEntity);
     }
 
-    private void mergeTable(OrderEntity o0, List<TableEntity> combineTables) {
+    private void mergeTable(OrderEntity o0, List<TableEntity> combineTables) throws Exception {
         Map<ItemCartDTO, Integer> mergedODs = new HashMap<>();
         //Bàn nguồn 
         FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
@@ -1316,25 +1372,47 @@ public class OrderGUI extends JPanel {
 
         if (!o0.getOrderDetails().isEmpty()) {
             o0.getOrderDetails()
-                    .forEach(x -> mergedODs.merge(new ItemCartDTO(x.getItem(),
-                                    itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
-                            x.getQuantity(), Integer::sum));
+                    .forEach(x -> {
+                        try {
+                            mergedODs.merge(new ItemCartDTO(x.getItem(),
+                                            itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
+                                    x.getQuantity(), Integer::sum);
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         }
 
         List<OrderEntity> orderOfCombineTables = combineTables.stream()
-                .map(x -> (OrderEntity) orderBUS.findByTableId(x.getTableId()))
+                .map(x -> {
+                    try {
+                        return (OrderEntity) orderBUS.findByTableId(x.getTableId());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         orderOfCombineTables.stream()
                 .flatMap(o -> o.getOrderDetails().stream())
-                .forEach(x -> mergedODs.merge(new ItemCartDTO(x.getItem(),
-                                itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
-                        x.getQuantity(), Integer::sum));
+                .forEach(x -> {
+                    try {
+                        mergedODs.merge(new ItemCartDTO(x.getItem(),
+                                        itemToppingBUS.findByItemAndToppingId(x.getItem(), x.getTopping()), x.getDescription()),
+                                x.getQuantity(), Integer::sum);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         orderOfCombineTables.forEach(o -> {
             o.setOrderStatus(OrderStatusEnum.MERGED);
-            orderBUS.updateEntity(o);
+            try {
+                orderBUS.updateEntity(o);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         //OrderDetails mới
@@ -1344,10 +1422,20 @@ public class OrderGUI extends JPanel {
                 .collect(Collectors.toSet());
 
         o0.getOrderDetails()
-                .forEach(x -> orderDetailBUS.deleteEntity(new OrderDetailId(x.getItem().getItemId(), x.getOrder().getOrderId(), x.getTopping().getToppingId())));
+                .forEach(x -> {
+                    try {
+                        orderDetailBUS.deleteEntity(new OrderDetailId(x.getItem().getItemId(), x.getOrder().getOrderId(), x.getTopping().getToppingId()));
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         newODs.forEach(od -> {
-            insertOrderDetail(od);
+            try {
+                insertOrderDetail(od);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
         loadPrice(newODs);
         updatePriceOrder(newODs, o0);
@@ -1356,17 +1444,27 @@ public class OrderGUI extends JPanel {
 
         orderOfCombineTables.stream()
                 .flatMap(o -> o.getOrderDetails().stream())
-                .forEach(od -> orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId())));
+                .forEach(od -> {
+                    try {
+                        orderDetailBUS.deleteEntity(new OrderDetailId(od.getItem().getItemId(), od.getOrder().getOrderId(), od.getTopping().getToppingId()));
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         orderOfCombineTables.stream()
                 .forEach(o -> {
-                    updatePriceOrder(null, o);
-                    orderBUS.updateEntity(o);
+                    try {
+                        updatePriceOrder(null, o);
+                        orderBUS.updateEntity(o);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 });
         cartDTO.setCart(mergedODs);
     }
 
-    private void loadPrice(Set<OrderDetailEntity> orderDetails) {
+    private void loadPrice(Set<OrderDetailEntity> orderDetails) throws Exception {
         totalPrice = orderDetails.stream().mapToDouble(od -> od.getItem().getSellingPrice() * od.getQuantity()).sum();
         itemDiscount = orderDetails.stream().mapToDouble(OrderDetailEntity::getDiscount).sum();
 
@@ -1374,7 +1472,7 @@ public class OrderGUI extends JPanel {
         calcTotalPaid();
     }
 
-    public void loadOrder(OrderEntity o) {
+    public void loadOrder(OrderEntity o) throws Exception {
         cartDTO = new CartDTO();
         this.table = o.getTable();
 
@@ -1454,7 +1552,7 @@ public class OrderGUI extends JPanel {
         setButtonsSuggest();
     }
 
-    public void calcOrderDiscount() {
+    public void calcOrderDiscount() throws Exception {
         String levelCustomerStr = lblCusLevel.getText();
         if (levelCustomerStr.trim().equals("") || levelCustomerStr == null) {
             levelCustomerStr = LevelCustomer.NEW.getLevelCustomer();
@@ -1478,7 +1576,7 @@ public class OrderGUI extends JPanel {
 
     }
 
-    public void calcPrice() {
+    public void calcPrice() throws Exception {
         calcTotalPrice();
         calcItemDiscount();
         calcOrderDiscount();

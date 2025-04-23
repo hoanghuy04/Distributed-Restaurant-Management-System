@@ -11,7 +11,6 @@ import gui.FormLoad;
 import gui.custom.TableDesign;
 
 import java.lang.Exception;
-import java.rmi.Exception;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

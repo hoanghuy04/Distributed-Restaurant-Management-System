@@ -23,7 +23,7 @@ public class MainGUI extends JPanel {
     private TabReservation tabReservation;
     private Application application;
 
-    public MainGUI(Application application) {
+    public MainGUI(Application application) throws Exception {
         this.application = application;
         orderGUI = new OrderGUI(application, this);
         tabTable = new TabTable(orderGUI);

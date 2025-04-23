@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.impl.OrderBUSImpl;
-import bus.impl.TableBUSImpl;
+import bus.OrderBUS;
+import bus.TableBUS;
 import common.Constants;
 import model.OrderEntity;
 import model.TableEntity;
@@ -14,6 +14,7 @@ import gui.custom.RoundedPanel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JLabel;
@@ -31,8 +32,8 @@ import util.DatetimeFormatterUtil;
  */
 public class PanelReservation extends RoundedPanel {
 
-    private OrderBUSImpl orderBUSImpl;
-    private TableBUSImpl tableBUSImpl;
+    private OrderBUS orderBUS;
+    private TableBUS tableBUS;
     private PanelReservationByDate panelReservationByDate;
     private Color color;
     private MainGUI mainGUI;
@@ -54,8 +55,8 @@ public class PanelReservation extends RoundedPanel {
         this.color = getColor();
         this.mainGUI = mainGUI;
         initComponents();
-        this.orderBUSImpl = FormLoad.orderBUSImpl;
-        this.tableBUSImpl = FormLoad.tableBUSImpl;
+        this.orderBUS = FormLoad.orderBUS;
+        this.tableBUS = FormLoad.tableBUS;
         this.panelReservationByDate = p;
         setLblCusTotal();
         setLblDeposit();
@@ -259,7 +260,11 @@ public class PanelReservation extends RoundedPanel {
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-trash-15.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -277,7 +282,11 @@ public class PanelReservation extends RoundedPanel {
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-done-26.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                try {
+                    jButton2ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -321,9 +330,9 @@ public class PanelReservation extends RoundedPanel {
         mainGUI.loadMainGUI();
     }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton2ActionPerformed
 
-        List<OrderEntity> servingOrders = orderBUSImpl.getCurrentOrdersAndReservations(LocalDateTime.now(), -1);
+        List<OrderEntity> servingOrders = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), -1);
 
         OrderEntity tempO = new OrderEntity();
         for (OrderEntity or : servingOrders) {
@@ -344,11 +353,15 @@ public class PanelReservation extends RoundedPanel {
                 this.order.getCombinedTables()
                         .forEach(t -> {
                             t.setTableStatus(TableStatusEnum.OCCUPIED);
-                            tableBUSImpl.updateEntity(t);
+                            try {
+                                tableBUS.updateEntity(t);
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
                         });
 
-                tableBUSImpl.updateEntity(this.order.getTable());
-                orderBUSImpl.updateEntity(order);
+                tableBUS.updateEntity(this.order.getTable());
+                orderBUS.updateEntity(order);
                 panelReservationByDate.removePanelReservation(this);
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, 3000, "Khách hàng: " + this.order.getCustomer().getName() + " - Đã nhận bàn thành công!");
 
@@ -406,11 +419,11 @@ public class PanelReservation extends RoundedPanel {
 //        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton1ActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa đơn đặt này?", "Cảnh báo", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             this.order.setReservationStatus(ReservationStatusEnum.CANCELED);
             this.order.setPaymentStatus(PaymentStatusEnum.PAID);
-            orderBUSImpl.updateEntity(order);
+            orderBUS.updateEntity(order);
             panelReservationByDate.removePanelReservation(this);
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, 3000, "Đã hủy đơn đặt của khách hàng: " + this.order.getCustomer().getName());
         }
