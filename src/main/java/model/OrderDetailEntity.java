@@ -92,8 +92,7 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
 
 
     public void setDiscount() {
-//        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
-        this.discount = 0;
+        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
     }
 
 }
