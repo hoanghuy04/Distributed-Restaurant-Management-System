@@ -11,6 +11,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import common.Constants;
 import dal.connectDB.ConnectDB;
 import gui.main.LoginGUI;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.awt.Color;
 import java.rmi.Naming;
@@ -23,7 +24,9 @@ import static util.HostNameUtil.*;
  * @author RAVEN
  */
 public class FormLoad extends javax.swing.JDialog {
-    private static final String SERVER_HOST_NAME = "MSI";
+
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String SERVER_HOST_NAME = dotenv.get("SERVER_HOST_NAME");
 
     /**
      * Creates new form Application
@@ -139,7 +142,6 @@ public class FormLoad extends javax.swing.JDialog {
                     // Load dữ liệu thực tế cho OrderGUI
 
                     doTask("Loading...", 5);
-                    ConnectDB.connect();
 
                     categoryBUS = (CategoryBUS ) ((Object) Naming.lookup(getURI(SERVER_HOST_NAME, CategoryBUS.class)));
                     itemBUS = (ItemBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemBUS.class));
