@@ -47,6 +47,7 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
     @Override
     public boolean insert(OrderEntity orderEntity) {
         orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate("O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
+        System.out.println("Order ID: " + orderEntity.getOrderId());
         return executeTransaction(() -> em.persist(orderEntity));
     }
 
