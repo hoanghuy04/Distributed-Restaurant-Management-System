@@ -1164,7 +1164,8 @@ public class OrderGUI extends JPanel {
             o.setEmployee(LoginGUI.emp);
             o.setTable(tableCBB);
             o.setNumberOfCustomer(1);
-            orderBUS.insertEntity(o);
+//            orderBUS.insertEntity(o);
+
         }
 
         boolean isSwitched = true;
@@ -1246,7 +1247,11 @@ public class OrderGUI extends JPanel {
                     processPaidOrder(o);
                 }
             }
-            orderBUS.updateEntity(o);
+            if(isNewOrder) {
+                orderBUS.insertEntity(o);
+            } else {
+                orderBUS.updateEntity(o);
+            }
         }
         return isSwitched;
     }
@@ -1303,11 +1308,11 @@ public class OrderGUI extends JPanel {
         o.setTotalPaid();
     }
 
-    private void insertOrderDetail(OrderDetailEntity od) throws Exception {
-        od.setLineTotal();
-        od.setDiscount();
-        orderDetailBUS.insertEntity(od);
-    }
+//    private void insertOrderDetail(OrderDetailEntity od) throws Exception {
+//        od.setLineTotal();
+//        od.setDiscount();
+//        orderDetailBUS.insertEntity(od);
+//    }
 
     private Set<OrderDetailEntity> getListOrderDetail(OrderEntity o) throws Exception {
         Set<OrderDetailEntity> orderDetails = new HashSet<>();
@@ -1328,7 +1333,7 @@ public class OrderGUI extends JPanel {
             }
             entry.getKey().setDescription(desc);
             OrderDetailEntity od = new OrderDetailEntity(qty, desc, item, o, topping);
-            insertOrderDetail(od);
+//            insertOrderDetail(od);
             orderDetails.add(od);
             updateItemStock(od.getItem(), -od.getQuantity());
         }
@@ -1435,13 +1440,13 @@ public class OrderGUI extends JPanel {
                     }
                 });
 
-        newODs.forEach(od -> {
-            try {
-                insertOrderDetail(od);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+//        newODs.forEach(od -> {
+//            try {
+//                insertOrderDetail(od);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
         loadPrice(newODs);
         updatePriceOrder(newODs, o0);
         o0.setExpectedCompletionTime(LocalDateTime.now().plusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES));

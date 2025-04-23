@@ -49,6 +49,7 @@ public class RMIServer {
         context.bind(getURI(getHostName(), PromotionDetailBUS.class), promotionDetailBUS);
         context.bind(getURI(getHostName(), RoleBUS.class), roleBUS);
 
+
         System.out.println("RMI Server is running...");
     }
 

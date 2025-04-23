@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum OrderTypeEnum {
+public enum OrderTypeEnum  {
     ADVANCE ("Đơn đặt trước"),
     IMMEDIATE ("Đơn dùng ngay");
 

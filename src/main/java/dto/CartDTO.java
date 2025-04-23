@@ -5,6 +5,8 @@
 package dto;
 
 import model.ItemEntity;
+
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +15,7 @@ import java.util.Objects;
  *
  * @author Trần Ngọc Huyền
  */
-public class CartDTO {
+public class CartDTO implements Serializable {
 
     private Map<ItemCartDTO, Integer> cart;
     private int qty = 0;

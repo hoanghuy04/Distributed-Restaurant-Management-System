@@ -374,7 +374,7 @@ public class LoginGUI extends javax.swing.JFrame {
             FlatLightLaf.setup();
             if (emp.getRole().getRoleName().equals("STAFF")) {
                 Application.app = new Application(1);
-//                Application.showForm(new MainGUI(Application.app));
+                Application.showForm(new MainGUI(Application.app));
                 Application.app.setVisible(true);
             } else if (emp.getRole().getRoleName().equals("MANAGER")) {
                 Application.app = new Application(2);

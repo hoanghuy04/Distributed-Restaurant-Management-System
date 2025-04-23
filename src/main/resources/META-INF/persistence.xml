@@ -24,9 +24,9 @@ true"/>
     <persistence-unit name="mariadb">
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/RestaurantManagement"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3307/RestaurantManagement"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="sapassword"/>
+            <property name="jakarta.persistence.jdbc.password" value="123"/>
             <property name="jakarta.persistence.jdbc.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
