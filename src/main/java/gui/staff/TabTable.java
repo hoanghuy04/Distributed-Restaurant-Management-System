@@ -7,28 +7,20 @@ package gui.staff;
 import bus.FloorBUS;
 import bus.OrderBUS;
 import bus.TableBUS;
-import bus.impl.FloorBUSImpl;
-import bus.impl.OrderBUSImpl;
-import bus.impl.TableBUSImpl;
 import common.Constants;
-import model.FloorEntity;
-import model.TableEntity;
 import gui.FormLoad;
 import gui.custom.JRadioButtonCustom;
-import static gui.custom.JRadioButtonCustom.getSelectedButton;
 import gui.custom.RoundedPanel;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.rmi.RemoteException;
-import java.util.List;
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import model.FloorEntity;
+import model.TableEntity;
 import util.ReloadComponentUlti;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
+
+import static gui.custom.JRadioButtonCustom.getSelectedButton;
 
 /**
  *
@@ -436,10 +428,16 @@ public class TabTable extends JPanel {
     
     private void loadTable(FloorEntity floor, String status) throws Exception {
         List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), status);
-        tables.forEach(x -> loadPanelTables(x));
+        tables.forEach(x -> {
+            try {
+                loadPanelTables(x);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
     
-    public void loadPanelTables(TableEntity table) {
+    public void loadPanelTables(TableEntity table) throws Exception {
         PanelTable pnTable = new PanelTable(table, orderGUI);
         panelTables.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 50));
         panelTables.add(pnTable);

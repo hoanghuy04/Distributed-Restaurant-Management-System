@@ -23,7 +23,7 @@ public class PanelView extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     event.onView(row);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
