@@ -4,13 +4,12 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
-import dal.connectDB.ConnectDB;
 import model.OrderEntity;
 import gui.FormLoad;
 import gui.custom.RoundedPanel;
-import jakarta.persistence.EntityManager;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -45,9 +44,9 @@ import util.DatetimeFormatterUtil;
  *
  * @author pc
  */
-public class TabReservation extends javax.swing.JPanel {
+public class TabReservation extends JPanel {
 
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private List<OrderEntity> listOfAllReservations;
     private TreeMap<String, List<OrderEntity>> mapOfAllReservations;
     private MainGUI mainGUI;
@@ -59,9 +58,9 @@ public class TabReservation extends javax.swing.JPanel {
      */
     public TabReservation(MainGUI mainGUI) {
         this.mainGUI = mainGUI;
-        this.orderBUS = FormLoad.orderBUS;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
 
-        this.listOfAllReservations = orderBUS.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
+        this.listOfAllReservations = orderBUSImpl.getListOfReservations(null, null, OrderTypeEnum.ADVANCE.getOrderType());
         this.mapOfAllReservations = getOrdersGroupByDate(listOfAllReservations);
 
         this.description = new panelDescription();
@@ -86,7 +85,7 @@ public class TabReservation extends javax.swing.JPanel {
             private void action() {
 //                JOptionPane.showMessageDialog(null, "Nội dung mới: " + txtQrContent.getText());
                 panelAllReservationsMouseClicked(null);
-                OrderEntity orderEntity = orderBUS.getEntityById(txtQrContent.getText().trim());
+                OrderEntity orderEntity = orderBUSImpl.getEntityById(txtQrContent.getText().trim());
                 if (orderEntity != null && orderEntity.getPaymentStatus().equals(PaymentStatusEnum.UNPAID) && orderEntity.getReservationStatus().equals(ReservationStatusEnum.PENDING)) {
                     setListOfReservationsByOption(List.of(orderEntity));
                 } else {
@@ -308,23 +307,23 @@ public class TabReservation extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelWrapper = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
         scrollPaneReservation = new javax.swing.JScrollPane();
-        panelReservations = new javax.swing.JPanel();
-        panelSideBar = new javax.swing.JPanel();
-        panel = new javax.swing.JPanel();
+        panelReservations = new JPanel();
+        panelSideBar = new JPanel();
+        panel = new JPanel();
         panelButtonCreate = new gui.custom.RoundedButton();
-        panelAllReservations = new gui.custom.RoundedPanel();
-        lblAllReservations = new javax.swing.JLabel();
-        lblNumberOfAll = new javax.swing.JLabel();
-        panelOptions = new gui.custom.RoundedPanel();
-        panelUpComingOption = new gui.custom.RoundedPanel();
-        lblUpComingRs = new javax.swing.JLabel();
-        lblNumberOfUpComingRs = new javax.swing.JLabel();
-        panelPastOption = new gui.custom.RoundedPanel();
-        lblPastRs = new javax.swing.JLabel();
-        lblNumberOfPastRs = new javax.swing.JLabel();
-        panel7Dates = new gui.custom.RoundedPanel();
+        panelAllReservations = new RoundedPanel();
+        lblAllReservations = new JLabel();
+        lblNumberOfAll = new JLabel();
+        panelOptions = new RoundedPanel();
+        panelUpComingOption = new RoundedPanel();
+        lblUpComingRs = new JLabel();
+        lblNumberOfUpComingRs = new JLabel();
+        panelPastOption = new RoundedPanel();
+        lblPastRs = new JLabel();
+        lblNumberOfPastRs = new JLabel();
+        panel7Dates = new RoundedPanel();
         roundedButton1 = new gui.custom.RoundedButton();
 
         setLayout(new java.awt.BorderLayout());
@@ -338,40 +337,44 @@ public class TabReservation extends javax.swing.JPanel {
 
         panelSideBar.setLayout(new javax.swing.BoxLayout(panelSideBar, javax.swing.BoxLayout.LINE_AXIS));
 
-        panel.setPreferredSize(new java.awt.Dimension(300, 40));
+        panel.setPreferredSize(new Dimension(300, 40));
 
         panelButtonCreate.setBorder(null);
         panelButtonCreate.setBackground(Constants.COLOR_GREEN);
-        panelButtonCreate.setForeground(new java.awt.Color(255, 255, 255));
+        panelButtonCreate.setForeground(new Color(255, 255, 255));
         panelButtonCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/createReservation.png"))); // NOI18N
         panelButtonCreate.setText("Tạo đơn đặt");
         panelButtonCreate.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         panelButtonCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                panelButtonCreateActionPerformed(evt);
+                try {
+                    panelButtonCreateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         panelAllReservationsMouseClicked(null);
-        panelAllReservations.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panelAllReservations.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        panelAllReservations.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        panelAllReservations.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 panelAllReservationsMouseClicked(evt);
             }
         });
 
         lblAllReservations.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lblAllReservations.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAllReservations.setHorizontalAlignment(SwingConstants.CENTER);
         lblAllReservations.setText("Tất cả đơn đặt");
-        lblAllReservations.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        lblAllReservations.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lblAllReservationsMouseClicked(evt);
             }
         });
 
         lblNumberOfAll.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblNumberOfAll.setText("100");
-        lblNumberOfAll.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblNumberOfAll.setVerticalAlignment(SwingConstants.TOP);
 
         javax.swing.GroupLayout panelAllReservationsLayout = new javax.swing.GroupLayout(panelAllReservations);
         panelAllReservations.setLayout(panelAllReservationsLayout);
@@ -395,23 +398,23 @@ public class TabReservation extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panelOptions.setPreferredSize(new java.awt.Dimension(150, 75));
+        panelOptions.setPreferredSize(new Dimension(150, 75));
 
-        panelUpComingOption.setBackground(new java.awt.Color(255, 255, 255));
-        panelUpComingOption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panelUpComingOption.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        panelUpComingOption.setBackground(new Color(255, 255, 255));
+        panelUpComingOption.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        panelUpComingOption.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 panelUpComingOptionMouseClicked(evt);
             }
         });
 
         lblUpComingRs.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lblUpComingRs.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblUpComingRs.setHorizontalAlignment(SwingConstants.RIGHT);
         lblUpComingRs.setText("Sắp tới");
 
         lblNumberOfUpComingRs.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblNumberOfUpComingRs.setText("100");
-        lblNumberOfUpComingRs.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblNumberOfUpComingRs.setVerticalAlignment(SwingConstants.TOP);
 
         javax.swing.GroupLayout panelUpComingOptionLayout = new javax.swing.GroupLayout(panelUpComingOption);
         panelUpComingOption.setLayout(panelUpComingOptionLayout);
@@ -433,21 +436,21 @@ public class TabReservation extends javax.swing.JPanel {
             .addComponent(lblUpComingRs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        panelPastOption.setBackground(new java.awt.Color(255, 255, 255));
-        panelPastOption.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panelPastOption.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        panelPastOption.setBackground(new Color(255, 255, 255));
+        panelPastOption.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        panelPastOption.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 panelPastOptionMouseClicked(evt);
             }
         });
 
         lblPastRs.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lblPastRs.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPastRs.setHorizontalAlignment(SwingConstants.RIGHT);
         lblPastRs.setText("Quá hạn");
 
         lblNumberOfPastRs.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lblNumberOfPastRs.setText("100");
-        lblNumberOfPastRs.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblNumberOfPastRs.setVerticalAlignment(SwingConstants.TOP);
 
         javax.swing.GroupLayout panelPastOptionLayout = new javax.swing.GroupLayout(panelPastOption);
         panelPastOption.setLayout(panelPastOptionLayout);
@@ -490,9 +493,9 @@ public class TabReservation extends javax.swing.JPanel {
         panel7Dates.setLayout(new javax.swing.BoxLayout(panel7Dates, javax.swing.BoxLayout.Y_AXIS));
 
         roundedButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/QrCodeIcon.png"))); // NOI18N
-        roundedButton1.setMaximumSize(new java.awt.Dimension(40, 32));
-        roundedButton1.setMinimumSize(new java.awt.Dimension(40, 32));
-        roundedButton1.setPreferredSize(new java.awt.Dimension(40, 32));
+        roundedButton1.setMaximumSize(new Dimension(40, 32));
+        roundedButton1.setMinimumSize(new Dimension(40, 32));
+        roundedButton1.setPreferredSize(new Dimension(40, 32));
         roundedButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 roundedButton1ActionPerformed(evt);
@@ -538,15 +541,15 @@ public class TabReservation extends javax.swing.JPanel {
         add(panelWrapper, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void panelButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_panelButtonCreateActionPerformed
+    private void panelButtonCreateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_panelButtonCreateActionPerformed
         new DialogAddReservation(this.mapOfAllReservations, this).setVisible(true);
     }//GEN-LAST:event_panelButtonCreateActionPerformed
 
-    private void lblAllReservationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAllReservationsMouseClicked
+    private void lblAllReservationsMouseClicked(MouseEvent evt) {//GEN-FIRST:event_lblAllReservationsMouseClicked
         panelAllReservationsMouseClicked(evt);
     }//GEN-LAST:event_lblAllReservationsMouseClicked
 
-    private void panelAllReservationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAllReservationsMouseClicked
+    private void panelAllReservationsMouseClicked(MouseEvent evt) {//GEN-FIRST:event_panelAllReservationsMouseClicked
         setListOfAllReservations();
         updatePanelBackground();
         this.panelAllReservations.setBackground(Constants.COLOR_PRIMARY);
@@ -554,16 +557,16 @@ public class TabReservation extends javax.swing.JPanel {
         getLblAllReservations().setForeground(Color.white);
     }//GEN-LAST:event_panelAllReservationsMouseClicked
 
-    private void panelUpComingOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelUpComingOptionMouseClicked
-        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblUpComingRs.getText()));
+    private void panelUpComingOptionMouseClicked(MouseEvent evt) {//GEN-FIRST:event_panelUpComingOptionMouseClicked
+        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblUpComingRs.getText()));
         updatePanelBackground();
         this.panelUpComingOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfUpComingRs().setForeground(Color.white);
         getLblUpComingRs().setForeground(Color.white);
     }//GEN-LAST:event_panelUpComingOptionMouseClicked
 
-    private void panelPastOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPastOptionMouseClicked
-        setListOfReservationsByOption(orderBUS.getReservationsByOption(lblPastRs.getText()));
+    private void panelPastOptionMouseClicked(MouseEvent evt) {//GEN-FIRST:event_panelPastOptionMouseClicked
+        setListOfReservationsByOption(orderBUSImpl.getReservationsByOption(lblPastRs.getText()));
         updatePanelBackground();
         this.panelPastOption.setBackground(Constants.COLOR_PRIMARY);
         getLblNumberOfPastRs().setForeground(Color.white);
@@ -767,22 +770,22 @@ public class TabReservation extends javax.swing.JPanel {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblAllReservations;
-    private javax.swing.JLabel lblNumberOfAll;
-    private javax.swing.JLabel lblNumberOfPastRs;
-    private javax.swing.JLabel lblNumberOfUpComingRs;
-    private javax.swing.JLabel lblPastRs;
-    private javax.swing.JLabel lblUpComingRs;
-    private javax.swing.JPanel panel;
-    private static gui.custom.RoundedPanel panel7Dates;
-    private gui.custom.RoundedPanel panelAllReservations;
+    private JLabel lblAllReservations;
+    private JLabel lblNumberOfAll;
+    private JLabel lblNumberOfPastRs;
+    private JLabel lblNumberOfUpComingRs;
+    private JLabel lblPastRs;
+    private JLabel lblUpComingRs;
+    private JPanel panel;
+    private static RoundedPanel panel7Dates;
+    private RoundedPanel panelAllReservations;
     private gui.custom.RoundedButton panelButtonCreate;
-    private gui.custom.RoundedPanel panelOptions;
-    private gui.custom.RoundedPanel panelPastOption;
-    private static javax.swing.JPanel panelReservations;
-    private javax.swing.JPanel panelSideBar;
-    private gui.custom.RoundedPanel panelUpComingOption;
-    private javax.swing.JPanel panelWrapper;
+    private RoundedPanel panelOptions;
+    private RoundedPanel panelPastOption;
+    private static JPanel panelReservations;
+    private JPanel panelSideBar;
+    private RoundedPanel panelUpComingOption;
+    private JPanel panelWrapper;
     private gui.custom.RoundedButton roundedButton1;
     private javax.swing.JScrollPane scrollPaneReservation;
     // End of variables declaration//GEN-END:variables

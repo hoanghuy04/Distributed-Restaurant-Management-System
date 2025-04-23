@@ -17,7 +17,7 @@ public class Application extends javax.swing.JFrame {
     public static Application app;
     public final MainMenu mainMenu;
 
-    public Application(int option) {
+    public Application(int option) throws Exception {
         setUndecorated(true);
         initComponents();
         setLocationRelativeTo(null);
@@ -35,7 +35,7 @@ public class Application extends javax.swing.JFrame {
         app.revalidate();
     }
 
-    public static void login() {
+    public static void login() throws Exception {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.mainMenu);
         app.mainMenu.applyComponentOrientation(app.getComponentOrientation());
@@ -52,7 +52,7 @@ public class Application extends javax.swing.JFrame {
 //        SwingUtilities.updateComponentTreeUI(app.loginForm);
 //        FlatAnimatedLafChange.hideSnapshotWithAnimation();
 //    }
-    public static void setSelectedMenu(int index, int subIndex) {
+    public static void setSelectedMenu(int index, int subIndex) throws Exception {
         app.mainMenu.setSelectedMenu(index, subIndex);
     }
 

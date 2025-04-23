@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.CategoryBUS;
-import bus.ItemBUS;
+import bus.impl.CategoryBUSImpl;
+import bus.impl.ItemBUSImpl;
 import common.Constants;
 import model.ItemEntity;
 import java.util.List;
@@ -20,13 +20,13 @@ import util.ReloadComponentUlti;
  *
  * @author Trần Ngọc Huyền.
  */
-public class PanelCategoryDetail extends javax.swing.JPanel {
+public class PanelCategoryDetail extends JPanel {
 
     /**
      * Creates new form PanelCategoryDetail
      */
-    private CategoryBUS categoryBUS;
-    private ItemBUS itemBUS;
+    private CategoryBUSImpl categoryBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
     private OrderGUI orderGUI;
     private PromotionGUI promotionGUI;
     private ToppingGUI toppingGUI;
@@ -36,8 +36,8 @@ public class PanelCategoryDetail extends javax.swing.JPanel {
     }
 
     public PanelCategoryDetail(List<ItemEntity> items, JPanel parentGUI) {
-        this.itemBUS = FormLoad.itemBUS;
-        this.categoryBUS = FormLoad.categoryBUS;
+        this.itemBUSImpl = FormLoad.itemBUSImpl;
+        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
         if (parentGUI instanceof OrderGUI) {
             this.orderGUI = (OrderGUI) parentGUI;
         } else if (parentGUI instanceof PromotionGUI) {
@@ -59,13 +59,13 @@ public class PanelCategoryDetail extends javax.swing.JPanel {
     private void initComponents() {
 
         btnItemGroup = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new JPanel();
         scrollItems = new javax.swing.JScrollPane();
-        panelItems = new javax.swing.JPanel();
+        panelItems = new JPanel();
 
         setBackground(new java.awt.Color(255, 102, 102));
-        setMaximumSize(new java.awt.Dimension(112, 102));
-        setMinimumSize(new java.awt.Dimension(112, 102));
+        setMaximumSize(new Dimension(112, 102));
+        setMinimumSize(new Dimension(112, 102));
         setLayout(new java.awt.BorderLayout());
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
@@ -106,8 +106,8 @@ public class PanelCategoryDetail extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btnItemGroup;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel panelItems;
+    private JPanel jPanel1;
+    private JPanel panelItems;
     private javax.swing.JScrollPane scrollItems;
     // End of variables declaration//GEN-END:variables
 }

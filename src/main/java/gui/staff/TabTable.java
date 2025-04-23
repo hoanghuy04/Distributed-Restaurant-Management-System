@@ -7,6 +7,9 @@ package gui.staff;
 import bus.FloorBUS;
 import bus.OrderBUS;
 import bus.TableBUS;
+import bus.impl.FloorBUSImpl;
+import bus.impl.OrderBUSImpl;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import model.FloorEntity;
 import model.TableEntity;
@@ -18,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -30,7 +34,7 @@ import util.ReloadComponentUlti;
  *
  * @author Trần Ngọc Huyền.
  */
-public class TabTable extends javax.swing.JPanel {
+public class TabTable extends JPanel {
 
     /**
      * Creates new form TabTable
@@ -42,7 +46,7 @@ public class TabTable extends javax.swing.JPanel {
     private JRadioButtonCustom rFirstFloor;
     private JRadioButtonCustom rFirstStatus;
     
-    public TabTable(OrderGUI orderGUI) {
+    public TabTable(OrderGUI orderGUI) throws Exception {
         floorBUS = FormLoad.floorBUS;
         tableBUS = FormLoad.tableBUS;
         orderBUS = FormLoad.orderBUS;
@@ -60,28 +64,28 @@ public class TabTable extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnGroupOrderStatus = new javax.swing.ButtonGroup();
-        btnGroupTableStatus = new javax.swing.ButtonGroup();
-        btnGroupFloor = new javax.swing.ButtonGroup();
-        panelAllTables = new javax.swing.JPanel();
-        panelAllTablesTop = new javax.swing.JPanel();
-        pnFloors = new javax.swing.JPanel();
-        pnTableStatus = new javax.swing.JPanel();
-        panelAllTablesCen = new javax.swing.JPanel();
+        btnGroupOrderStatus = new ButtonGroup();
+        btnGroupTableStatus = new ButtonGroup();
+        btnGroupFloor = new ButtonGroup();
+        panelAllTables = new JPanel();
+        panelAllTablesTop = new JPanel();
+        pnFloors = new JPanel();
+        pnTableStatus = new JPanel();
+        panelAllTablesCen = new JPanel();
         scrollTables = new javax.swing.JScrollPane();
-        panelTables = new javax.swing.JPanel();
-        panelTableStatus = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        panelTables = new JPanel();
+        panelTableStatus = new JPanel();
+        jPanel5 = new JPanel();
+        jPanel1 = new JPanel();
         jPanel2 = new RoundedPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        jPanel3 = new JPanel();
         jPanel4 = new RoundedPanel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
+        jPanel6 = new JPanel();
         jPanel7 = new RoundedPanel();
         jLabel3 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        jPanel8 = new JPanel();
         jPanel9 = new RoundedPanel();
         jLabel4 = new javax.swing.JLabel();
 
@@ -89,18 +93,18 @@ public class TabTable extends javax.swing.JPanel {
         panelAllTables.setLayout(new java.awt.BorderLayout());
 
         panelAllTablesTop.setBackground(new java.awt.Color(255, 255, 255));
-        panelAllTablesTop.setPreferredSize(new java.awt.Dimension(1000, 100));
+        panelAllTablesTop.setPreferredSize(new Dimension(1000, 100));
         panelAllTablesTop.setLayout(new java.awt.BorderLayout());
 
         pnFloors.setBackground(new java.awt.Color(255, 255, 255));
-        pnFloors.setPreferredSize(new java.awt.Dimension(411, 50));
-        pnFloors.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 35, 5));
+        pnFloors.setPreferredSize(new Dimension(411, 50));
+        pnFloors.setLayout(new FlowLayout(FlowLayout.LEFT, 35, 5));
         panelAllTablesTop.add(pnFloors, java.awt.BorderLayout.NORTH);
 
         pnTableStatus.setBackground(new java.awt.Color(255, 255, 255));
         pnTableStatus.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        pnTableStatus.setPreferredSize(new java.awt.Dimension(936, 50));
-        pnTableStatus.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 35, 5));
+        pnTableStatus.setPreferredSize(new Dimension(936, 50));
+        pnTableStatus.setLayout(new FlowLayout(FlowLayout.LEFT, 35, 5));
         panelAllTablesTop.add(pnTableStatus, java.awt.BorderLayout.CENTER);
 
         panelAllTables.add(panelAllTablesTop, java.awt.BorderLayout.NORTH);
@@ -108,11 +112,11 @@ public class TabTable extends javax.swing.JPanel {
         panelAllTablesCen.setBackground(new java.awt.Color(255, 255, 255));
         panelAllTablesCen.setLayout(new java.awt.BorderLayout());
 
-        scrollTables.setPreferredSize(new java.awt.Dimension(1300, 739));
+        scrollTables.setPreferredSize(new Dimension(1300, 739));
 
         panelTables.setBackground(new java.awt.Color(255, 255, 255));
-        panelTables.setMaximumSize(new java.awt.Dimension(1300, 739));
-        panelTables.setPreferredSize(new java.awt.Dimension(1300, 739));
+        panelTables.setMaximumSize(new Dimension(1300, 739));
+        panelTables.setPreferredSize(new Dimension(1300, 739));
 
         javax.swing.GroupLayout panelTablesLayout = new javax.swing.GroupLayout(panelTables);
         panelTables.setLayout(panelTablesLayout);
@@ -131,11 +135,11 @@ public class TabTable extends javax.swing.JPanel {
 
         panelTableStatus.setBackground(new java.awt.Color(255, 255, 255));
         panelTableStatus.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        panelTableStatus.setPreferredSize(new java.awt.Dimension(1959, 60));
-        panelTableStatus.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelTableStatus.setPreferredSize(new Dimension(1959, 60));
+        panelTableStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setPreferredSize(new java.awt.Dimension(19, 50));
+        jPanel5.setPreferredSize(new Dimension(19, 50));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -151,10 +155,10 @@ public class TabTable extends javax.swing.JPanel {
         panelTableStatus.add(jPanel5);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(220, 50));
+        jPanel1.setPreferredSize(new Dimension(220, 50));
 
         jPanel2.setBackground(Constants.COLOR_PRIMARY);
-        jPanel2.setPreferredSize(new java.awt.Dimension(60, 40));
+        jPanel2.setPreferredSize(new Dimension(60, 40));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -167,7 +171,7 @@ public class TabTable extends javax.swing.JPanel {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel1.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setText("Bàn trống");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -196,10 +200,10 @@ public class TabTable extends javax.swing.JPanel {
         panelTableStatus.add(jPanel1);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setPreferredSize(new java.awt.Dimension(215, 50));
+        jPanel3.setPreferredSize(new Dimension(215, 50));
 
         jPanel4.setBackground(Constants.COLOR_GREEN);
-        jPanel4.setPreferredSize(new java.awt.Dimension(60, 40));
+        jPanel4.setPreferredSize(new Dimension(60, 40));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -212,7 +216,7 @@ public class TabTable extends javax.swing.JPanel {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel2.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jLabel2.setText("Đang phục vụ");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -241,10 +245,10 @@ public class TabTable extends javax.swing.JPanel {
         panelTableStatus.add(jPanel3);
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setPreferredSize(new java.awt.Dimension(230, 50));
+        jPanel6.setPreferredSize(new Dimension(230, 50));
 
         jPanel7.setBackground(Constants.COLOR_ORANGE);
-        jPanel7.setPreferredSize(new java.awt.Dimension(60, 40));
+        jPanel7.setPreferredSize(new Dimension(60, 40));
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -257,7 +261,7 @@ public class TabTable extends javax.swing.JPanel {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel3.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jLabel3.setText("Đặt trước");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -286,10 +290,10 @@ public class TabTable extends javax.swing.JPanel {
         panelTableStatus.add(jPanel6);
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel8.setPreferredSize(new java.awt.Dimension(200, 50));
+        jPanel8.setPreferredSize(new Dimension(200, 50));
 
         jPanel9.setBackground(Constants.COLOR_GRAY);
-        jPanel9.setPreferredSize(new java.awt.Dimension(60, 40));
+        jPanel9.setPreferredSize(new Dimension(60, 40));
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -302,7 +306,7 @@ public class TabTable extends javax.swing.JPanel {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel4.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
         jLabel4.setText("Bàn gộp");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -356,7 +360,7 @@ public class TabTable extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadFloors() {
+    public void loadFloors() throws Exception {
         if (pnFloors.getComponentCount() == 0) {
             pnFloors.removeAll();
             
@@ -415,7 +419,11 @@ public class TabTable extends javax.swing.JPanel {
             panelTables.removeAll();
             FloorEntity floor = (FloorEntity) getSelectedRadio(btnGroupFloor);
             String status = (String) getSelectedRadio(btnGroupTableStatus);
-            loadTable(floor, status);
+            try {
+                loadTable(floor, status);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             ReloadComponentUlti.reload(panelTables);
         });
     }
@@ -426,7 +434,7 @@ public class TabTable extends javax.swing.JPanel {
         return selectedButton.getObject();
     }
     
-    private void loadTable(FloorEntity floor, String status) {
+    private void loadTable(FloorEntity floor, String status) throws Exception {
         List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), status);
         tables.forEach(x -> loadPanelTables(x));
     }
@@ -438,29 +446,29 @@ public class TabTable extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.ButtonGroup btnGroupFloor;
-    private javax.swing.ButtonGroup btnGroupOrderStatus;
-    private javax.swing.ButtonGroup btnGroupTableStatus;
+    public ButtonGroup btnGroupFloor;
+    private ButtonGroup btnGroupOrderStatus;
+    private ButtonGroup btnGroupTableStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JPanel panelAllTables;
-    private javax.swing.JPanel panelAllTablesCen;
-    private javax.swing.JPanel panelAllTablesTop;
-    private javax.swing.JPanel panelTableStatus;
-    private javax.swing.JPanel panelTables;
-    private javax.swing.JPanel pnFloors;
-    private javax.swing.JPanel pnTableStatus;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JPanel jPanel6;
+    private JPanel jPanel7;
+    private JPanel jPanel8;
+    private JPanel jPanel9;
+    private JPanel panelAllTables;
+    private JPanel panelAllTablesCen;
+    private JPanel panelAllTablesTop;
+    private JPanel panelTableStatus;
+    private JPanel panelTables;
+    private JPanel pnFloors;
+    private JPanel pnTableStatus;
     private javax.swing.JScrollPane scrollTables;
     // End of variables declaration//GEN-END:variables
 }

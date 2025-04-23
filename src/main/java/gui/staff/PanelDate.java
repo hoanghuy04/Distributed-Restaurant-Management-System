@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import model.OrderEntity;
 import gui.FormLoad;
@@ -14,7 +14,6 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 import javax.swing.JLabel;
 import model.enums.OrderTypeEnum;
 
@@ -30,7 +29,7 @@ public class PanelDate extends RoundedPanel {
      */
     private LocalDate date;
     private EntityManager em;
-    private OrderBUS orderBUS;
+    private OrderBUSImpl orderBUSImpl;
     private TabReservation tabReservation;
 
     public PanelDate() {
@@ -70,7 +69,7 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        this.orderBUS = FormLoad.orderBUS;
+        this.orderBUSImpl = FormLoad.orderBUSImpl;
         this.date = d;
         this.tabReservation = tab;
     }
@@ -78,10 +77,10 @@ public class PanelDate extends RoundedPanel {
     public void fillContent() {
 
         if (lblDate.getText().contains("Hôm nay")) {
-            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         } else {
-            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         }
 
@@ -106,9 +105,9 @@ public class PanelDate extends RoundedPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelDate = new gui.custom.RoundedPanel();
-        lblDate = new javax.swing.JLabel();
-        lblnumber = new javax.swing.JLabel();
+        panelDate = new RoundedPanel();
+        lblDate = new JLabel();
+        lblnumber = new JLabel();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -116,8 +115,8 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        panelDate.setBackground(new java.awt.Color(255, 255, 255));
-        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelDate.setBackground(new Color(255, 255, 255));
+        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
         panelDate.setPreferredSize(new java.awt.Dimension(288, 77));
         panelDate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -197,9 +196,9 @@ public class PanelDate extends RoundedPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblDate;
-    private javax.swing.JLabel lblnumber;
-    private gui.custom.RoundedPanel panelDate;
+    private JLabel lblDate;
+    private JLabel lblnumber;
+    private RoundedPanel panelDate;
     // End of variables declaration//GEN-END:variables
 
     public void deselectPanel() {

@@ -1,10 +1,11 @@
 package gui.menu;
 
+
 /**
  *
  * @author Raven
  */
 public interface MenuEvent {
 
-    public void menuSelected(int index, int subIndex, MenuAction action);
+    public void menuSelected(int index, int subIndex, MenuAction action) throws Exception;
 }

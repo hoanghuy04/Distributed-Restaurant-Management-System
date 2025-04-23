@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.TableBUS;
+import bus.impl.TableBUSImpl;
 import common.Constants;
 import model.OrderEntity;
 import gui.menu.Application;
@@ -20,19 +20,19 @@ import util.DoubleFormatUlti;
  *
  * @author Trần Ngọc Huyền.
  */
-public class PanelOrder extends javax.swing.JPanel {
+public class PanelOrder extends JPanel {
 
     /**
      * Creates new form PanelOrder
      */
     private OrderEntity o;
     private OrderGUI orderGUI;
-    private TableBUS tableBUS;
+    private TableBUSImpl tableBUSImpl;
 
     public PanelOrder(OrderGUI orderGUI, OrderEntity o) {
         this.o = o;
         this.orderGUI = orderGUI;
-        this.tableBUS = FormLoad.tableBUS;
+        this.tableBUSImpl = FormLoad.tableBUSImpl;
         initComponents();
         startTimeCounter(o.getReservationTime());
         fillContent();
@@ -56,20 +56,20 @@ public class PanelOrder extends javax.swing.JPanel {
     private void initComponents() {
 
         panelOrderTop = new RoundedPanel();
-        lblCusTotal = new javax.swing.JLabel();
-        lblFloorName = new javax.swing.JLabel();
-        panelOrderMid = new javax.swing.JPanel();
-        panelMidLeft = new javax.swing.JPanel();
-        lblTableName = new javax.swing.JLabel();
-        panelMidRight = new javax.swing.JPanel();
-        panelMidRightTop = new javax.swing.JPanel();
-        lblTotalPaid = new javax.swing.JLabel();
-        panelMidRightBot = new javax.swing.JPanel();
-        lblTime = new javax.swing.JLabel();
+        lblCusTotal = new JLabel();
+        lblFloorName = new JLabel();
+        panelOrderMid = new JPanel();
+        panelMidLeft = new JPanel();
+        lblTableName = new JLabel();
+        panelMidRight = new JPanel();
+        panelMidRightTop = new JPanel();
+        lblTotalPaid = new JLabel();
+        panelMidRightBot = new JPanel();
+        lblTime = new JLabel();
         panelOrderBot = new RoundedPanel();
-        btnEdit = new javax.swing.JButton();
-        btnPay = new javax.swing.JButton();
-        btnMerge = new javax.swing.JButton();
+        btnEdit = new JButton();
+        btnPay = new JButton();
+        btnMerge = new JButton();
 
         setMinimumSize(new java.awt.Dimension(250, 200));
         setPreferredSize(new java.awt.Dimension(250, 200));
@@ -81,53 +81,53 @@ public class PanelOrder extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         panelOrderTop.setBackground(Constants.COLOR_PRIMARY);
-        panelOrderTop.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, Constants.COLOR_BORDER));
+        panelOrderTop.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constants.COLOR_BORDER));
         panelOrderTop.setForeground(new java.awt.Color(255, 255, 255));
         panelOrderTop.setPreferredSize(new java.awt.Dimension(35, 35));
 
         lblCusTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblCusTotal.setForeground(new java.awt.Color(255, 255, 255));
-        lblCusTotal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-user-24.png"))); // NOI18N
+        lblCusTotal.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-user-24.png"))); // NOI18N
 
         lblFloorName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblFloorName.setForeground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout panelOrderTopLayout = new javax.swing.GroupLayout(panelOrderTop);
+        GroupLayout panelOrderTopLayout = new GroupLayout(panelOrderTop);
         panelOrderTop.setLayout(panelOrderTopLayout);
         panelOrderTopLayout.setHorizontalGroup(
-            panelOrderTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrderTopLayout.createSequentialGroup()
+            panelOrderTopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, panelOrderTopLayout.createSequentialGroup()
                 .addGap(0, 231, Short.MAX_VALUE)
-                .addComponent(lblCusTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelOrderTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(lblCusTotal, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelOrderTopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(panelOrderTopLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(lblFloorName, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFloorName, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(223, Short.MAX_VALUE)))
         );
         panelOrderTopLayout.setVerticalGroup(
-            panelOrderTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblCusTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-            .addGroup(panelOrderTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblFloorName, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+            panelOrderTopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblCusTotal, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+            .addGroup(panelOrderTopLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(lblFloorName, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
         );
 
         add(panelOrderTop, java.awt.BorderLayout.NORTH);
 
         panelOrderMid.setBackground(new java.awt.Color(255, 255, 255));
-        panelOrderMid.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 1, Constants.COLOR_BORDER));
+        panelOrderMid.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Constants.COLOR_BORDER));
         panelOrderMid.setPreferredSize(new java.awt.Dimension(100, 100));
         panelOrderMid.setLayout(new java.awt.GridLayout(1, 0));
 
         panelMidLeft.setBackground(Constants.COLOR_BG);
-        panelMidLeft.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
+        panelMidLeft.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
         panelMidLeft.setPreferredSize(new java.awt.Dimension(50, 50));
         panelMidLeft.setLayout(new java.awt.BorderLayout());
 
         lblTableName.setBackground(new java.awt.Color(115, 171, 227));
         lblTableName.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         lblTableName.setForeground(Constants.COLOR_PRIMARY);
-        lblTableName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTableName.setHorizontalAlignment(SwingConstants.CENTER);
         panelMidLeft.add(lblTableName, java.awt.BorderLayout.CENTER);
 
         panelOrderMid.add(panelMidLeft);
@@ -141,21 +141,21 @@ public class PanelOrder extends javax.swing.JPanel {
         panelMidRightTop.setLayout(new java.awt.BorderLayout());
 
         lblTotalPaid.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblTotalPaid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotalPaid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-coin-24.png"))); // NOI18N
+        lblTotalPaid.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTotalPaid.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-coin-24.png"))); // NOI18N
         lblTotalPaid.setText("0");
-        lblTotalPaid.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        lblTotalPaid.setHorizontalTextPosition(SwingConstants.RIGHT);
         panelMidRightTop.add(lblTotalPaid, java.awt.BorderLayout.CENTER);
 
         panelMidRight.add(panelMidRightTop);
 
         panelMidRightBot.setBackground(new java.awt.Color(255, 255, 255));
-        panelMidRightBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, Constants.COLOR_BORDER));
+        panelMidRightBot.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Constants.COLOR_BORDER));
         panelMidRightBot.setLayout(new java.awt.BorderLayout());
 
         lblTime.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-alarm-clock-24.png"))); // NOI18N
+        lblTime.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTime.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-alarm-clock-24.png"))); // NOI18N
         lblTime.setText("00:00:00");
         panelMidRightBot.add(lblTime, java.awt.BorderLayout.CENTER);
 
@@ -165,24 +165,24 @@ public class PanelOrder extends javax.swing.JPanel {
 
         add(panelOrderMid, java.awt.BorderLayout.CENTER);
 
-        panelOrderBot.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, Constants.COLOR_BORDER));
+        panelOrderBot.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constants.COLOR_BORDER));
         panelOrderBot.setPreferredSize(new java.awt.Dimension(35, 35));
         panelOrderBot.setLayout(new java.awt.GridLayout(1, 0));
 
         btnEdit.setBackground(Constants.COLOR_BTN_ICON);
-        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/food-tray.png"))); // NOI18N
-        btnEdit.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
+        btnEdit.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/food-tray.png"))); // NOI18N
+        btnEdit.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
         btnEdit.setFocusable(false);
         panelOrderBot.add(btnEdit);
 
         btnPay.setBackground(Constants.COLOR_BTN_ICON);
-        btnPay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-calculator-30.png"))); // NOI18N
-        btnPay.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
+        btnPay.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-calculator-30.png"))); // NOI18N
+        btnPay.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Constants.COLOR_BORDER));
         btnPay.setFocusable(false);
         panelOrderBot.add(btnPay);
 
         btnMerge.setBackground(Constants.COLOR_BTN_ICON);
-        btnMerge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-ungroup-objects-30.png"))); // NOI18N
+        btnMerge.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-ungroup-objects-30.png"))); // NOI18N
         btnMerge.setBorder(null);
         btnMerge.setFocusable(false);
         panelOrderBot.add(btnMerge);
@@ -233,20 +233,20 @@ public class PanelOrder extends javax.swing.JPanel {
         timer.start();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnMerge;
-    private javax.swing.JButton btnPay;
-    private javax.swing.JLabel lblCusTotal;
-    private javax.swing.JLabel lblFloorName;
-    private javax.swing.JLabel lblTableName;
-    private javax.swing.JLabel lblTime;
-    private javax.swing.JLabel lblTotalPaid;
-    private javax.swing.JPanel panelMidLeft;
-    private javax.swing.JPanel panelMidRight;
-    private javax.swing.JPanel panelMidRightBot;
-    private javax.swing.JPanel panelMidRightTop;
-    private javax.swing.JPanel panelOrderBot;
-    private javax.swing.JPanel panelOrderMid;
-    private javax.swing.JPanel panelOrderTop;
+    private JButton btnEdit;
+    private JButton btnMerge;
+    private JButton btnPay;
+    private JLabel lblCusTotal;
+    private JLabel lblFloorName;
+    private JLabel lblTableName;
+    private JLabel lblTime;
+    private JLabel lblTotalPaid;
+    private JPanel panelMidLeft;
+    private JPanel panelMidRight;
+    private JPanel panelMidRightBot;
+    private JPanel panelMidRightTop;
+    private JPanel panelOrderBot;
+    private JPanel panelOrderMid;
+    private JPanel panelOrderTop;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,10 +4,9 @@
  */
 package gui.staff;
 
-import bus.CategoryBUS;
-import bus.ItemBUS;
+import bus.impl.CategoryBUSImpl;
+import bus.impl.ItemBUSImpl;
 import common.Constants;
-import dal.connectDB.ConnectDB;
 import model.CategoryEntity;
 import model.ItemEntity;
 import gui.FormLoad;
@@ -25,8 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import raven.toast.Notifications;
 import util.ResizeImage;
-import gui.custom.RoundedButton;
-import java.awt.Desktop;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -59,8 +57,8 @@ public class ItemGUI extends javax.swing.JPanel {
     private DefaultTableModel defaultTableModel;
     private TableColumnModel columnModel;
 
-    private CategoryBUS categoryBUS;
-    private ItemBUS itemBUS;
+    private CategoryBUSImpl categoryBUSImpl;
+    private ItemBUSImpl itemBUSImpl;
 
     /**
      * Creates new form ItemGUI
@@ -81,19 +79,19 @@ public class ItemGUI extends javax.swing.JPanel {
         this.columnModel = tableDesign.getColumnModel();
         table.setColumnModel(columnModel);
 
-        this.categoryBUS = FormLoad.categoryBUS;
-        this.itemBUS = FormLoad.itemBUS;
+        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
+        this.itemBUSImpl = FormLoad.itemBUSImpl;
         loadData();
 
     }
 
     private void loadData() {
-        categoryBUS.getAllEntities().stream()
+        categoryBUSImpl.getAllEntities().stream()
                 .forEach(c -> {
                     cbbCategory.addItem(c.getName());
                 });
 
-        itemBUS.getAllEntities().stream()
+        itemBUSImpl.getAllEntities().stream()
                 .forEach(i -> {
                     FillOneRow(i);
                 });
@@ -185,7 +183,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnImport.setBackground(new java.awt.Color(0, 153, 51));
         btnImport.setForeground(new java.awt.Color(255, 255, 255));
-        btnImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnImport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnImport.setText("Import");
         btnImport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnImport.addActionListener(new java.awt.event.ActionListener() {
@@ -199,7 +197,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnExport.setBackground(new java.awt.Color(0, 153, 51));
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
-        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnExport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnExport.setText("Export");
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
@@ -625,14 +623,14 @@ public class ItemGUI extends javax.swing.JPanel {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
             i.setName(txtName.getText());
-            i.setCategory(categoryBUS.findByName(cbbCategory.getSelectedItem().toString()));
+            i.setCategory(categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString()));
             i.setCostPrice(Double.parseDouble(txtCostPrice.getText()));
             i.setStockQuantity(Integer.parseInt(txtStockQty.getText()));
             i.setDescription(txtDesc.getText().trim());
             i.setActive(cbStatus.isSelected());
             i.setImg(this.imgPath);
             
-            itemBUS.updateEntity(i);
+            itemBUSImpl.updateEntity(i);
             // Cập nhật vào bảng
             int selectedRow = table.getSelectedRow(); // Lấy hàng được chọn
             if (selectedRow != -1) { // Nếu có hàng nào đang được chọn
@@ -661,12 +659,12 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String name = txtName.getText();
-        String categoryId = categoryBUS.findByName(cbbCategory.getSelectedItem().toString()).getCategoryId();
+        String categoryId = categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString()).getCategoryId();
         Double costPrice = txtCostPrice.getText().trim().length() != 0 ? Double.parseDouble(txtCostPrice.getText().trim()) : null;
         Integer stockQty = txtStockQty.getText().trim().length() != 0 ? Integer.parseInt(txtStockQty.getText().trim()) : null;
         boolean active = cbStatus.isSelected();
         defaultTableModel.setRowCount(0);
-        itemBUS.getItemsWithKeyword(name, categoryId, costPrice, stockQty, active)
+        itemBUSImpl.getItemsWithKeyword(name, categoryId, costPrice, stockQty, active)
                 .forEach(i -> {
                     FillOneRow(i);
                 });
@@ -677,7 +675,7 @@ public class ItemGUI extends javax.swing.JPanel {
         fileChooser.setDialogTitle("Chọn ảnh");
 
         // Đặt thư mục mặc định
-        fileChooser.setCurrentDirectory(new java.io.File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
+        fileChooser.setCurrentDirectory(new File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
 
         // Chỉ hiển thị các tệp hình ảnh
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
@@ -685,7 +683,7 @@ public class ItemGUI extends javax.swing.JPanel {
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            java.io.File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = fileChooser.getSelectedFile();
             ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
 
             // Resize và hiển thị ảnh trên JLabel
@@ -718,7 +716,7 @@ public class ItemGUI extends javax.swing.JPanel {
         ItemEntity itemEntity;
         if (isValidate()) {
             String name = txtName.getText();
-            CategoryEntity category = categoryBUS.findByName(cbbCategory.getSelectedItem().toString());
+            CategoryEntity category = categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString());
             double costPrice = Double.parseDouble(txtCostPrice.getText());
             double sellingPrice = Double.parseDouble(txtSellingPrice.getText());
             int stockQty = Integer.parseInt(txtStockQty.getText());
@@ -726,9 +724,9 @@ public class ItemGUI extends javax.swing.JPanel {
             boolean active = cbStatus.isSelected();
 
             itemEntity = new ItemEntity(name, costPrice, stockQty, desc, active, category, this.imgPath);
-            itemBUS.insertEntity(itemEntity);
+            itemBUSImpl.insertEntity(itemEntity);
 
-            itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
+            itemEntity = itemBUSImpl.findOneByName(name, cbbCategory.getSelectedItem().toString());
 
             FillOneRow(itemEntity);
             clear();
@@ -762,7 +760,7 @@ public class ItemGUI extends javax.swing.JPanel {
             lblImg.setIcon(ResizeImage.resizeImage(new ImageIcon("src/main/resources/img/item/" + imgPath), 154, 142));
             txtDesc.setText(desc);
         }
-        this.i = itemBUS.findOneByName(txtName.getText().trim(), cbbCategory.getSelectedItem().toString());
+        this.i = itemBUSImpl.findOneByName(txtName.getText().trim(), cbbCategory.getSelectedItem().toString());
     }//GEN-LAST:event_tableMouseClicked
 
     private void txtCostPriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCostPriceKeyReleased
@@ -778,7 +776,7 @@ public class ItemGUI extends javax.swing.JPanel {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         clear();
         defaultTableModel.setRowCount(0);
-        itemBUS.getAllEntities()
+        itemBUSImpl.getAllEntities()
                 .forEach(i -> {
                     FillOneRow(i);
                 });
@@ -786,7 +784,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH-mm");
-        exportItemsToExcel(itemBUS.getAllEntities(), Constants.REPORT_FILE_PATH + "/items/" + "report_items_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
+        exportItemsToExcel(itemBUSImpl.getAllEntities(), Constants.REPORT_FILE_PATH + "/items/" + "report_items_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
         
         JOptionPane.showMessageDialog(
                         null,
@@ -798,7 +796,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         importItemsToExcel().stream().forEach(i -> {
-            itemBUS.insertEntity(i);
+            itemBUSImpl.insertEntity(i);
         });
         JOptionPane.showMessageDialog(
                         null,
@@ -850,7 +848,7 @@ public class ItemGUI extends javax.swing.JPanel {
                     String imgName = row.getCell(7).getStringCellValue();
 
                     // Tạo đối tượng ItemEntity
-                    ItemEntity item = new ItemEntity(name, costPrice, stockQuantity, description, true, categoryBUS.findByName(category), imgName);
+                    ItemEntity item = new ItemEntity(name, costPrice, stockQuantity, description, true, categoryBUSImpl.findByName(category), imgName);
                     items.add(item);
                 }
             } catch (IOException e) {

@@ -69,7 +69,7 @@ public class MenuItem extends JPanel {
 
     private PopupSubmenu popup;
 
-    public MenuItem(Menu menu, String menus[], int menuIndex, List<MenuEvent> events) {
+    public MenuItem(Menu menu, String menus[], int menuIndex, List<MenuEvent> events) throws Exception {
         this.menu = menu;
         this.menus = menus;
         this.menuIndex = menuIndex;
@@ -96,7 +96,7 @@ public class MenuItem extends JPanel {
         return ResizeImage.resizeImage(icon, 50, 50);
     }
 
-    private void init(int option) {
+    private void init(int option) throws Exception {
         setLayout(new MenuLayout());
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:$Menu.background;"
@@ -114,13 +114,21 @@ public class MenuItem extends JPanel {
                             popup.show(MenuItem.this, (int) MenuItem.this.getWidth() + UIScale.scale(5), UIScale.scale(menuItemHeight) / 2);
                         }
                     } else {
-                        menu.runEvent(menuIndex, 0);
+                        try {
+                            menu.runEvent(menuIndex, 0);
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 });
             } else {
                 final int subIndex = i;
                 menuItem.addActionListener((ActionEvent e) -> {
-                    menu.runEvent(menuIndex, subIndex);
+                    try {
+                        menu.runEvent(menuIndex, subIndex);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
             }
             add(menuItem);

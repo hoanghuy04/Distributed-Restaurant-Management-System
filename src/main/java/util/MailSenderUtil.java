@@ -1,6 +1,5 @@
 package util;
 
-import bus.OrderBUS;
 import com.google.zxing.WriterException;
 import common.Constants;
 import model.OrderEntity;
@@ -10,7 +9,6 @@ import jakarta.activation.FileDataSource;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;

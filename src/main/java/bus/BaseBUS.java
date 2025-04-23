@@ -4,18 +4,18 @@
  */
 package bus;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
  *
  * @author hoang
  */
-public interface BaseBUS <T, ID> {
-    boolean insertEntity(T t);
-    boolean updateEntity(T t);
-    boolean deleteEntity(ID id);
-    T getEntityById(ID id);
-    List<T> getAllEntities();
+public interface BaseBUS <T, ID>  {
+    boolean insertEntity(T t) throws RemoteException;
+    boolean updateEntity(T t) throws RemoteException;
+    boolean deleteEntity(ID id) throws RemoteException;
+    T getEntityById(ID id) throws RemoteException ;
+    List<T> getAllEntities() throws RemoteException;
 }
-//lam nay lam kia gibhub thu
-//thu lai cai nua
