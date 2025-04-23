@@ -23,11 +23,8 @@ import static util.HostNameUtil.*;
  * @author RAVEN
  */
 public class FormLoad extends javax.swing.JDialog {
-<<<<<<< HEAD
+
     private static final String SERVER_HOST_NAME = "huyHoangPC";
-=======
-    private static final String SERVER_HOST_NAME = "MSI";
->>>>>>> 0540bf4930351384cbc8227700676d5f92748f4c
 
     /**
      * Creates new form Application

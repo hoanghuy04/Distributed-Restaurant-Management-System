@@ -1247,12 +1247,14 @@ public class OrderGUI extends JPanel {
                     processPaidOrder(o);
                 }
             }
+            updatePriceOrder(getListOrderDetail(o), o);
             if(isNewOrder) {
                 orderBUS.insertEntity(o);
             } else {
                 orderBUS.updateEntity(o);
             }
         }
+
         return isSwitched;
     }
 
