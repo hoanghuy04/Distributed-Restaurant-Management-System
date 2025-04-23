@@ -332,7 +332,7 @@ public class DataGenerator {
         OrderEntity order = new OrderEntity();
 
         // Gán giá trị bằng Random
-        order.setReservationTime(LocalDateTime.now().plusDays(rand.nextInt(30) + 1));
+        order.setReservationTime(LocalDateTime.now().minusDays(rand.nextInt(30) + 1));
         order.setExpectedCompletionTime(order.getReservationTime().plusHours(rand.nextInt(3) + 1));
         order.setNumberOfCustomer(rand.nextInt(10) + 1);
         order.setDeposit(rand.nextDouble() * 100);
@@ -392,6 +392,7 @@ public class DataGenerator {
             detail.setDescription(faker.lorem().sentence());
 
             orderDetails.add(detail);
+            orderDetailDAL.insert(detail);
         }
 
         order.setOrderDetails(orderDetails);

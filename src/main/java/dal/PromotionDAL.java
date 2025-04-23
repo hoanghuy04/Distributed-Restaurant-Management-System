@@ -10,6 +10,7 @@ import util.IDGeneratorUtility;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,20 +78,29 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
                 + "AND CURRENT_DATE BETWEEN p.startedDate AND p.endedDate "
                 + "AND p.minPrice <= :totalPaid "
                 + "AND p.promotionType = :promotionType "
-                + "AND CONCAT(',', p.customerLevels, ',') LIKE :customerLevel "
+//                + "AND p.customerLevels LIKE  :customerLevel "
                 + "ORDER BY p.discountPercentage DESC";
 
         TypedQuery<PromotionEntity> q = em.createQuery(jpql, PromotionEntity.class);
         q.setParameter("totalPaid", totalPaid);
         q.setParameter("promotionType", PromotionTypeEnum.ORDER);  // Assuming PromotionTypeEnum exists
-        q.setParameter("customerLevel", customerLevelEnum.name());
-        q.setMaxResults(1);
+//        q.setParameter("customerLevel", "%"+customerLevelEnum.name()+"%");
 
-        try {
-            return q.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        PromotionEntity promotion = (PromotionEntity) q.getResultList()
+                            .stream()
+                                .filter(p -> {
+//                                    StringBuilder  sb = new StringBuilder();
+//                                    p.getCustomerLevels().forEach( enumTemp -> sb.append(enumTemp.toString()));
+//                                    System.out.println(sb.toString());
+//                                    System.out.println(customerLevelEnum.name());
+//                                    return sb.toString().contains(customerLevelEnum.name());
+                                    return p.getCustomerLevels().contains(customerLevelEnum);
+                                })
+                                                .sorted(Comparator.comparing(PromotionEntity::getDiscountPercentage).reversed())
+                                                .findFirst()
+                                                        .orElse(null);
+
+        return promotion;
     }
 
 
@@ -144,10 +154,8 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         ConnectDB.connect();
         EntityManager em = ConnectDB.getEntityManager();
         PromotionDAL promotionDAL = new PromotionDAL(em);
-        List<PromotionEntity> promotions = promotionDAL.getPromotionsWithKeywordfit(LocalDate.of(2025, 4, 11).atStartOfDay(), null, null, null, null, null, null, true);
-        for (PromotionEntity promotion : promotions) {
-            System.out.println(promotion);
-        }
+        PromotionEntity promotions = promotionDAL.getPromotionsByCustomerLevelAndTotalPrice(700000, CustomerLevelEnum.VIP );
+        System.out.println(promotions);
     }
 
 }

@@ -5,19 +5,14 @@
 package gui.staff;
 
 import bus.EmployeeBUS;
-import bus.impl.EmployeeBUSImpl;
 import common.Constants;
-import model.EmployeeEntity;
 import gui.FormLoad;
 import gui.main.LoginGUI;
+import model.EmployeeEntity;
+import util.MailSenderUtil;
 
-import java.awt.Frame;
-import java.rmi.RemoteException;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-
-import util.*;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *
