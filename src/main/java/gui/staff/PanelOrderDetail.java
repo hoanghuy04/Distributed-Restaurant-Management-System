@@ -202,7 +202,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnMinus.setPreferredSize(new java.awt.Dimension(40, 40));
         btnMinus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMinusActionPerformed(evt);
+                try {
+                    btnMinusActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -230,7 +234,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnDelete.setPreferredSize(new java.awt.Dimension(40, 40));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                try {
+                    btnDeleteActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -365,7 +373,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
                 updateQty(0, newQty);
                 orderGUI.calcPrice();
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
             txtQty.setText(String.valueOf(qty));
         }

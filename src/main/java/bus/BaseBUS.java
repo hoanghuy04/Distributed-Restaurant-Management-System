@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author hoang
  */
-public interface BaseBUS <T, ID>  {
+public interface BaseBUS <T, ID> extends Remote {
     boolean insertEntity(T t) throws RemoteException;
     boolean updateEntity(T t) throws RemoteException;
     boolean deleteEntity(ID id) throws RemoteException;

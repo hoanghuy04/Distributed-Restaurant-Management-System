@@ -16,11 +16,14 @@ import java.awt.Color;
 import java.rmi.Naming;
 import javax.swing.JDialog;
 
+import static util.HostNameUtil.*;
+
 /**
  *
  * @author RAVEN
  */
 public class FormLoad extends javax.swing.JDialog {
+    private static final String SERVER_HOST_NAME = "DuongHoangHuy";
 
     /**
      * Creates new form Application
@@ -128,6 +131,7 @@ public class FormLoad extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,19 +141,19 @@ public class FormLoad extends javax.swing.JDialog {
                     doTask("Loading...", 5);
                     ConnectDB.connect();
 
-                    categoryBUS = (CategoryBUS) Naming.lookup("rmi://localhost:9090/categoryBUS");
-                    itemBUS = (ItemBUS) Naming.lookup("rmi://localhost:9090/itemBUS");
-                    floorBUS = (FloorBUS) Naming.lookup("rmi://localhost:9090/floorBUS");
-                    tableBUS = (TableBUS) Naming.lookup("rmi://localhost:9090/tableBUS");
-                    customerBUS = (CustomerBUS) Naming.lookup("rmi://localhost:9090/customerBUS");
-                    orderBUS = (OrderBUS) Naming.lookup("rmi://localhost:9090/orderBUS");
-                    orderDetailBUS = (OrderDetailBUS) Naming.lookup("rmi://localhost:9090/orderDetailBUS");
-                    employeeBUS = (EmployeeBUS) Naming.lookup("rmi://localhost:9090/employeeBUS");
-                    promotionBUS = (PromotionBUS) Naming.lookup("rmi://localhost:9090/promotionBUS");
-                    toppingBUS = (ToppingBUS) Naming.lookup("rmi://localhost:9090/toppingBUS");
-                    itemToppingBUS = (ItemToppingBUS) Naming.lookup("rmi://localhost:9090/itemToppingBUS");
-                    promotionDetailBUS = (PromotionDetailBUS) Naming.lookup("rmi://localhost:9090/promotionDetailBUS");
-                    roleBUS = (RoleBUS) Naming.lookup("rmi://localhost:9090/roleBUS");
+                    categoryBUS = (CategoryBUS ) ((Object) Naming.lookup(getURI(SERVER_HOST_NAME, CategoryBUS.class)));
+                    itemBUS = (ItemBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemBUS.class));
+                    floorBUS = (FloorBUS) Naming.lookup(getURI(SERVER_HOST_NAME, FloorBUS.class));
+                    tableBUS = (TableBUS) Naming.lookup(getURI(SERVER_HOST_NAME, TableBUS.class));
+                    customerBUS = (CustomerBUS) Naming.lookup(getURI(SERVER_HOST_NAME, CustomerBUS.class));
+                    orderBUS = (OrderBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderBUS.class));
+                    orderDetailBUS = (OrderDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderDetailBUS.class));
+                    employeeBUS = (EmployeeBUS) Naming.lookup(getURI(SERVER_HOST_NAME, EmployeeBUS.class));
+                    promotionBUS = (PromotionBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionBUS.class));
+                    toppingBUS = (ToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ToppingBUS.class));
+                    itemToppingBUS = (ItemToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemToppingBUS.class));
+                    promotionDetailBUS = (PromotionDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionDetailBUS.class));
+                    roleBUS = (RoleBUS) Naming.lookup(getURI(SERVER_HOST_NAME, RoleBUS.class));
 
                     doTask("Loading...", 50);
 

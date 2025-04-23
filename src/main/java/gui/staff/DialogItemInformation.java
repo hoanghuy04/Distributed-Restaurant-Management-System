@@ -55,7 +55,11 @@ public class DialogItemInformation extends JDialog {
         this.getRootPane().getActionMap().put("action", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                confirmAddingItem();
+                try {
+                    confirmAddingItem();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -210,7 +214,11 @@ public class DialogItemInformation extends JDialog {
         roundedButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         roundedButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                roundedButton1ActionPerformed(evt);
+                try {
+                    roundedButton1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         roundedPanel1.add(roundedButton1, java.awt.BorderLayout.SOUTH);
@@ -386,7 +394,7 @@ public class DialogItemInformation extends JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void roundedButton1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
+    private void roundedButton1ActionPerformed(ActionEvent evt) throws Exception {//GEN-FIRST:event_roundedButton1ActionPerformed
 //        ItemCartDTO itemCartDTO = new ItemCartDTO(item, itemTopping, txtDes.getText());
 //        orderGUI.cartDTO.insert(itemCartDTO);
 //        PanelOrderDetail pnOD = new PanelOrderDetail(itemCartDTO, orderGUI);
@@ -422,7 +430,7 @@ public class DialogItemInformation extends JDialog {
         return true;
     }
 
-    private void confirmAddingItem() {
+    private void confirmAddingItem() throws Exception {
         ItemCartDTO itemCartDTO = new ItemCartDTO(item, itemTopping, "");
         int oldQtyInCart = orderGUI.cartDTO.getItemQty(itemCartDTO);
         orderGUI.cartDTO.insert(itemCartDTO);

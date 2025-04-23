@@ -34,7 +34,7 @@ public class FloorEntity implements Serializable {
     private int capacity;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "floor", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "floor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<TableEntity> tables;
 
     public FloorEntity(String floorId) {
