@@ -353,7 +353,11 @@ public class TabReservation extends JPanel {
         panelButtonCreate.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         panelButtonCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                panelButtonCreateActionPerformed(evt);
+                try {
+                    panelButtonCreateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -551,7 +555,7 @@ public class TabReservation extends JPanel {
         add(panelWrapper, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void panelButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_panelButtonCreateActionPerformed
+    private void panelButtonCreateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_panelButtonCreateActionPerformed
         new DialogAddReservation(this.mapOfAllReservations, this).setVisible(true);
     }//GEN-LAST:event_panelButtonCreateActionPerformed
 

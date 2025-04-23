@@ -12,6 +12,7 @@ import model.*;
 import gui.custom.*;
 
 import java.lang.Exception;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -70,9 +71,14 @@ public class SearchGUI extends javax.swing.JPanel {
 //        table.setModel(tableModel);
         TableActionEvent actionEvent = new TableActionEvent() {
             @Override
-            public void onView(int row) throws Exception {
+            public void onView(int row) {
                 String orderID = table.getValueAt(row, 0).toString();
-                OrderEntity o = orderBUS.getEntityById(orderID);
+                OrderEntity o = null;
+                try {
+                    o = orderBUS.getEntityById(orderID);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 new DialogOrderDetail(o).setVisible(true);
             }
 

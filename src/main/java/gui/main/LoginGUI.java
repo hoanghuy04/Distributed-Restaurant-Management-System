@@ -66,6 +66,8 @@ public class LoginGUI extends javax.swing.JFrame {
                     btnLoginActionPerformed(null);
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -200,6 +202,8 @@ public class LoginGUI extends javax.swing.JFrame {
                     btnLoginActionPerformed(evt);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -225,7 +229,7 @@ public class LoginGUI extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 try {
                     txtPassKeyReleased(evt);
-                } catch (RemoteException e) {
+                }  catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -349,7 +353,7 @@ public class LoginGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnLoginActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnLoginActionPerformed
         String name = txtName.getText().trim();
         String id = new String(txtPass.getPassword());
         if (name.length() == 0) {
@@ -405,7 +409,7 @@ public class LoginGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_chkShowIdActionPerformed
 
-    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) throws RemoteException {//GEN-FIRST:event_txtPassKeyReleased
+    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) throws Exception {//GEN-FIRST:event_txtPassKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnLoginActionPerformed(null);
         }

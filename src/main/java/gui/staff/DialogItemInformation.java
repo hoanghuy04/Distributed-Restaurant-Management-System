@@ -4,6 +4,7 @@
  */
 package gui.staff;
 
+import bus.ItemToppingBUS;
 import bus.impl.ItemToppingBUSImpl;
 import common.Constants;
 import dto.ItemCartDTO;
@@ -33,14 +34,14 @@ public class DialogItemInformation extends JDialog {
     private ItemEntity item;
     private ItemToppingEntity itemTopping;
     private OrderGUI orderGUI;
-    private ItemToppingBUSImpl itemToppingBUSImpl;
+    private ItemToppingBUS itemToppingBUS;
 
     public DialogItemInformation(ItemEntity item, ItemToppingEntity itemTopping, OrderGUI orderGUI) {
         super(new JFrame(), true);
         this.itemTopping = itemTopping;
         this.item = item;
         this.orderGUI = orderGUI;
-        itemToppingBUSImpl = FormLoad.itemToppingBUSImpl;
+        itemToppingBUS = FormLoad.itemToppingBUS;
         initComponents();
         fillContent();
         ReloadComponentUlti.reload(this);
@@ -431,9 +432,7 @@ public class DialogItemInformation extends JDialog {
         this.setVisible(false);
     }
 
-    /**
-     * @param args the command line arguments
-     */
+
     private void fillContent() {
         lblName.setText(item.getName());
         

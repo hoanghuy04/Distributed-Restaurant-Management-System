@@ -89,7 +89,7 @@ public class MainGUI extends JPanel {
         this.tabReservation = tabReservation;
     }
     
-    public void loadMainGUI() {
+    public void loadMainGUI() throws Exception {
         this.getTabTable().loadFloors();
         ReloadComponentUlti.reload(this);
         orderGUI.clearData();

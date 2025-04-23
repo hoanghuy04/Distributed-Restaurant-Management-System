@@ -4,6 +4,9 @@
  */
 package gui.staff;
 
+import bus.FloorBUS;
+import bus.OrderBUS;
+import bus.TableBUS;
 import bus.impl.FloorBUSImpl;
 import bus.impl.OrderBUSImpl;
 import bus.impl.TableBUSImpl;
@@ -18,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -35,17 +39,17 @@ public class TabTable extends JPanel {
     /**
      * Creates new form TabTable
      */
-    private FloorBUSImpl floorBUSImpl;
-    private TableBUSImpl tableBUSImpl;
+    private FloorBUS floorBUS;
+    private TableBUS tableBUS;
     private OrderGUI orderGUI;
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
     private JRadioButtonCustom rFirstFloor;
     private JRadioButtonCustom rFirstStatus;
     
-    public TabTable(OrderGUI orderGUI) {
-        floorBUSImpl = FormLoad.floorBUSImpl;
-        tableBUSImpl = FormLoad.tableBUSImpl;
-        orderBUSImpl = FormLoad.orderBUSImpl;
+    public TabTable(OrderGUI orderGUI) throws Exception {
+        floorBUS = FormLoad.floorBUS;
+        tableBUS = FormLoad.tableBUS;
+        orderBUS = FormLoad.orderBUS;
         this.orderGUI = orderGUI;
         initComponents();
         loadFloors();
@@ -356,11 +360,11 @@ public class TabTable extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadFloors() {
+    public void loadFloors() throws Exception {
         if (pnFloors.getComponentCount() == 0) {
             pnFloors.removeAll();
             
-            floorBUSImpl.getAllEntities().forEach(x -> {
+            floorBUS.getAllEntities().forEach(x -> {
                 JRadioButtonCustom r = new JRadioButtonCustom(x.getName(), x);
                 btnGroupFloor.add(r);
                 if (btnGroupFloor.getButtonCount() == 1) {
@@ -415,7 +419,11 @@ public class TabTable extends JPanel {
             panelTables.removeAll();
             FloorEntity floor = (FloorEntity) getSelectedRadio(btnGroupFloor);
             String status = (String) getSelectedRadio(btnGroupTableStatus);
-            loadTable(floor, status);
+            try {
+                loadTable(floor, status);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             ReloadComponentUlti.reload(panelTables);
         });
     }
@@ -426,8 +434,8 @@ public class TabTable extends JPanel {
         return selectedButton.getObject();
     }
     
-    private void loadTable(FloorEntity floor, String status) {
-        List<TableEntity> tables = tableBUSImpl.getListTablesByStatus(floor.getFloorId(), status);
+    private void loadTable(FloorEntity floor, String status) throws Exception {
+        List<TableEntity> tables = tableBUS.getListTablesByStatus(floor.getFloorId(), status);
         tables.forEach(x -> loadPanelTables(x));
     }
     
