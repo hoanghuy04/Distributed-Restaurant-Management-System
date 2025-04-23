@@ -3,10 +3,12 @@ package server;
 import bus.*;
 import bus.impl.*;
 import dal.connectDB.ConnectDB;
+import static util.HostNameUtil.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.rmi.registry.LocateRegistry;
+
 
 /*
  * @description: RMIServer
@@ -17,7 +19,7 @@ import java.rmi.registry.LocateRegistry;
 public class RMIServer {
     public static void main(String[] args) throws Exception {
         Context context = new InitialContext();
-        LocateRegistry.createRegistry(9090);
+        LocateRegistry.createRegistry(PORT);
 
         CategoryBUS categoryBUS = new CategoryBUSImpl(ConnectDB.getEntityManager());
         ItemBUS itemBUS = new ItemBUSImpl(ConnectDB.getEntityManager());
@@ -33,21 +35,21 @@ public class RMIServer {
         PromotionDetailBUS promotionDetailBUS = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
         RoleBUS roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
 
-        context.bind("rmi://localhost:9090/categoryBUS", categoryBUS);
-        context.bind("rmi://localhost:9090/itemBUS", itemBUS);
-        context.bind("rmi://localhost:9090/floorBUS", floorBUS);
-        context.bind("rmi://localhost:9090/tableBUS", tableBUS);
-        context.bind("rmi://localhost:9090/customerBUS", customerBUS);
-        context.bind("rmi://localhost:9090/orderBUS", orderBUS);
-        context.bind("rmi://localhost:9090/orderDetailBUS", orderDetailBUS);
-        context.bind("rmi://localhost:9090/employeeBUS", employeeBUS);
-        context.bind("rmi://localhost:9090/promotionBUS", promotionBUS);
-        context.bind("rmi://localhost:9090/toppingBUS", toppingBUS);
-        context.bind("rmi://localhost:9090/itemToppingBUS", itemToppingBUS);
-        context.bind("rmi://localhost:9090/promotionDetailBUS", promotionDetailBUS);
-        context.bind("rmi://localhost:9090/roleBUS", roleBUS);
-
+        context.bind(getURI(getHostName(), CategoryBUS.class), categoryBUS);
+        context.bind(getURI(getHostName(), ItemBUS.class), itemBUS);
+        context.bind(getURI(getHostName(), FloorBUS.class), floorBUS);
+        context.bind(getURI(getHostName(), TableBUS.class), tableBUS);
+        context.bind(getURI(getHostName(), CustomerBUS.class), customerBUS);
+        context.bind(getURI(getHostName(), OrderBUS.class), orderBUS);
+        context.bind(getURI(getHostName(), OrderDetailBUS.class), orderDetailBUS);
+        context.bind(getURI(getHostName(), EmployeeBUS.class), employeeBUS);
+        context.bind(getURI(getHostName(), PromotionBUS.class), promotionBUS);
+        context.bind(getURI(getHostName(), ToppingBUS.class), toppingBUS);
+        context.bind(getURI(getHostName(), ItemToppingBUS.class), itemToppingBUS);
+        context.bind(getURI(getHostName(), PromotionDetailBUS.class), promotionDetailBUS);
+        context.bind(getURI(getHostName(), RoleBUS.class), roleBUS);
 
         System.out.println("RMI Server is running...");
     }
+
 }

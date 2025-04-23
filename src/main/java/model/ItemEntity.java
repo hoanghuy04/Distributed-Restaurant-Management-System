@@ -73,7 +73,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
     private CategoryEntity category;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<PromotionDetailEntity> promotionDetailEntities;
 
     @ToString.Exclude
@@ -81,7 +81,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
     private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<PromotionDetailEntity> promotionDetails;
 
     public ItemEntity() {

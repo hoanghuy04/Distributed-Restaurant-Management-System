@@ -1159,8 +1159,8 @@ public class OrderGUI extends JPanel {
         o.setPaymentMethod(PaymentMethodEnum.convertToEnum(cbbPayment.getSelectedItem().toString()));
         o.setPaymentStatus(paymentStatus);
         if (isNewOrder) {
-            CustomerEntity c = customerBUS.getEntityById("Cust0101010001");
-            o.setCustomer(c);
+            CustomerEntity customerG = getCustomer();
+            o.setCustomer(customerG != null ? customerG : dfCus);
             o.setEmployee(LoginGUI.emp);
             o.setTable(tableCBB);
             o.setNumberOfCustomer(1);
@@ -1339,7 +1339,8 @@ public class OrderGUI extends JPanel {
         if (txtSearchCustomer.getText().trim().equals("") || txtSearchCustomer.getText() == null) {
             return dfCus;
         } else {
-            return customerBUS.findByPhone(txtSearchCustomer.getText());
+            CustomerEntity customerEntity = customerBUS.findByPhone(txtSearchCustomer.getText());
+            return customerEntity;
         }
     }
 
