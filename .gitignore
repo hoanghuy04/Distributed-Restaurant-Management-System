@@ -40,3 +40,6 @@ build/
 /mvnw
 /mvnw.cmd
 /.mvn
+
+# Ignore local environment file
+.env

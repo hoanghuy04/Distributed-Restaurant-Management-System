@@ -142,7 +142,7 @@ public class DataGenerator {
     // ToppingEntity
     public ToppingEntity generateToppingEntity(boolean isDefault) {
         String name = isDefault ? "DEFAULT_TOPPING": (rand.nextBoolean()? "Spice " + faker.food().spice(): "Ingredient " + faker.food().ingredient());
-        double costPrice = rand.nextDouble() * 50000 + 10000;
+        double costPrice =isDefault ? 0 : rand.nextDouble() * 50000 + 10000;
         int stockQuantity = rand.nextInt(100) + 1;
         String description = faker.lorem().sentence();
         if(itemDAL.findByName(name) != null) {
@@ -392,6 +392,7 @@ public class DataGenerator {
             detail.setDescription(faker.lorem().sentence());
 
             orderDetails.add(detail);
+            orderDetailDAL.insert(detail);
         }
 
         order.setOrderDetails(orderDetails);
