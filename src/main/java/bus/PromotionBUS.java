@@ -41,5 +41,5 @@ public interface PromotionBUS extends BaseBUS<PromotionEntity, String> {
 
     List<PromotionEntity> getListPromotionActive(String active) throws RemoteException;
 
-    List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) throws RemoteException;
+    List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, List<CustomerLevelEnum> rank, PromotionTypeEnum type, boolean active) throws RemoteException;
 }

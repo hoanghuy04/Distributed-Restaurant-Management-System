@@ -1,6 +1,7 @@
 package dal;
 
 import dal.connectDB.ConnectDB;
+import model.Address;
 import model.EmployeeEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -108,7 +109,7 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
 
     }
 
-    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active) {
+    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, Address address, String email, String pass, String roleId, boolean active) {
 
         StringBuilder queryBuilder = new StringBuilder("SELECT e FROM EmployeeEntity e WHERE 1=1");
 
@@ -118,8 +119,8 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
         if (phone != null && !phone.trim().isEmpty()) {
             queryBuilder.append(" AND e.phoneNumber LIKE :phone");
         }
-        if (address != null && !address.trim().isEmpty()) {
-            queryBuilder.append(" AND e.address LIKE :address");
+        if (address != null ) {
+            queryBuilder.append(" AND e.address = :address");
         }
         if (email != null && !email.trim().isEmpty()) {
             queryBuilder.append(" AND e.email LIKE :email");
@@ -142,8 +143,8 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
         if (phone != null && !phone.trim().isEmpty()) {
             query.setParameter("phone", "%"+ phone + "%");
         }
-        if (address != null && !address.trim().isEmpty()) {
-            query.setParameter("address", "%" + address + "%");
+        if (address != null ) {
+            query.setParameter("address", address);
         }
         if (email != null && !email.trim().isEmpty()) {
             query.setParameter("email", "%" + email + "%");

@@ -124,13 +124,13 @@ public class ItemStatsGUI extends javax.swing.JPanel {
             if(key.matches(".*Pizza.*")) {
                 pieChart.addData(new ModelPieChart(key,value,new Color(248,159,114)));
             }
-            if(key.equals("Khai vị & Salad")) {
+            if(key.equals("Khai Vị & Salad")) {
                 pieChart.addData(new ModelPieChart(key,value,new Color(12,237,159)));
             }
-            if(key.equals("Mì ý")) {
+            if(key.equals("Mì Ý")) {
                 pieChart.addData(new ModelPieChart(key,value,new Color(253,129,143)));
             }
-            if(key.equals("Thức uống")) {
+            if(key.equals("Đồ Uống")) {
                 pieChart.addData(new ModelPieChart(key,value,new Color(4,209,219)));
             }
         });
@@ -138,15 +138,15 @@ public class ItemStatsGUI extends javax.swing.JPanel {
     
     private void setTextForCategory(LocalDateTime startDate, LocalDateTime endDate) throws Exception {
         lblPizzaRevenue.setText("" + DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Pizza")));
-        double temp = itemBUS.getTotalRevenueByCategory(startDate, endDate, "Khai vị") + itemBUS.getTotalRevenueByCategory(startDate, endDate, "Salad");
+        double temp = itemBUS.getTotalRevenueByCategory(startDate, endDate, "Khai Vị") + itemBUS.getTotalRevenueByCategory(startDate, endDate, "Salad");
         lblKhaiViSaladRevenue.setText("" + DoubleFormatUlti.format(temp));
-        lblMiyRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Mì ý")));
-        lblThucUongRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Thức uống")));
-        temp = itemBUS.getQtyByCategory(startDate, endDate, "Salad") + itemBUS.getQtyByCategory(startDate, endDate, "Khai vị");
+        lblMiyRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Mì Ý")));
+        lblThucUongRevenue.setText(""+DoubleFormatUlti.format(itemBUS.getTotalRevenueByCategory(startDate, endDate, "Đồ Uống")));
+        temp = itemBUS.getQtyByCategory(startDate, endDate, "Salad") + itemBUS.getQtyByCategory(startDate, endDate, "Khai Vị");
         lblQtyKhaiviSalad.setText("Số lượng đã bán: " + DoubleFormatUlti.format(temp));
         lblQtyPizza.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Pizza"));
-        lblQtyMiy.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Mì ý"));
-        lblQtyThucuong.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Thức uống"));
+        lblQtyMiy.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Mì Ý"));
+        lblQtyThucuong.setText("Số lượng đã bán: "+ itemBUS.getQtyByCategory(startDate, endDate, "Đồ Uống"));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -786,7 +786,7 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         selectionPanelLayout.setHorizontalGroup(
             selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectionPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(52, 52, 52)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(startedDate, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -798,25 +798,24 @@ public class ItemStatsGUI extends javax.swing.JPanel {
                 .addComponent(comboItemType, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(roundedButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(400, Short.MAX_VALUE))
         );
         selectionPanelLayout.setVerticalGroup(
             selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectionPanelLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, selectionPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboItemType, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(roundedButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboItemType, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(roundedButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(selectionPanelLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addGap(3, 3, 3)
                         .addGroup(selectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(endedDate, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(startedDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(29, 29, 29))
+                .addGap(30, 30, 30))
         );
 
         statsByType.add(selectionPanel, java.awt.BorderLayout.NORTH);
@@ -864,7 +863,9 @@ public class ItemStatsGUI extends javax.swing.JPanel {
         jLabel3.setBackground(Constants.COLOR_PRIMARY
         );
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText(" Top 5 sản phẩm có doanh thu cao nhất");
+        jLabel3.setPreferredSize(new java.awt.Dimension(382, 50));
         jPanel3.add(jLabel3, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel3, java.awt.BorderLayout.NORTH);
@@ -899,7 +900,9 @@ public class ItemStatsGUI extends javax.swing.JPanel {
 
         jLabel4.setBackground(Constants.COLOR_PRIMARY);
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText(" Top 5 sản phẩm có lượt bán cao nhất");
+        jLabel4.setPreferredSize(new java.awt.Dimension(364, 50));
         jPanel8.add(jLabel4, java.awt.BorderLayout.CENTER);
 
         jPanel6.add(jPanel8, java.awt.BorderLayout.NORTH);

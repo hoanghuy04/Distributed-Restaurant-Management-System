@@ -284,12 +284,12 @@ public class MainHuyen {
             roleBUSImpl.insertEntity(rS);
             roleBUSImpl.insertEntity(rM);
 
-            //Employee
-            EmployeeEntity e1 = new EmployeeEntity("123", "Trần Ngọc Huyền", "0964424149", "tranngochuyenn1909@gmail.com", "GV", roleBUSImpl.getEntityById("Role0001"));
-            employeeBUS.insertEntity(e1);
-
-            EmployeeEntity e2 = new EmployeeEntity("123", "Nguyễn Huỳnh Minh Hiếu", "0703553341", "koutachan1147@gmail.com", "GV", roleBUSImpl.getEntityById("Role0002"));
-            employeeBUS.insertEntity(e2);
+//            //Employee
+//            EmployeeEntity e1 = new EmployeeEntity("123", "Trần Ngọc Huyền", "0964424149", "tranngochuyenn1909@gmail.com", "GV", roleBUSImpl.getEntityById("Role0001"));
+//            employeeBUS.insertEntity(e1);
+//
+//            EmployeeEntity e2 = new EmployeeEntity("123", "Nguyễn Huỳnh Minh Hiếu", "0703553341", "koutachan1147@gmail.com", "GV", roleBUSImpl.getEntityById("Role0002"));
+//            employeeBUS.insertEntity(e2);
         } catch (Exception ex) {
             Logger.getLogger(MainHuyen.class.getName()).log(Level.SEVERE, null, ex);
         }

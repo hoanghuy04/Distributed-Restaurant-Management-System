@@ -22,5 +22,4 @@ public class Address implements Serializable {
 
     @Column(name = "city", columnDefinition = "nvarchar(255)")
     private String city;
-
 }

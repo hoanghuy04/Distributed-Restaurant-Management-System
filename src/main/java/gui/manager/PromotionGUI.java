@@ -736,6 +736,10 @@ public class PromotionGUI extends javax.swing.JPanel {
             itemBUS.updateEntity(item);
             pro.setPromotionDetails(promotionDetails);
         }
+
+        pro.setEndedDate(endDate);
+        pro.setStartedDate(startDate);
+
         proBUS.updateEntity(pro);
 
         int selectedRow = table.getSelectedRow();
@@ -829,7 +833,7 @@ public class PromotionGUI extends javax.swing.JPanel {
         PromotionTypeEnum selectedType = PromotionTypeEnum.valueOf(cbbType.getSelectedItem().toString());
 
         tableModel.setRowCount(0);
-        List<PromotionEntity> pros = proBUS.getPromotionsWithKeywordfit(startDate, endDate, scrip, discount, minPrice, ranks, selectedType, active);
+        List<PromotionEntity> pros = proBUS.getPromotionsWithKeywordfit(startDate, endDate, scrip, discount, minPrice, selectedRanks, selectedType, active);
 //        JOptionPane.showMessageDialog(this,pros);
 
         if (pros.isEmpty()) {

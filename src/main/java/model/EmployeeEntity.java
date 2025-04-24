@@ -52,12 +52,12 @@ public class EmployeeEntity extends BaseEntity implements Serializable {
         setEmployeeId(employeeId);
     }
 
-    public EmployeeEntity(String password, String fullname, String phoneNumber, String email, String address, RoleEntity role) {
+    public EmployeeEntity(String password, String fullname, String phoneNumber, String email, Address address, RoleEntity role) {
         this.password = password;
         this.fullname = fullname;
         this.phoneNumber = phoneNumber;
         this.email = email;
-//        this.address = address;
+        this.address = address;
         this.role = role;
         this.active = true;
     }

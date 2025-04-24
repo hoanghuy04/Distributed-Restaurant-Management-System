@@ -1,5 +1,6 @@
 package bus;
 
+import model.Address;
 import model.EmployeeEntity;
 
 import java.rmi.RemoteException;
@@ -25,7 +26,7 @@ public interface EmployeeBUS extends BaseBUS<EmployeeEntity, String> {
 
     EmployeeEntity checkLogin(String username, String password) throws RemoteException;
 
-    List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active) throws RemoteException;
+    List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, Address address, String email, String pass, String roleId, boolean active) throws RemoteException;
 
     EmployeeEntity findByEmail(String email) throws RemoteException;
 

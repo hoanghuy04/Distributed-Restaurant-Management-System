@@ -4,6 +4,7 @@ import bus.BaseBUS;
 import common.Constants;
 import dal.EmployeeDAL;
 import jakarta.persistence.EntityManager;
+import model.Address;
 import model.EmployeeEntity;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -65,7 +66,7 @@ public class EmployeeBUSImpl extends UnicastRemoteObject implements bus.Employee
     }
 
     @Override
-    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, String address, String email, String pass, String roleId, boolean active)  throws RemoteException {
+    public List<EmployeeEntity> getEmployeesWithKeyword(String name, String phone, Address address, String email, String pass, String roleId, boolean active)  throws RemoteException {
         return employeeDAL.getEmployeesWithKeyword(name, phone, address, email, pass, roleId, active);
     }
 
