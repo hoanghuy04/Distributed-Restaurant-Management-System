@@ -24,7 +24,7 @@ public class CategoryBUSImpl extends UnicastRemoteObject implements bus.Category
     }
 
     @Override
-    public boolean insertEntity(CategoryEntity category)  throws RemoteException {
+    public CategoryEntity insertEntity(CategoryEntity category)  throws RemoteException {
         return categoryDAL.insert(category);
     }
 

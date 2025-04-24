@@ -48,9 +48,11 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
     }
 
     @Override
-    public boolean insert(CustomerEntity t) {
+    public CustomerEntity insert(CustomerEntity t) {
         t.setCustomerId(IDGeneratorUtility.generateIDWithCreatedDate("Cust", "customers", "customer_id", "created_date", em, LocalDateTime.now()));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+
+        return t;
     }
 
     @Override

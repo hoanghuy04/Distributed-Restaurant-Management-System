@@ -297,7 +297,7 @@ public class FloorGUI extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             FloorEntity f = new FloorEntity(null, name, capacity);
-            if (floorBUS.insertEntity(f)) {
+            if (floorBUS.insertEntity(f) != null) {
                 JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                 deleteAllTable();
                 loadData();

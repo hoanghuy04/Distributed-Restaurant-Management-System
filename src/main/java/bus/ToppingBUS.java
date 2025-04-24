@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ToppingBUS extends BaseBUS<ToppingEntity, String> {
     @Override
-    boolean insertEntity(ToppingEntity topping) throws RemoteException;
+    ToppingEntity insertEntity(ToppingEntity topping) throws RemoteException;
 
     @Override
     boolean updateEntity(ToppingEntity topping) throws RemoteException;

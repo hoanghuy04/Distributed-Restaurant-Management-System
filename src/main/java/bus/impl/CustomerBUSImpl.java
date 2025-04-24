@@ -19,7 +19,7 @@ public class CustomerBUSImpl extends UnicastRemoteObject implements bus.Customer
     }
 
     @Override
-    public boolean insertEntity(CustomerEntity customer)  throws RemoteException {
+    public CustomerEntity insertEntity(CustomerEntity customer)  throws RemoteException {
         return customerDAL.insert(customer);
     }
 

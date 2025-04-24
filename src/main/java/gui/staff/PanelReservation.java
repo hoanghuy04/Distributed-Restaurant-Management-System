@@ -348,6 +348,7 @@ public class PanelReservation extends RoundedPanel {
 
         if (!this.order.getReservationTime().minusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES).isAfter(LocalDateTime.now())) {
             if (tempO != null) {
+                this.order = tempO;
                 this.order.setReservationStatus(ReservationStatusEnum.RECEIVED);
                 if (this.order.getReservationTime().isBefore(LocalDateTime.now().plusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES))) {
                     this.order.setReservationTime(LocalDateTime.now());
@@ -365,7 +366,7 @@ public class PanelReservation extends RoundedPanel {
                         });
 
                 tableBUS.updateEntity(this.order.getTable());
-                orderBUS.updateEntity(order);
+                orderBUS.updateEntity(tempO);
                 panelReservationByDate.removePanelReservation(this);
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, 3000, "Khách hàng: " + this.order.getCustomer().getName() + " - Đã nhận bàn thành công!");
 

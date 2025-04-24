@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderDetailBUS extends BaseBUS<OrderDetailEntity, OrderDetailId> {
     @Override
-    boolean insertEntity(OrderDetailEntity orderDetail) throws RemoteException;
+    OrderDetailEntity insertEntity(OrderDetailEntity orderDetail) throws RemoteException;
 
     @Override
     boolean updateEntity(OrderDetailEntity orderDetail) throws RemoteException;

@@ -379,7 +379,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE,
                         OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
                         PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
-                orderBUS.insertEntity(orderEntity);
+                this.orderEntity = orderBUS.insertEntity(orderEntity);
                 tabReservation.getListOfAllReservations().add(orderEntity);
                 this.tabReservation.addToMapOfAllReservations(orderEntity);
             } else {

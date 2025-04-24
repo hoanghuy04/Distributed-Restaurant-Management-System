@@ -39,9 +39,10 @@ public class RoleDAL implements BaseDAL<RoleEntity, String>{
     }
     
     @Override
-    public boolean insert(RoleEntity t) {
+    public RoleEntity insert(RoleEntity t) {
         t.setRoleId(IDGeneratorUtility.generateSimpleID("Role", "roles", "role_id", em));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override

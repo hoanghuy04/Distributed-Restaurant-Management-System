@@ -39,9 +39,11 @@ public class ItemDAL implements BaseDAL<ItemEntity, String> {
     }
 
     @Override
-    public boolean insert(ItemEntity t) {
+    public ItemEntity insert(ItemEntity t) {
         t.setItemId(IDGeneratorUtility.generateIDWithCreatedDate("I", "items", "item_id", "created_date", em, LocalDateTime.now()));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+
+        return t;
     }
 
     @Override

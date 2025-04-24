@@ -17,7 +17,7 @@ public class FloorBUSImpl extends UnicastRemoteObject implements bus.FloorBUS {
     }
 
     @Override
-    public boolean insertEntity(FloorEntity floor)  throws RemoteException {
+    public FloorEntity insertEntity(FloorEntity floor)  throws RemoteException {
         return floorDAL.insert(floor);
     }
 

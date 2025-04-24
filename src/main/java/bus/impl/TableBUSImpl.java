@@ -27,7 +27,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     }
 
     @Override
-    public boolean insertEntity(TableEntity table)  throws RemoteException {
+    public TableEntity insertEntity(TableEntity table)  throws RemoteException {
         return tableDAL.insert(table);
     }
 

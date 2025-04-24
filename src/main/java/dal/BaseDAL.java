@@ -18,7 +18,7 @@ import java.util.Optional;
  * @version: 1.0
  */
 public interface BaseDAL <T, ID>{
-    boolean insert(T t);
+    T insert(T t);
     boolean update(T t);
     boolean deleteById(ID id);
     T findById(ID id);

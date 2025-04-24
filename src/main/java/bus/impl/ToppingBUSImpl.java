@@ -41,7 +41,7 @@ public class ToppingBUSImpl extends UnicastRemoteObject implements bus.ToppingBU
     }
 
     @Override
-    public boolean insertEntity(ToppingEntity topping)  throws RemoteException {
+    public ToppingEntity insertEntity(ToppingEntity topping)  throws RemoteException {
         return toppingDAL.insert(topping);
     }
 

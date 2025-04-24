@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CategoryBUS extends BaseBUS<CategoryEntity, String> {
     @Override
-    boolean insertEntity(CategoryEntity category) throws RemoteException;
+    CategoryEntity insertEntity(CategoryEntity category) throws RemoteException;
 
     @Override
     boolean updateEntity(CategoryEntity category) throws RemoteException;

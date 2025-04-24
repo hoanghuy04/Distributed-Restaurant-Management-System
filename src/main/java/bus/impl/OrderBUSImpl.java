@@ -4,7 +4,6 @@
  */
 package bus.impl;
 
-import bus.BaseBUS;
 import bus.OrderBUS;
 import dal.OrderDAL;
 import dal.connectDB.ConnectDB;
@@ -43,7 +42,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     }
 
     @Override
-    public boolean insertEntity(OrderEntity orderEntity)  throws RemoteException {
+    public OrderEntity insertEntity(OrderEntity orderEntity)  throws RemoteException {
         return orderDAL.insert(orderEntity);
     }
 

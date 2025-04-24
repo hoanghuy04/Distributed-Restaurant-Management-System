@@ -305,7 +305,7 @@ public class CategoryGUI extends javax.swing.JPanel {
                     active = false;
                 }
                 CategoryEntity f = new CategoryEntity(null, name, desc, active);
-                if (categoryBUS.insertEntity(f)) {
+                if (categoryBUS.insertEntity(f) != null) {
                     JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                     deleteAllTable();
                     loadData();

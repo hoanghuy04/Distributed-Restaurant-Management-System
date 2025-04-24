@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FloorBUS extends BaseBUS<FloorEntity, String>, Remote {
     @Override
-    boolean insertEntity(FloorEntity floor) throws RemoteException;
+    FloorEntity insertEntity(FloorEntity floor) throws RemoteException;
 
     @Override
     boolean updateEntity(FloorEntity floor) throws RemoteException;
