@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PromotionBUS extends BaseBUS<PromotionEntity, String> {
     @Override
-    boolean insertEntity(PromotionEntity promotion) throws RemoteException;
+    PromotionEntity insertEntity(PromotionEntity promotion) throws RemoteException;
 
     @Override
     boolean updateEntity(PromotionEntity promotion) throws RemoteException;

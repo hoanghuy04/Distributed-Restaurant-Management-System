@@ -5,24 +5,19 @@
 package gui.staff;
 
 import common.Constants;
-import model.ItemEntity;
 import gui.manager.PromotionGUI;
 import gui.manager.ToppingGUI;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+import model.ItemEntity;
+import util.DoubleFormatUlti;
+import util.FormatTextUlti;
+import util.ResizeImage;
+
+import javax.swing.*;
+import javax.swing.border.StrokeBorder;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import util.*;
-import javax.swing.border.StrokeBorder;
 
 /**
  *

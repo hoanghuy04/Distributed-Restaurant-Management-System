@@ -46,8 +46,10 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
     }
 
     @Override
-    public boolean insert(OrderDetailEntity t) {
-        return executeTransaction(() -> em.persist(t));
+    public OrderDetailEntity insert(OrderDetailEntity t) {
+        executeTransaction(() -> em.persist(t));
+
+        return t;
     }
 
     @Override

@@ -41,9 +41,10 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
     }
 
     @Override
-    public boolean insert(TableEntity t) {
+    public TableEntity insert(TableEntity t) {
         t.setTableId(IDGeneratorUtility.generateSimpleID(t.getFloor().getFloorId() + "T", "tables", "table_id", em));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override

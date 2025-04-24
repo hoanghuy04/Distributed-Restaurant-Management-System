@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface OrderBUS extends BaseBUS<OrderEntity, String>, Remote {
     @Override
-    boolean insertEntity(OrderEntity orderEntity) throws RemoteException;
+    OrderEntity insertEntity(OrderEntity orderEntity) throws RemoteException;
 
     @Override
     boolean updateEntity(OrderEntity orderEntity) throws RemoteException;

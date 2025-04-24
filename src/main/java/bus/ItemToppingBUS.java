@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ItemToppingBUS extends BaseBUS<ItemToppingEntity, ItemToppingId> {
     @Override
-    boolean insertEntity(ItemToppingEntity itemTopping) throws RemoteException;
+    ItemToppingEntity insertEntity(ItemToppingEntity itemTopping) throws RemoteException;
 
     @Override
     boolean updateEntity(ItemToppingEntity itemTopping) throws RemoteException;

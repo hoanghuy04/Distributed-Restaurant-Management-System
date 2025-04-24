@@ -45,8 +45,9 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity, Promot
     }
 
     @Override
-    public boolean insert(PromotionDetailEntity t) {
-        return executeTransaction(() -> em.persist(t));
+    public PromotionDetailEntity insert(PromotionDetailEntity t) {
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RoleBUS extends BaseBUS<RoleEntity, String> {
     @Override
-    boolean insertEntity(RoleEntity t) throws RemoteException;
+    RoleEntity insertEntity(RoleEntity t) throws RemoteException;
 
     @Override
     boolean updateEntity(RoleEntity t) throws RemoteException;

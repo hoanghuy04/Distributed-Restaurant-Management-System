@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EmployeeBUS extends BaseBUS<EmployeeEntity, String> {
     @Override
-    boolean insertEntity(EmployeeEntity employee) throws RemoteException;
+    EmployeeEntity insertEntity(EmployeeEntity employee) throws RemoteException;
 
     @Override
     boolean updateEntity(EmployeeEntity employee) throws RemoteException;

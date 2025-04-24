@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface ItemBUS extends BaseBUS<ItemEntity, String> {
     @Override
-    boolean insertEntity(ItemEntity item) throws RemoteException;
+    ItemEntity insertEntity(ItemEntity item) throws RemoteException;
 
     @Override
     boolean updateEntity(ItemEntity item) throws RemoteException;

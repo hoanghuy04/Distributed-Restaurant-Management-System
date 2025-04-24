@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TableBUS extends BaseBUS<TableEntity, String> {
     @Override
-    boolean insertEntity(TableEntity table) throws RemoteException;
+    TableEntity insertEntity(TableEntity table) throws RemoteException;
 
     @Override
     boolean updateEntity(TableEntity table) throws RemoteException;

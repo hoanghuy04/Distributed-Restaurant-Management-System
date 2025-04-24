@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PromotionDetailBUS extends BaseBUS<PromotionDetailEntity, PromotionDetailId> {
     @Override
-    boolean insertEntity(PromotionDetailEntity t) throws RemoteException;
+    PromotionDetailEntity insertEntity(PromotionDetailEntity t) throws RemoteException;
 
     @Override
     boolean updateEntity(PromotionDetailEntity t) throws RemoteException;

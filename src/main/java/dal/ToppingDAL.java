@@ -48,9 +48,10 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     }
 
     @Override
-    public boolean insert(ToppingEntity t) {
+    public ToppingEntity insert(ToppingEntity t) {
         t.setToppingId(IDGeneratorUtility.generateIDWithCreatedDate("T", "toppings", "topping_id", "created_date", em, LocalDateTime.now()));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override

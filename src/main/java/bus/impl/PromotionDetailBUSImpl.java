@@ -28,7 +28,7 @@ public class PromotionDetailBUSImpl extends UnicastRemoteObject implements bus.P
     }
 
     @Override
-    public boolean insertEntity(PromotionDetailEntity t)  throws RemoteException {
+    public PromotionDetailEntity insertEntity(PromotionDetailEntity t)  throws RemoteException {
         return promotionDetailDAL.insert(t);
     }
 

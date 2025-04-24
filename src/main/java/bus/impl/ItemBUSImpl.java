@@ -28,7 +28,7 @@ public class ItemBUSImpl extends UnicastRemoteObject implements bus.ItemBUS {
     }
 
     @Override
-    public boolean insertEntity(ItemEntity item)  throws RemoteException {
+    public ItemEntity insertEntity(ItemEntity item)  throws RemoteException {
         return itemDAL.insert(item);
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CustomerBUS extends BaseBUS<CustomerEntity, String> {
     @Override
-    boolean insertEntity(CustomerEntity customer) throws RemoteException;
+    CustomerEntity insertEntity(CustomerEntity customer) throws RemoteException;
 
     @Override
     boolean updateEntity(CustomerEntity customer) throws RemoteException;

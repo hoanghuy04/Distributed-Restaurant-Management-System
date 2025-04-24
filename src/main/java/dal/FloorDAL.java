@@ -37,9 +37,11 @@ public class FloorDAL implements BaseDAL<FloorEntity, String> {
     }
 
     @Override
-    public boolean insert(FloorEntity t) {
+    public FloorEntity insert(FloorEntity t) {
         t.setFloorId(IDGeneratorUtility.generateSimpleID("F", "floors", "floor_id", em));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+
+        return t;
     }
 
     @Override

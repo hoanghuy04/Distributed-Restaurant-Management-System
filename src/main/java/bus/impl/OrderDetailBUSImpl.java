@@ -19,7 +19,7 @@ public class OrderDetailBUSImpl extends UnicastRemoteObject implements bus.Order
     }
 
     @Override
-    public boolean insertEntity(OrderDetailEntity orderDetail)  throws RemoteException {
+    public OrderDetailEntity insertEntity(OrderDetailEntity orderDetail)  throws RemoteException {
         return orderDetailDAL.insert(orderDetail);
     }
 

@@ -25,9 +25,10 @@ public class CategoryDAL implements BaseDAL<CategoryEntity, String> {
     }
 
     @Override
-    public boolean insert(CategoryEntity category) {
+    public CategoryEntity insert(CategoryEntity category) {
         category.setCategoryId(IDGeneratorUtility.generateSimpleID("C", "categories", "category_id", entityManager));
-        return executeTransaction(() -> entityManager.persist(category));
+        executeTransaction(() -> entityManager.persist(category));
+        return category;
     }
 
     @Override
