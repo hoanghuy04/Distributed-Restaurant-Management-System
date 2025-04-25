@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Restaurant_Management:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="69c791a0-ffbc-44cd-871a-6bb4af8db259" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2riW32eFSjU3ceiHJ6UN0rbqCKN" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DataGenerator.executor": "Run",
+    "Application.FormLoad.executor": "Run",
+    "Application.ItemDAL.executor": "Run",
+    "Application.RMIClient.executor": "Debug",
+    "Application.RMIServer.executor": "Run",
+    "Application.Runner.executor": "Run",
+    "Maven.Restaurant_Management [clean].executor": "Run",
+    "Maven.Restaurant_Management [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Huyen",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/IUH/HKII-2024-2025/LTPT/Distributed-Restaurant-Management-System/Distributed-Restaurant-Management-System-Server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "fileTemplates",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb",
+      "sqlserver"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IUH\HKII-2024-2025\LTPT\Distributed-Restaurant-Management-System\src\main\java\gui" />
+      <recent name="D:\IUH\HKII-2024-2025\LTPT\Distributed-Restaurant-Management-System\src\main\java\gui\staff" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.FormLoad">
+    <configuration name="DataGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="util.datafaker.DataGenerator" />
+      <module name="Restaurant_Management" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="util.datafaker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FormLoad" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="gui.FormLoad" />
+      <module name="Restaurant_Management" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ItemDAL" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="dal.ItemDAL" />
+      <module name="Restaurant_Management" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dal.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RMIClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="client.RMIClient" />
+      <module name="Restaurant_Management" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RMIServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="server.RMIServer" />
+      <module name="Restaurant_Management" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.FormLoad" />
+        <item itemvalue="Application.RMIServer" />
+        <item itemvalue="Application.DataGenerator" />
+        <item itemvalue="Application.RMIClient" />
+        <item itemvalue="Application.ItemDAL" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="69c791a0-ffbc-44cd-871a-6bb4af8db259" name="Changes" comment="" />
+      <created>1737042173042</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1737042173042</updated>
+      <workItem from="1737042174232" duration="864000" />
+      <workItem from="1737083899792" duration="876000" />
+      <workItem from="1737084818166" duration="720000" />
+      <workItem from="1737085567550" duration="2743000" />
+      <workItem from="1737091956535" duration="5261000" />
+      <workItem from="1737097376437" duration="1139000" />
+      <workItem from="1737100497293" duration="938000" />
+      <workItem from="1737109568705" duration="24000" />
+      <workItem from="1737119719645" duration="1853000" />
+      <workItem from="1737123517569" duration="484000" />
+      <workItem from="1737124748690" duration="2975000" />
+      <workItem from="1737128761360" duration="2290000" />
+      <workItem from="1737171892317" duration="480000" />
+      <workItem from="1737205777767" duration="163000" />
+      <workItem from="1737205954451" duration="8789000" />
+      <workItem from="1737257511158" duration="40288000" />
+      <workItem from="1737344198755" duration="2114000" />
+      <workItem from="1737346449247" duration="3178000" />
+      <workItem from="1737379961752" duration="13426000" />
+      <workItem from="1737447444470" duration="1822000" />
+      <workItem from="1737471698529" duration="641000" />
+      <workItem from="1737472530641" duration="3092000" />
+      <workItem from="1737519567329" duration="799000" />
+      <workItem from="1737520417249" duration="47000" />
+      <workItem from="1737525729535" duration="4708000" />
+      <workItem from="1737533158406" duration="1039000" />
+      <workItem from="1737727640944" duration="477000" />
+      <workItem from="1744795494757" duration="6394000" />
+      <workItem from="1745155338371" duration="1304000" />
+      <workItem from="1745165694449" duration="22000" />
+      <workItem from="1745310586780" duration="10344000" />
+      <workItem from="1745377648282" duration="526000" />
+      <workItem from="1745385097384" duration="13091000" />
+      <workItem from="1745398584428" duration="3601000" />
+      <workItem from="1745402429074" duration="986000" />
+      <workItem from="1745403492853" duration="29000" />
+      <workItem from="1745422471585" duration="750000" />
+      <workItem from="1745423241854" duration="1255000" />
+      <workItem from="1745424565273" duration="70000" />
+      <workItem from="1745478457860" duration="265000" />
+      <workItem from="1745502039962" duration="144000" />
+      <workItem from="1745558232826" duration="617000" />
+      <workItem from="1745561397672" duration="609000" />
+      <workItem from="1745571248995" duration="2033000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="2d813f76-ed6f-49d6-a582-671b2991266e" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="2d813f76-ed6f-49d6-a582-671b2991266e">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/Huy" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/gui/staff/OrderGUI.java</url>
+          <line>1313</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/gui/staff/OrderGUI.java</url>
+          <line>1446</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/gui/staff/OrderGUI.java</url>
+          <line>1251</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/gui/staff/OrderGUI.java</url>
+          <line>1253</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/gui/staff/OrderGUI.java</url>
+          <line>1236</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="&#10;public class OrderBUSImpl extends " />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

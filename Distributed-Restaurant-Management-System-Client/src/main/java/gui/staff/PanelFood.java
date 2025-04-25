@@ -65,7 +65,6 @@ public class PanelFood extends javax.swing.JPanel {
             lblImgItem.setIcon(ResizeImage.resizeImage(new ImageIcon(getClass().getResource("/img/item/" + item.getImg())), dialog.getWidth(), 300));
         }
         setLblNameItem(FormatTextUlti.formatTextWithLineBreaks(item.getName(), 50, "center"));
-        System.out.println(item.getTopDiscountPercentage());
         if (item.getTopDiscountPercentage() > 0) {
             lblDiscountItem.setText(DoubleFormatUlti.format(item.getTopDiscountPercentage() * 100) + "%");
             lblPriceItem.setText("<html><body><s style='color: rgba(0, 0, 0, 0.5); font-size: 10px; font-weight:0'>"
