@@ -86,7 +86,7 @@ public class PromotionBUSImpl extends UnicastRemoteObject implements bus.Promoti
     }
     
     @Override
-    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active)  throws RemoteException {
+    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String scrip, Double discount, Double minPrice, List<CustomerLevelEnum> rank, PromotionTypeEnum type, boolean active)  throws RemoteException {
         return promotionDAL.getPromotionsWithKeywordfit(startDate, endDate, scrip, discount, minPrice, rank, type, active);
     }
 }

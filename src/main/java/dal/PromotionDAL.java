@@ -106,7 +106,7 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
     }
 
 
-    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String des, Double discount, Double minPrice, String rank, PromotionTypeEnum type, boolean active) {
+    public List<PromotionEntity> getPromotionsWithKeywordfit(LocalDateTime startDate, LocalDateTime endDate, String des, Double discount, Double minPrice, List<CustomerLevelEnum> rank, PromotionTypeEnum type, boolean active) {
         StringBuilder queryBuilder = new StringBuilder("SELECT p FROM PromotionEntity p WHERE 1=1 ");
         Map<String, Object> parameters = new HashMap<>();
 
@@ -123,16 +123,18 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
             parameters.put("description", "%" + des + "%");
         }
         if (discount != null) {
-            queryBuilder.append(" AND p.discountRate = :discountRate");
-            parameters.put("discountRate", discount);
+            queryBuilder.append(" AND p.discountPercentage = :discountPercentage");
+            parameters.put("discountPercentage", discount);
+
         }
         if (minPrice != null) {
             queryBuilder.append(" AND p.minPrice = :minPrice");
             parameters.put("minPrice", minPrice);
         }
-        if (rank != null && !rank.trim().isEmpty()) {
-            queryBuilder.append(" AND p.applicableCustomerLevels = :applicableCustomerLevels");
+        if (rank != null && !rank.isEmpty()) {
+            queryBuilder.append(" AND p.customerLevels = :applicableCustomerLevels");
             parameters.put("applicableCustomerLevels", rank);
+
         }
         if (type != null) {
             queryBuilder.append(" AND p.promotionType = :promotionType");

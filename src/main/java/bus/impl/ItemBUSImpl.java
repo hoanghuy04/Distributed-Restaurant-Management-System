@@ -99,14 +99,15 @@ public class ItemBUSImpl extends UnicastRemoteObject implements bus.ItemBUS {
                 .filter(od -> nameItems.contains(od.getItem().getCategory().getName()))
                 .collect(Collectors.groupingBy(od -> {
                     String categoryName = od.getItem().getCategory().getName();
-                    if (categoryName.equals("Salad") || categoryName.equals("Khai vị"))  {
-                        return "Khai vị & Salad";
+                    if (categoryName.equals("Salad") || categoryName.equals("Khai Vị"))  {
+                        return "Khai Vị & Salad";
                     }
                     if (categoryName.matches(".*Pizza.*")) {
                         return "Pizza";
                     }
                     return categoryName;
                 }, Collectors.summingDouble(od -> (od.getLineTotal()) - od.getDiscount())));
+        System.out.println(mapItemRevenue);
         return mapItemRevenue;
     }
 
