@@ -53,7 +53,13 @@ public class EmployeeBUSImpl extends UnicastRemoteObject implements bus.Employee
 
     @Override
     public EmployeeEntity checkLogin(String username, String password)  throws RemoteException {
-        return employeeDAL.findAll().stream().filter(e -> e.getEmployeeId().equals(username) && varifyPassword(password, e.getPassword()))
+        return employeeDAL.findAll().stream().filter(e -> {
+                    try {
+                        return e.getEmployeeId().equals(username) && varifyPassword(password, e.getPassword());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                })
                 .findFirst()
                 .orElse(null);
     }
