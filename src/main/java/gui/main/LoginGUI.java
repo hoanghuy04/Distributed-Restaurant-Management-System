@@ -17,6 +17,8 @@ import gui.custom.textfield.PasswordField;
 import gui.staff.DialogPasswordRecover;
 import gui.staff.MainGUI;
 import gui.staff.OverviewGUI;
+
+import java.rmi.RemoteException;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,7 +44,7 @@ public class LoginGUI extends javax.swing.JFrame {
      * Creates new form LonginGUI
      *
      */
-    public LoginGUI() {
+    public LoginGUI() throws Exception {
         empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
         initComponents();
         encryptPassword();
@@ -58,7 +60,11 @@ public class LoginGUI extends javax.swing.JFrame {
         actionMap.put("xacNhan", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                btnLoginActionPerformed(null);
+                try {
+                    btnLoginActionPerformed(null);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -79,7 +85,7 @@ public class LoginGUI extends javax.swing.JFrame {
         this.txtPass.setText(txtPass);
     }
 
-    private void encryptPassword() {
+    private void encryptPassword() throws Exception {
         List<EmployeeEntity> list = empBUS.getAllEntities(); // Thêm dấu ngoặc tròn
         for (EmployeeEntity e : list) {
             if (!isBCryptHash(e.getPassword())) { // Kiểm tra định dạng BCrypt
@@ -188,7 +194,11 @@ public class LoginGUI extends javax.swing.JFrame {
         });
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
+                try {
+                    btnLoginActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -211,7 +221,11 @@ public class LoginGUI extends javax.swing.JFrame {
         });
         txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPassKeyReleased(evt);
+                try {
+                    txtPassKeyReleased(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -333,7 +347,7 @@ public class LoginGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnLoginActionPerformed
         String name = txtName.getText().trim();
         String id = new String(txtPass.getPassword());
         if (name.length() == 0) {
@@ -389,7 +403,7 @@ public class LoginGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_chkShowIdActionPerformed
 
-    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyReleased
+    private void txtPassKeyReleased(java.awt.event.KeyEvent evt) throws Exception {//GEN-FIRST:event_txtPassKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btnLoginActionPerformed(null);
         }
