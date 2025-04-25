@@ -43,9 +43,11 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
     }
 
     @Override
-    public boolean insert(EmployeeEntity t) {
+    public EmployeeEntity insert(EmployeeEntity t) {
         t.setEmployeeId(IDGeneratorUtility.generateIDWithCreatedDate("Emp", "employees", "employee_id", "created_date", em, LocalDateTime.now()));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+
+        return t;
     }
     @Override
     public boolean update(EmployeeEntity t) {

@@ -53,7 +53,7 @@ public class CustomerEntity extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private CustomerLevelEnum customerLevel;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
 

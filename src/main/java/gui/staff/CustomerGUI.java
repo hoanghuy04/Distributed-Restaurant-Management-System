@@ -6,29 +6,19 @@ package gui.staff;
 
 import bus.CustomerBUS;
 import common.Constants;
-import common.LevelCustomer;
-import dal.connectDB.ConnectDB;
-import model.CategoryEntity;
-import model.CustomerEntity;
-import model.ItemEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import model.CustomerEntity;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import raven.toast.Notifications;
+import util.DatetimeFormatterUtil;
+import util.ResizeImage;
+
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import raven.toast.Notifications;
-import util.ResizeImage;
-import gui.custom.RoundedButton;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -36,16 +26,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import util.DatetimeFormatterUtil;
+import java.util.List;
 
 /**
  *
@@ -66,11 +50,11 @@ public class CustomerGUI extends javax.swing.JPanel {
     /**
      * Creates new form CustomerGUI
      */
-    public CustomerGUI() {
+    public CustomerGUI() throws Exception {
         initComponents();
     }
 
-    private void customTable() {
+    private void customTable() throws Exception {
         headers = new String[]{"Mã", "Tên", "Số điện thoại", "Email", "Ngày sinh", "Điểm thưởng", "Hạng", "Địa chỉ"};
         tableWidth = Arrays.asList(100, 100, 100, 200, 100, 100, 100, 200);
         this.tableDesign = new TableDesign(headers, tableWidth);
@@ -86,7 +70,7 @@ public class CustomerGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadData() {
+    private void loadData() throws Exception {
         customerBUS.getAllEntities().stream()
                 .forEach(c -> {
                     FillOneRow(c);
@@ -123,7 +107,7 @@ public class CustomerGUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws Exception {
 
         dateChooser1 = new gui.custom.datechooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
@@ -186,7 +170,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportActionPerformed(evt);
+                try {
+                    btnExportActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -467,7 +455,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         btnUpdate.setPreferredSize(new java.awt.Dimension(150, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnUpdate);
@@ -477,7 +469,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         btnSearch.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnSearch);
@@ -487,7 +483,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         btnSearch1.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearch1ActionPerformed(evt);
+                try {
+                    btnSearch1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnSearch1);
@@ -545,7 +545,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         customTable();
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                try {
+                    tableMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jScrollPane3.setViewportView(table);
@@ -594,7 +598,7 @@ public class CustomerGUI extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnExportActionPerformed
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH-mm");
         exportItemsToExcel(customerBUS.getAllEntities(), Constants.REPORT_FILE_PATH + "/customers/" + "report_customers_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
         JOptionPane.showMessageDialog(
@@ -641,10 +645,12 @@ public class CustomerGUI extends javax.swing.JPanel {
             }
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws  Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
             c.setEmail(txtEmail.getText().trim());
             c.setPhone(txtPhoneNumber.getText().trim());
@@ -679,7 +685,7 @@ public class CustomerGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         String name = txtName.getText();
         String phoneNumber = txtPhoneNumber.getText();
         String email = txtEmail.getText();
@@ -699,7 +705,7 @@ public class CustomerGUI extends javax.swing.JPanel {
                 });
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
+    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearch1ActionPerformed
         clear();
         defaultTableModel.setRowCount(0);
         customerBUS.getAllEntities()
@@ -708,7 +714,7 @@ public class CustomerGUI extends javax.swing.JPanel {
                 });
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tableMouseClicked
 
         int row = table.getSelectedRow(); // Lấy chỉ số hàng đã chọn
 

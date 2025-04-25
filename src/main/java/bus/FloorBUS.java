@@ -1,46 +1,28 @@
 package bus;
 
-import dal.FloorDAL;
 import model.FloorEntity;
-import jakarta.persistence.EntityManager;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Optional;
 
-public class FloorBUS implements BaseBUS<FloorEntity, String> {
-    private FloorDAL floorDAL;
-
-    public FloorBUS(EntityManager entityManager) {
-        this.floorDAL = new FloorDAL(entityManager);
-    }
+public interface FloorBUS extends BaseBUS<FloorEntity, String>, Remote {
+    @Override
+    FloorEntity insertEntity(FloorEntity floor) throws RemoteException;
 
     @Override
-    public boolean insertEntity(FloorEntity floor) {
-        return floorDAL.insert(floor);
-    }
+    boolean updateEntity(FloorEntity floor) throws RemoteException;
 
     @Override
-    public boolean updateEntity(FloorEntity floor) {
-        return floorDAL.update(floor);
-    }
+    boolean deleteEntity(String id) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(String id) {
-        return floorDAL.deleteById(id);
-    }
+    FloorEntity getEntityById(String id) throws RemoteException;
 
     @Override
-    public FloorEntity getEntityById(String id) {
-        return floorDAL.findById(id);
-    }
-    @Override
-    public List<FloorEntity> getAllEntities() {
-        return floorDAL.findAll();
-    }
-     public FloorEntity findByName(String name) {
-         return floorDAL.findByName(name);
-     }
-     
-    public List<FloorEntity> getTablesWithKeyword(Integer capacity, String name) {
-        return floorDAL.getTablesWithKeyword(capacity, name);
-    }        
+    List<FloorEntity> getAllEntities() throws RemoteException;
+
+    FloorEntity findByName(String name) throws RemoteException;
+
+    List<FloorEntity> getTablesWithKeyword(Integer capacity, String name) throws RemoteException;
 }

@@ -6,13 +6,15 @@ package dto;
 
 import model.ItemEntity;
 import model.ItemToppingEntity;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Trần Ngọc Huyền
  */
-public class ItemCartDTO {
+public class ItemCartDTO implements Serializable {
 
     private ItemEntity item;
     private ItemToppingEntity itemTopping;

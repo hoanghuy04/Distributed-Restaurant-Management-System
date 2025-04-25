@@ -18,6 +18,7 @@ import lombok.ToString;
 import model.enums.SizeEnum;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -72,7 +73,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
     private CategoryEntity category;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<PromotionDetailEntity> promotionDetailEntities;
 
     @ToString.Exclude
@@ -80,7 +81,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
     private Set<ItemToppingEntity> itemToppings = new HashSet<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private Set<PromotionDetailEntity> promotionDetails;
 
     public ItemEntity() {
@@ -135,7 +136,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
         this.stockQuantity = stockQuantity;
         this.description = description;
         this.active = active;
-        this.sellingPrice = sellingPrice;
+        setSellingPrice();
     }
 
     public void setSellingPrice() {
@@ -174,6 +175,17 @@ public class ItemEntity extends BaseEntity implements Serializable {
     }
 
     public double getTopDiscountPercentage() {
-        return 0;
+        if(promotionDetails == null) {
+            return 0;
+        } else {
+            return promotionDetails.stream()
+                    .filter(x -> x.getPromotion().getStartedDate() != null
+                            && x.getPromotion().getEndedDate() != null
+                            && x.getPromotion().getStartedDate().isBefore(LocalDateTime.now())
+                            && x.getPromotion().getEndedDate().isAfter(LocalDateTime.now()))
+                    .mapToDouble(p -> p.getPromotion().getDiscountPercentage())
+                    .max()
+                    .orElse(0);
+        }
     }
 }

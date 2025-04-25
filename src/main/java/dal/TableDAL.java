@@ -41,9 +41,10 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
     }
 
     @Override
-    public boolean insert(TableEntity t) {
+    public TableEntity insert(TableEntity t) {
         t.setTableId(IDGeneratorUtility.generateSimpleID(t.getFloor().getFloorId() + "T", "tables", "table_id", em));
-        return executeTransaction(() -> em.persist(t));
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override
@@ -86,7 +87,8 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
                 + "SELECT o.table.tableId FROM OrderEntity o "
                 + "WHERE o.reservationTime <= :reservationDateTime "
                 + "AND o.expectedCompletionTime >= :reservationDateTime "
-                + "AND o.reservationStatus IN ('PENDING', 'RECEIVED'))";
+                + "AND o.reservationStatus IN ('PENDING', 'RECEIVED') "
+                + " AND o.paymentStatus = 'UNPAID')";
 
         Query query = em.createQuery(jpql, TableEntity.class);
 

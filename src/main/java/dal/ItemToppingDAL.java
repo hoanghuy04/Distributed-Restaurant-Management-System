@@ -45,8 +45,9 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, ItemToppingId>
     }
 
     @Override
-    public boolean insert(ItemToppingEntity t) {
-        return executeTransaction(() -> em.persist(t));
+    public ItemToppingEntity insert(ItemToppingEntity t) {
+        executeTransaction(() -> em.persist(t));
+        return t;
     }
 
     @Override

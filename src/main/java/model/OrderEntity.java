@@ -65,7 +65,7 @@ public class OrderEntity extends BaseEntity implements Serializable {
     private double deposit;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
@@ -110,7 +110,7 @@ public class OrderEntity extends BaseEntity implements Serializable {
     private ReservationStatusEnum reservationStatus;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OrderDetailEntity> orderDetails;
 
     @Override

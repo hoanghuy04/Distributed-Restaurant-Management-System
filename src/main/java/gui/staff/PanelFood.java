@@ -5,24 +5,19 @@
 package gui.staff;
 
 import common.Constants;
-import model.ItemEntity;
 import gui.manager.PromotionGUI;
 import gui.manager.ToppingGUI;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+import model.ItemEntity;
+import util.DoubleFormatUlti;
+import util.FormatTextUlti;
+import util.ResizeImage;
+
+import javax.swing.*;
+import javax.swing.border.StrokeBorder;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import util.*;
-import javax.swing.border.StrokeBorder;
 
 /**
  *
@@ -70,6 +65,7 @@ public class PanelFood extends javax.swing.JPanel {
             lblImgItem.setIcon(ResizeImage.resizeImage(new ImageIcon(getClass().getResource("/img/item/" + item.getImg())), dialog.getWidth(), 300));
         }
         setLblNameItem(FormatTextUlti.formatTextWithLineBreaks(item.getName(), 50, "center"));
+        System.out.println(item.getTopDiscountPercentage());
         if (item.getTopDiscountPercentage() > 0) {
             lblDiscountItem.setText(DoubleFormatUlti.format(item.getTopDiscountPercentage() * 100) + "%");
             lblPriceItem.setText("<html><body><s style='color: rgba(0, 0, 0, 0.5); font-size: 10px; font-weight:0'>"
@@ -132,14 +128,14 @@ public class PanelFood extends javax.swing.JPanel {
     private void initComponents() {
 
         roundedPanel4 = new gui.custom.RoundedPanel();
-        lblPriceItem = new javax.swing.JLabel();
-        lblNameItem = new javax.swing.JLabel();
+        lblPriceItem = new JLabel();
+        lblNameItem = new JLabel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         roundedPanel1 = new gui.custom.RoundedPanel();
-        lblImgItem = new javax.swing.JLabel();
-        lblDiscountItem = new javax.swing.JLabel();
+        lblImgItem = new JLabel();
+        lblDiscountItem = new JLabel();
 
-        setPreferredSize(new java.awt.Dimension(200, 240));
+        setPreferredSize(new Dimension(200, 240));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
@@ -147,8 +143,8 @@ public class PanelFood extends javax.swing.JPanel {
         });
         setLayout(new java.awt.BorderLayout());
 
-        roundedPanel4.setBackground(new java.awt.Color(241, 241, 241));
-        roundedPanel4.setPreferredSize(new java.awt.Dimension(212, 80));
+        roundedPanel4.setBackground(new Color(241, 241, 241));
+        roundedPanel4.setPreferredSize(new Dimension(212, 80));
         roundedPanel4.setLayout(new java.awt.GridLayout(2, 1));
 
         lblPriceItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -166,15 +162,15 @@ public class PanelFood extends javax.swing.JPanel {
 
         add(roundedPanel4, java.awt.BorderLayout.SOUTH);
 
-        jLayeredPane1.setPreferredSize(new java.awt.Dimension(200, 300));
+        jLayeredPane1.setPreferredSize(new Dimension(200, 300));
 
         roundedPanel1.setLayout(new java.awt.BorderLayout());
         roundedPanel1.add(lblImgItem, java.awt.BorderLayout.CENTER);
 
         lblDiscountItem.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblDiscountItem.setForeground(new java.awt.Color(255, 255, 255));
+        lblDiscountItem.setForeground(new Color(255, 255, 255));
         lblDiscountItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDiscountItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-discount-60.png"))); // NOI18N
+        lblDiscountItem.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/icons8-discount-60.png"))); // NOI18N
         lblDiscountItem.setText("0.2%");
         lblDiscountItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -239,10 +235,10 @@ public class PanelFood extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JLabel lblDiscountItem;
-    private javax.swing.JLabel lblImgItem;
-    private javax.swing.JLabel lblNameItem;
-    private javax.swing.JLabel lblPriceItem;
+    private JLabel lblDiscountItem;
+    private JLabel lblImgItem;
+    private JLabel lblNameItem;
+    private JLabel lblPriceItem;
     private gui.custom.RoundedPanel roundedPanel1;
     private gui.custom.RoundedPanel roundedPanel4;
     // End of variables declaration//GEN-END:variables

@@ -13,7 +13,7 @@ import javax.swing.border.MatteBorder;
  *
  * @author hoang
  */
-public class PanelReservationByDate extends javax.swing.JPanel {
+public class PanelReservationByDate extends JPanel {
 
     private TabReservation tabReservation;
 
@@ -71,9 +71,9 @@ public class PanelReservationByDate extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelReservations = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        lblDate = new javax.swing.JLabel();
+        panelReservations = new JPanel();
+        jPanel2 = new JPanel();
+        lblDate = new JLabel();
 
         panelReservations.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 25, 25));
 
@@ -121,8 +121,8 @@ public class PanelReservationByDate extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lblDate;
-    private javax.swing.JPanel panelReservations;
+    private JPanel jPanel2;
+    private JLabel lblDate;
+    private JPanel panelReservations;
     // End of variables declaration//GEN-END:variables
 }

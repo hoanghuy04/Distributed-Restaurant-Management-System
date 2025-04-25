@@ -40,7 +40,7 @@ public class PanelTable extends javax.swing.JPanel {
     
     private TableBUS tableBUS;
     
-    public PanelTable(TableEntity table, OrderGUI orderGUI) {
+    public PanelTable(TableEntity table, OrderGUI orderGUI) throws Exception {
         initComponents();
         setOpaque(false);
         this.table = table;
@@ -83,7 +83,11 @@ public class PanelTable extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(200, 200));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
+                try {
+                    formMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -104,7 +108,7 @@ public class PanelTable extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+    private void formMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_formMouseClicked
         List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
@@ -139,7 +143,7 @@ public class PanelTable extends javax.swing.JPanel {
         Application.app.showForm(orderGUI);
     }
     
-    public void fillContent() {
+    public void fillContent() throws Exception {
         List<OrderEntity> list = orderBUS.getCurrentOrdersAndReservations(LocalDateTime.now(), 0);
         o = list.stream().filter(x -> x.getTable().getTableId().equalsIgnoreCase(table.getTableId())).findFirst().orElse(null);
         
@@ -148,6 +152,7 @@ public class PanelTable extends javax.swing.JPanel {
         }
         
         ImageIcon icon = new ImageIcon(getClass().getResource("/img/icon/png/available-table.png"));
+        System.out.println(this.orderGUI.getCombinedTables());
         
         if (o != null) {
             o.getCombinedTables().stream()

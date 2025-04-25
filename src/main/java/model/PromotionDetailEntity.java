@@ -23,13 +23,13 @@ public class PromotionDetailEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "promotion_id", nullable = false)
     private PromotionEntity promotion;
 
     @Id
     @EqualsAndHashCode.Include
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private ItemEntity item;
 }

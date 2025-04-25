@@ -2,6 +2,7 @@ package gui.custom;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -20,7 +21,11 @@ public class PanelView extends javax.swing.JPanel {
         cmdView.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                event.onView(row);
+                try {
+                    event.onView(row);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

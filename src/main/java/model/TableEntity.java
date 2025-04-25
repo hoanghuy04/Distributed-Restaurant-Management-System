@@ -38,7 +38,7 @@ public class TableEntity implements Serializable {
     @ToString.Exclude
     private FloorEntity floor;
 
-    @OneToMany(mappedBy = "table", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "table", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private Set<OrderEntity> orders;
 

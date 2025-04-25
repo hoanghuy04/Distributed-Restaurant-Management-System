@@ -156,28 +156,36 @@ public class DialogReceipt extends javax.swing.JDialog {
         };
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new Color(255, 255, 255));
         setName("Bill"); // NOI18N
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new Color(255, 255, 255));
 
-        roundedButton1.setBackground(new java.awt.Color(204, 204, 204));
-        roundedButton1.setForeground(new java.awt.Color(102, 102, 102));
+        roundedButton1.setBackground(new Color(204, 204, 204));
+        roundedButton1.setForeground(new Color(102, 102, 102));
         roundedButton1.setText("Hủy");
-        roundedButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        roundedButton1.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         roundedButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roundedButton1ActionPerformed(evt);
+                try {
+                    roundedButton1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         roundedButton2.setBackground(Constants.COLOR_PRIMARY);
-        roundedButton2.setForeground(new java.awt.Color(255, 255, 255));
+        roundedButton2.setForeground(new Color(255, 255, 255));
         roundedButton2.setText("In hóa đơn");
-        roundedButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        roundedButton2.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
         roundedButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roundedButton2ActionPerformed(evt);
+                try {
+                    roundedButton2ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -204,9 +212,9 @@ public class DialogReceipt extends javax.swing.JDialog {
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        panelDeceiptDetail.setBackground(new java.awt.Color(255, 255, 255));
-        panelDeceiptDetail.setMinimumSize(new java.awt.Dimension(600, 500));
-        panelDeceiptDetail.setPreferredSize(new java.awt.Dimension(600, 500));
+        panelDeceiptDetail.setBackground(new Color(255, 255, 255));
+        panelDeceiptDetail.setMinimumSize(new Dimension(600, 500));
+        panelDeceiptDetail.setPreferredSize(new Dimension(600, 500));
         jScrollPane1.setViewportView(panelDeceiptDetail);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,12 +240,12 @@ public class DialogReceipt extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
+    private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_roundedButton1ActionPerformed
         mainGUI.loadMainGUI();
         this.dispose();
     }//GEN-LAST:event_roundedButton1ActionPerformed
 
-    private void roundedButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundedButton2ActionPerformed
+    private void roundedButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_roundedButton2ActionPerformed
         mainGUI.loadMainGUI();
         this.dispose();
     }//GEN-LAST:event_roundedButton2ActionPerformed

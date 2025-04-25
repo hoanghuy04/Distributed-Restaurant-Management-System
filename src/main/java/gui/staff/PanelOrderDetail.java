@@ -146,9 +146,9 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         lblDiscount = new javax.swing.JLabel();
         btnPlus = new gui.custom.RoundedButton();
         btnMinus = new gui.custom.RoundedButton();
-        txtQty = new gui.custom.RoundedTextField();
+        txtQty = new RoundedTextField();
         btnDelete = new gui.custom.RoundedButton();
-        txtDescription = new gui.custom.RoundedTextField();
+        txtDescription = new RoundedTextField();
         lblToppingName = new javax.swing.JLabel();
 
         setBackground(Constants.COLOR_BG);
@@ -188,7 +188,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnPlus.setPreferredSize(new java.awt.Dimension(40, 40));
         btnPlus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPlusActionPerformed(evt);
+                try {
+                    btnPlusActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -198,7 +202,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnMinus.setPreferredSize(new java.awt.Dimension(40, 40));
         btnMinus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMinusActionPerformed(evt);
+                try {
+                    btnMinusActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -217,7 +225,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
             }
         });
         txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtQtyKeyReleased(evt);
             }
         });
@@ -226,7 +234,11 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         btnDelete.setPreferredSize(new java.awt.Dimension(40, 40));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                try {
+                    btnDeleteActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -237,7 +249,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
             }
         });
         txtDescription.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtDescriptionKeyReleased(evt);
             }
         });
@@ -309,23 +321,23 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnMinusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinusActionPerformed
+    private void btnMinusActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnMinusActionPerformed
         updateQty(-1, -1);
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnMinusActionPerformed
 
-    private void btnPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlusActionPerformed
+    private void btnPlusActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnPlusActionPerformed
         updateQty(1, -1);
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnPlusActionPerformed
 
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnDeleteActionPerformed
         deleteItemCart();
         orderGUI.calcPrice();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+    private void txtQtyKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txtQtyFocusLost(null);
         }
@@ -341,7 +353,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtQtyMouseClicked
 
-    private void txtDescriptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyReleased
+    private void txtDescriptionKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtDescriptionKeyReleased
         cartDTO.findItem(itemCartDTO).setDescription(txtDescription.getText().trim());
     }//GEN-LAST:event_txtDescriptionKeyReleased
 
@@ -361,7 +373,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
                 updateQty(0, newQty);
                 orderGUI.calcPrice();
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số nguyên hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
             txtQty.setText(String.valueOf(qty));
         }
@@ -440,7 +452,7 @@ public class PanelOrderDetail extends javax.swing.JPanel {
     private javax.swing.JLabel lblSTT;
     private javax.swing.JLabel lblSellPrice;
     private javax.swing.JLabel lblToppingName;
-    private gui.custom.RoundedTextField txtDescription;
-    private gui.custom.RoundedTextField txtQty;
+    private RoundedTextField txtDescription;
+    private RoundedTextField txtQty;
     // End of variables declaration//GEN-END:variables
 }

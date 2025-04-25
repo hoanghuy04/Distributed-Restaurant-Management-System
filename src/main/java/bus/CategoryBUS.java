@@ -1,53 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package bus;
 
-import dal.CategoryDAL;
 import model.CategoryEntity;
-import jakarta.persistence.EntityManager;
+
+import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- *
- * @author pc
- */
-public class CategoryBUS implements BaseBUS<CategoryEntity, String>{
-    private CategoryDAL categoryDAL;
-    public CategoryBUS(EntityManager entityManager){
-        this.categoryDAL = new CategoryDAL(entityManager);
-    }
+public interface CategoryBUS extends BaseBUS<CategoryEntity, String> {
+    @Override
+    CategoryEntity insertEntity(CategoryEntity category) throws RemoteException;
 
     @Override
-    public boolean insertEntity(CategoryEntity category) {
-        return categoryDAL.insert(category);
-    }
+    boolean updateEntity(CategoryEntity category) throws RemoteException;
 
     @Override
-    public boolean updateEntity(CategoryEntity category) {
-        return categoryDAL.update(category);
-    }
+    boolean deleteEntity(String id) throws RemoteException;
 
     @Override
-    public boolean deleteEntity(String id) {
-        return categoryDAL.deleteById(id);
-    }
-    
-    
+    CategoryEntity getEntityById(String id) throws RemoteException;
 
     @Override
-    public CategoryEntity getEntityById(String id) {
-        return categoryDAL.findById(id);
-    }
+    List<CategoryEntity> getAllEntities() throws RemoteException;
 
-    @Override
-    public List<CategoryEntity> getAllEntities() {
-        return categoryDAL.findAll();
-    }
-    
-    public CategoryEntity findByName(String name) {
-        return categoryDAL.findByName(name);
-    }
-
+    CategoryEntity findByName(String name) throws RemoteException;
 }

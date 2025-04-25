@@ -5,25 +5,25 @@
 package gui.manager;
 
 import bus.OrderBUS;
+import bus.impl.OrderBUSImpl;
 import common.Constants;
 import dal.connectDB.ConnectDB;
+import gui.FormLoad;
 import gui.custom.TableDesign;
 import gui.custom.chart.ModelChart;
-import java.awt.Color;
-import java.util.ArrayList;
+
+import java.lang.Exception;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JTable;
+
 import util.DoubleFormatUlti;
-import common.Constants;
 import gui.custom.chart.Chart;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 import java.time.format.DateTimeFormatter;
-import javax.management.Notification;
-import javax.swing.JOptionPane;
+
 import raven.toast.Notifications;
 
 /**
@@ -38,8 +38,8 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
      */
     private TableDesign tableDesign;
     private OrderBUS orderBUS;
-    public RevenueStatsGUI() {
-        orderBUS = new OrderBUS(ConnectDB.getEntityManager());
+    public RevenueStatsGUI() throws Exception {
+        orderBUS = FormLoad.orderBUS;
         String headers[] = {"Mã hóa đơn","Khách hàng","Nhân viên","Ngày lập","Tổng tiền"};
         List<Integer> tableWidth = Arrays.asList(50,80,80,120,150);
         tableDesign = new TableDesign(headers, tableWidth);
@@ -136,7 +136,11 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         btnThongKe.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         btnThongKe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThongKeActionPerformed(evt);
+                try {
+                    btnThongKeActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -340,7 +344,11 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         comboStats.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Hôm trước", "7 ngày trước", "30 ngày trước", "Năm nay", "Năm trước" }));
         comboStats.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboStatsItemStateChanged(evt);
+                try {
+                    comboStatsItemStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -456,7 +464,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_endedDayActionPerformed
 
-    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboStatsItemStateChanged
+    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_comboStatsItemStateChanged
         String selectedItem = comboStats.getSelectedItem().toString(); 
         if(selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
@@ -503,7 +511,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboStatsItemStateChanged
 
-    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThongKeActionPerformed
+    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnThongKeActionPerformed
         LocalDate startedDate = LocalDate.parse(startedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(endedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if (endedDate.isAfter(LocalDate.now())) {
@@ -541,7 +549,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnThongKeActionPerformed
    
-    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) {
+    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         stats.removeAll();
         Chart chart = new Chart();
         stats.add(chart);
@@ -550,7 +558,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         stats.revalidate();
     }
 
-    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) {
+    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         chart.clear();
 
         if (year != null) {

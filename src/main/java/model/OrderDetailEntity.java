@@ -37,19 +37,19 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id", nullable = false)
     private ItemEntity item;
 
     @Id
     @EqualsAndHashCode.Include
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
     @Id
     @EqualsAndHashCode.Include
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "topping_id", nullable = false)
     private ToppingEntity topping;
 
@@ -92,8 +92,7 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
 
 
     public void setDiscount() {
-//        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
-        this.discount = 0;
+        this.discount = item.getSellingPrice() * item.getTopDiscountPercentage() * quantity;
     }
 
 }

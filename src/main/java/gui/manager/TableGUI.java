@@ -4,17 +4,18 @@
  */
 package gui.manager;
 
-import bus.FloorBUS;
-import bus.TableBUS;
-import model.FloorEntity;
-import model.TableEntity;
-import gui.FormLoad;
+import bus.*;
 import gui.custom.TableDesign;
+import model.*;
+import gui.*;
+
+import java.lang.Exception;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
 import model.enums.TableStatusEnum;
 import util.NumberUltis;
 
@@ -34,14 +35,14 @@ public class TableGUI extends javax.swing.JPanel {
     /**
      * Creates new form TableGUI
      */
-    public TableGUI() {
+    public TableGUI() throws Exception {
         tableBUS = FormLoad.tableBUS;
         floorBUS = FormLoad.floorBUS;
         tbl = new TableEntity();
         initComponents();
     }
 
-    private void customTable() {
+    private void customTable() throws Exception {
         String[] headers = {"Mã bàn", "Mã tầng", "Tên bàn", "Sức chứa", "Trạng thái"};
         List<Integer> tableWidth = Arrays.asList(100, 100, 100, 100, 100);
         tableDesign = new TableDesign(headers, tableWidth);
@@ -53,7 +54,7 @@ public class TableGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadData() {
+    private void loadData() throws Exception {
         tableModel.setRowCount(0);
         List<TableEntity> tabs = tableBUS.getAllEntities();
         floorBUS.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
@@ -71,7 +72,7 @@ public class TableGUI extends javax.swing.JPanel {
         txtCapacity.setText("");
     }
     
-    private TableEntity getTable() {
+    private TableEntity getTable() throws Exception {
         String capacityStr = txtCapacity.getText();
         String name = txtName.getText();
         String floorStr = cbbFloor.getSelectedItem().toString();
@@ -92,7 +93,7 @@ public class TableGUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws Exception {
 
         panelInfo = new javax.swing.JPanel();
         panelImgTbl = new javax.swing.JPanel();
@@ -157,7 +158,11 @@ public class TableGUI extends javax.swing.JPanel {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 50));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         panelEdit.add(btnAdd);
@@ -167,7 +172,11 @@ public class TableGUI extends javax.swing.JPanel {
         btnUpdate.setPreferredSize(new java.awt.Dimension(150, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         panelEdit.add(btnUpdate);
@@ -177,7 +186,11 @@ public class TableGUI extends javax.swing.JPanel {
         btnSearch.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         panelEdit.add(btnSearch);
@@ -295,7 +308,7 @@ public class TableGUI extends javax.swing.JPanel {
         clear();
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         TableEntity tableNew = getTable();
         tableBUS.insertEntity(tableNew);
         addOneLine(tableNew);
@@ -303,7 +316,7 @@ public class TableGUI extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         int row = table.getSelectedRow();
         if (row == -1) {
             return;
@@ -328,7 +341,7 @@ public class TableGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         int Capacity = 0;
         try {
             String capacityText = txtCapacity.getText().trim();

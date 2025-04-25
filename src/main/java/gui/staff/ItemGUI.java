@@ -7,7 +7,6 @@ package gui.staff;
 import bus.CategoryBUS;
 import bus.ItemBUS;
 import common.Constants;
-import dal.connectDB.ConnectDB;
 import model.CategoryEntity;
 import model.ItemEntity;
 import gui.FormLoad;
@@ -16,6 +15,7 @@ import java.awt.Image;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -25,8 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import raven.toast.Notifications;
 import util.ResizeImage;
-import gui.custom.RoundedButton;
-import java.awt.Desktop;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -65,12 +64,12 @@ public class ItemGUI extends javax.swing.JPanel {
     /**
      * Creates new form ItemGUI
      */
-    public ItemGUI() {
+    public ItemGUI() throws Exception {
         initComponents();
         this.i = new ItemEntity();
     }
 
-    private void customTable() {
+    private void customTable() throws Exception {
         headers = new String[]{"Mã", "Tên", "Nhóm hàng", "Giá vốn", "Giá bán", "Số lượng", "Trạng thái", "Ảnh", "Mô tả"};
         tableWidth = Arrays.asList(100, 100, 100, 100, 100, 100, 100, 200, 200);
         this.tableDesign = new TableDesign(headers, tableWidth);
@@ -87,7 +86,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     }
 
-    private void loadData() {
+    private void loadData() throws Exception {
         categoryBUS.getAllEntities().stream()
                 .forEach(c -> {
                     cbbCategory.addItem(c.getName());
@@ -131,7 +130,7 @@ public class ItemGUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws Exception {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -185,7 +184,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnImport.setBackground(new java.awt.Color(0, 153, 51));
         btnImport.setForeground(new java.awt.Color(255, 255, 255));
-        btnImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnImport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnImport.setText("Import");
         btnImport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnImport.addActionListener(new java.awt.event.ActionListener() {
@@ -199,12 +198,16 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnExport.setBackground(new java.awt.Color(0, 153, 51));
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
-        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnExport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnExport.setText("Export");
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportActionPerformed(evt);
+                try {
+                    btnExportActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -479,7 +482,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 50));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnAdd);
@@ -499,7 +506,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnSearch.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnSearch);
@@ -509,7 +520,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnClear.setPreferredSize(new java.awt.Dimension(150, 50));
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
+                try {
+                    btnClearActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnClear);
@@ -569,7 +584,11 @@ public class ItemGUI extends javax.swing.JPanel {
         customTable();
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                try {
+                    tableMouseClicked(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jScrollPane3.setViewportView(table);
@@ -659,7 +678,7 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         String name = txtName.getText();
         String categoryId = categoryBUS.findByName(cbbCategory.getSelectedItem().toString()).getCategoryId();
         Double costPrice = txtCostPrice.getText().trim().length() != 0 ? Double.parseDouble(txtCostPrice.getText().trim()) : null;
@@ -677,7 +696,7 @@ public class ItemGUI extends javax.swing.JPanel {
         fileChooser.setDialogTitle("Chọn ảnh");
 
         // Đặt thư mục mặc định
-        fileChooser.setCurrentDirectory(new java.io.File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
+        fileChooser.setCurrentDirectory(new File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
 
         // Chỉ hiển thị các tệp hình ảnh
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
@@ -685,7 +704,7 @@ public class ItemGUI extends javax.swing.JPanel {
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            java.io.File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = fileChooser.getSelectedFile();
             ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
 
             // Resize và hiển thị ảnh trên JLabel
@@ -714,7 +733,7 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lblImgMouseClicked
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         ItemEntity itemEntity;
         if (isValidate()) {
             String name = txtName.getText();
@@ -736,7 +755,7 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_tableMouseClicked
 
         int row = table.getSelectedRow(); // Lấy chỉ số hàng đã chọn
 
@@ -775,7 +794,7 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtCostPriceKeyReleased
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnClearActionPerformed
         clear();
         defaultTableModel.setRowCount(0);
         itemBUS.getAllEntities()
@@ -784,7 +803,7 @@ public class ItemGUI extends javax.swing.JPanel {
                 });
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnExportActionPerformed
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH-mm");
         exportItemsToExcel(itemBUS.getAllEntities(), Constants.REPORT_FILE_PATH + "/items/" + "report_items_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
         
@@ -798,7 +817,11 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         importItemsToExcel().stream().forEach(i -> {
-            itemBUS.insertEntity(i);
+            try {
+                itemBUS.insertEntity(i);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
         JOptionPane.showMessageDialog(
                         null,

@@ -6,8 +6,7 @@ package dal;
 
 import common.Constants;
 import dal.connectDB.ConnectDB;
-import model.OrderEntity;
-import model.PromotionDetailEntity;
+import model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -45,10 +44,28 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
     }
 
     @Override
-    public boolean insert(OrderEntity orderEntity) {
-        orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate("O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
-        return executeTransaction(() -> em.persist(orderEntity));
+    public OrderEntity insert(OrderEntity orderEntity) {
+        executeTransaction(() -> {
+            orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate(
+                    "O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
+
+            if (orderEntity.getOrderDetails() != null) {
+                for (OrderDetailEntity detail : orderEntity.getOrderDetails()) {
+                    detail.setOrder(orderEntity);
+                    detail.setItem(detail.getItem());
+                    detail.setTopping(detail.getTopping());
+                    detail.setLineTotal();
+                    detail.setDiscount();
+                }
+            }
+
+            em.persist(orderEntity);
+        });
+
+        return orderEntity;
     }
+
+
 
     @Override
     public boolean update(OrderEntity orderEntity) {
@@ -197,6 +214,7 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
             return null;
         }
     }
+
 
     public List<OrderEntity> getOrdersByYear(int year) {
         String sql = "SELECT o from OrderEntity o where YEAR(o.reservationTime)= :year";

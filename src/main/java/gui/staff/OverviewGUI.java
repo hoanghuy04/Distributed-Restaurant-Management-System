@@ -10,11 +10,12 @@ import common.Constants;
 import gui.FormLoad;
 import gui.custom.chart.Chart;
 import gui.custom.chart.ModelChart;
+
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import util.DoubleFormatUlti;
 
@@ -22,7 +23,7 @@ import util.DoubleFormatUlti;
  *
  * @author ADMIN
  */
-public class OverviewGUI extends javax.swing.JPanel {
+public class OverviewGUI extends JPanel {
 
     private final LocalDateTime start;
     private final LocalDateTime end;
@@ -32,7 +33,7 @@ public class OverviewGUI extends javax.swing.JPanel {
     /**
      * Creates new form OverviewGUI
      */
-    public OverviewGUI() {
+    public OverviewGUI() throws Exception {
         LocalDate localDateStart = LocalDate.now();
         LocalDate localDateEnd = LocalDate.now();
         start = localDateStart.atStartOfDay();
@@ -54,45 +55,45 @@ public class OverviewGUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        main = new javax.swing.JPanel();
-        north = new javax.swing.JPanel();
-        mainNorth = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        main = new JPanel();
+        north = new JPanel();
+        mainNorth = new JPanel();
+        jPanel1 = new JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
+        jPanel6 = new JPanel();
+        jPanel7 = new JPanel();
+        jPanel8 = new JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
+        jPanel9 = new JPanel();
         lblQtyOrder = new javax.swing.JLabel();
         lblRevenue = new javax.swing.JLabel();
-        jPanel16 = new javax.swing.JPanel();
-        jPanel17 = new javax.swing.JPanel();
+        jPanel16 = new JPanel();
+        jPanel17 = new JPanel();
         jLabel11 = new javax.swing.JLabel();
-        jPanel18 = new javax.swing.JPanel();
+        jPanel18 = new JPanel();
         lblQtyOff = new javax.swing.JLabel();
         lblProfits = new javax.swing.JLabel();
-        jPanel19 = new javax.swing.JPanel();
-        jPanel20 = new javax.swing.JPanel();
+        jPanel19 = new JPanel();
+        jPanel20 = new JPanel();
         jLabel14 = new javax.swing.JLabel();
-        jPanel21 = new javax.swing.JPanel();
+        jPanel21 = new JPanel();
         lblQtyOnl = new javax.swing.JLabel();
         lblQtyCustomer = new javax.swing.JLabel();
-        southNorth = new javax.swing.JPanel();
-        center = new javax.swing.JPanel();
-        jPanel10 = new javax.swing.JPanel();
+        southNorth = new JPanel();
+        center = new JPanel();
+        jPanel10 = new JPanel();
         jLabel5 = new javax.swing.JLabel();
-        statsByHours = new javax.swing.JPanel();
-        chart1 = new gui.custom.chart.Chart();
-        south = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
+        statsByHours = new JPanel();
+        chart1 = new Chart();
+        south = new JPanel();
+        jPanel11 = new JPanel();
         jLabel6 = new javax.swing.JLabel();
-        statsByHours1 = new javax.swing.JPanel();
-        chart2 = new gui.custom.chart.Chart();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        statsByHours1 = new JPanel();
+        chart2 = new Chart();
+        jPanel2 = new JPanel();
+        jPanel5 = new JPanel();
+        jPanel4 = new JPanel();
+        jPanel3 = new JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -419,14 +420,14 @@ public class OverviewGUI extends javax.swing.JPanel {
         add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void setTextForPanel() {
+    private void setTextForPanel() throws RemoteException {
         lblRevenue.setText(""+DoubleFormatUlti.format(orderBUS.getTotalRevenue(start, end)) + " VND");
         lblProfits.setText(""+DoubleFormatUlti.format(orderBUS.getTotalRevenue(start, end) - orderBUS.getTotalCapital(start, end)) + "VND");
-        lblQtyCustomer.setText(""+orderBUS.getTotalCustomers(start, end));
-        lblQtyOrder.setText(""+orderBUS.getTotalOrder(start, end)+" đơn đã phục vụ");
+        lblQtyCustomer.setText(""+ orderBUS.getTotalCustomers(start, end));
+        lblQtyOrder.setText(""+ orderBUS.getTotalOrder(start, end)+" đơn đã phục vụ");
     }
     
-    private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
+    private void createChartByHours(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws Exception {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -435,7 +436,7 @@ public class OverviewGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
+    private void updateChartByHours(Chart chart, LocalDateTime startDate, LocalDateTime endDate) throws Exception {
         chart.clear();
         chart.addLegend("Doanh Thu", Constants.COLOR_REVENUE);
         Map<String, Double> map = orderBUS.getTotalRevenueByHours(startDate, endDate);
@@ -456,7 +457,7 @@ public class OverviewGUI extends javax.swing.JPanel {
         chart.start();
     }
     
-    private void createChartQuantity(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) {
+    private void createChartQuantity(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws Exception {
         panel.removeAll();
         Chart chart = new Chart();
         panel.add(chart);
@@ -465,7 +466,7 @@ public class OverviewGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartQuantity(Chart chart, LocalDateTime startDate, LocalDateTime endDate) {
+    private void updateChartQuantity(Chart chart, LocalDateTime startDate, LocalDateTime endDate) throws Exception {
         chart.clear();
         chart.addLegend("Số Lượng", Constants.COLOR_REVENUE);
         Map<String, Integer> map = itemBUS.getTop5ItemHaveBestQuantityForAllCategories(startDate, endDate);
@@ -473,44 +474,44 @@ public class OverviewGUI extends javax.swing.JPanel {
         chart.start();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel center;
-    private gui.custom.chart.Chart chart1;
-    private gui.custom.chart.Chart chart2;
+    private JPanel center;
+    private Chart chart1;
+    private Chart chart2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel16;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel21;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
+    private JPanel jPanel1;
+    private JPanel jPanel10;
+    private JPanel jPanel11;
+    private JPanel jPanel16;
+    private JPanel jPanel17;
+    private JPanel jPanel18;
+    private JPanel jPanel19;
+    private JPanel jPanel2;
+    private JPanel jPanel20;
+    private JPanel jPanel21;
+    private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JPanel jPanel6;
+    private JPanel jPanel7;
+    private JPanel jPanel8;
+    private JPanel jPanel9;
     private javax.swing.JLabel lblProfits;
     private javax.swing.JLabel lblQtyCustomer;
     private javax.swing.JLabel lblQtyOff;
     private javax.swing.JLabel lblQtyOnl;
     private javax.swing.JLabel lblQtyOrder;
     private javax.swing.JLabel lblRevenue;
-    private javax.swing.JPanel main;
-    private javax.swing.JPanel mainNorth;
-    private javax.swing.JPanel north;
-    private javax.swing.JPanel south;
-    private javax.swing.JPanel southNorth;
-    private javax.swing.JPanel statsByHours;
-    private javax.swing.JPanel statsByHours1;
+    private JPanel main;
+    private JPanel mainNorth;
+    private JPanel north;
+    private JPanel south;
+    private JPanel southNorth;
+    private JPanel statsByHours;
+    private JPanel statsByHours1;
     // End of variables declaration//GEN-END:variables
 }
