@@ -5,7 +5,9 @@
 package bus.impl;
 
 import bus.BaseBUS;
+import bus.OrderBUS;
 import dal.OrderDAL;
+import dal.connectDB.ConnectDB;
 import model.OrderEntity;
 import model.TableEntity;
 import jakarta.persistence.EntityManager;
@@ -336,5 +338,11 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
                 .filter(x -> x.getTotalDiscount() > 0)
                 .mapToDouble(o -> o.getTotalDiscount())
                 .sum();
+    }
+
+    public static void main(String[] args) throws Exception {
+        OrderBUS orderBUS = new OrderBUSImpl(ConnectDB.getEntityManager());
+        orderBUS.getFrequencyPromotionStatsbyDatetime(LocalDateTime.of(2025, 4, 17, 0, 0),
+                LocalDateTime.of(2025, 4, 23, 23, 59)).entrySet().forEach(System.out::println);
     }
 }

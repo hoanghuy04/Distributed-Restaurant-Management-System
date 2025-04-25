@@ -21,7 +21,7 @@ import java.util.Hashtable;
  *
  * @author pc
  */
-public class DialogQrCodeScanner extends javax.swing.JDialog {
+public class DialogQrCodeScanner extends JDialog {
 
     /**
      * Creates new form DialogQrCodeScanner
@@ -33,7 +33,7 @@ public class DialogQrCodeScanner extends javax.swing.JDialog {
     /**
      * Creates new form NewJDialog
      */
-    public DialogQrCodeScanner(java.awt.Frame parent, TabReservation par) {
+    public DialogQrCodeScanner(Frame parent, TabReservation par) {
         super(parent, true);
         p = par;
         initComponents();
@@ -49,30 +49,30 @@ public class DialogQrCodeScanner extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelWrapper = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        javax.swing.GroupLayout panelWrapperLayout = new javax.swing.GroupLayout(panelWrapper);
+        GroupLayout panelWrapperLayout = new GroupLayout(panelWrapper);
         panelWrapper.setLayout(panelWrapperLayout);
         panelWrapperLayout.setHorizontalGroup(
-            panelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            panelWrapperLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
         panelWrapperLayout.setVerticalGroup(
-            panelWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            panelWrapperLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelWrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(panelWrapper, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelWrapper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(panelWrapper, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -183,6 +183,6 @@ public class DialogQrCodeScanner extends javax.swing.JDialog {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel panelWrapper;
+    private JPanel panelWrapper;
     // End of variables declaration//GEN-END:variables
 }

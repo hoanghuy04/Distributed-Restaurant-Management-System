@@ -4,12 +4,14 @@
  */
 package gui.main;
 
+import bus.EmployeeBUS;
 import bus.impl.EmployeeBUSImpl;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import common.Constants;
 import dal.connectDB.ConnectDB;
+import gui.FormLoad;
 import model.EmployeeEntity;
 import gui.menu.Application;
 import gui.custom.RoundedButton;
@@ -36,7 +38,7 @@ import util.ResizeImage;
 public class LoginGUI extends javax.swing.JFrame {
 
     public static EmployeeEntity emp;
-    private EmployeeBUSImpl empBUS;
+    private EmployeeBUS empBUS;
     private MainMenu mainMenu;
     private DateTimeFormatter df = DateTimeFormatter.ofPattern("ddMMyy");
 
@@ -44,8 +46,8 @@ public class LoginGUI extends javax.swing.JFrame {
      * Creates new form LonginGUI
      *
      */
-    public LoginGUI() throws Exception {
-        empBUS = new EmployeeBUSImpl(ConnectDB.getEntityManager());
+    public LoginGUI() throws RemoteException {
+        empBUS = FormLoad.employeeBUS;
         initComponents();
         encryptPassword();
         setLocationRelativeTo(null);
@@ -62,6 +64,8 @@ public class LoginGUI extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     btnLoginActionPerformed(null);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
@@ -85,7 +89,7 @@ public class LoginGUI extends javax.swing.JFrame {
         this.txtPass.setText(txtPass);
     }
 
-    private void encryptPassword() throws Exception {
+    private void encryptPassword() throws RemoteException {
         List<EmployeeEntity> list = empBUS.getAllEntities(); // Thêm dấu ngoặc tròn
         for (EmployeeEntity e : list) {
             if (!isBCryptHash(e.getPassword())) { // Kiểm tra định dạng BCrypt
@@ -196,6 +200,8 @@ public class LoginGUI extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnLoginActionPerformed(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -223,7 +229,7 @@ public class LoginGUI extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 try {
                     txtPassKeyReleased(evt);
-                } catch (Exception e) {
+                }  catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -414,7 +420,7 @@ public class LoginGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameKeyReleased
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        new DialogPasswordRecover(this).setVisible(true);
+//        new DialogPasswordRecover(this).setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**

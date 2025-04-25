@@ -3,6 +3,7 @@ package bus;
 import model.OrderEntity;
 import model.TableEntity;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
-public interface OrderBUS extends BaseBUS<OrderEntity, String> {
+public interface OrderBUS extends BaseBUS<OrderEntity, String>, Remote {
     @Override
     boolean insertEntity(OrderEntity orderEntity) throws RemoteException;
 

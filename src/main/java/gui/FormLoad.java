@@ -11,31 +11,38 @@ import com.formdev.flatlaf.FlatLightLaf;
 import common.Constants;
 import dal.connectDB.ConnectDB;
 import gui.main.LoginGUI;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.awt.Color;
+import java.rmi.Naming;
 import javax.swing.JDialog;
+
+import static util.HostNameUtil.*;
 
 /**
  *
  * @author RAVEN
  */
-public class FormLoad extends javax.swing.JDialog  {
+public class FormLoad extends javax.swing.JDialog {
+
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String SERVER_HOST_NAME = dotenv.get("SERVER_HOST_NAME");
 
     /**
      * Creates new form Application
      */
-    public static CategoryBUS categoryBUS ;
-    public static ItemBUS  itemBUS ;
-    public static FloorBUS  floorBUS ;
-    public static TableBUS  tableBUS ;
-    public static CustomerBUS  customerBUS ;
-    public static OrderBUS  orderBUS ;
-    public static OrderDetailBUS  orderDetailBUS ;
-    public static EmployeeBUS  employeeBUS;
-    public static PromotionBUS  promotionBUS ;
-    public static PromotionDetailBUS  promotionDetailBUS ;
-    public static ToppingBUS  toppingBUS ;
-    public static ItemToppingBUS  itemToppingBUS ;
+    public static CategoryBUS categoryBUS;
+    public static ItemBUS itemBUS;
+    public static FloorBUS floorBUS;
+    public static TableBUS tableBUS;
+    public static CustomerBUS customerBUS;
+    public static OrderBUS orderBUS;
+    public static OrderDetailBUS orderDetailBUS;
+    public static EmployeeBUS employeeBUS;
+    public static PromotionBUS promotionBUS;
+    public static PromotionDetailBUS promotionDetailBUS;
+    public static ToppingBUS toppingBUS;
+    public static ItemToppingBUS itemToppingBUS;
     public static RoleBUS roleBUS;
 
     public FormLoad(java.awt.Frame parent, boolean modal) {
@@ -44,8 +51,8 @@ public class FormLoad extends javax.swing.JDialog  {
         getContentPane().setBackground(new Color(221, 221, 221));
         //  To disable key Alt+F4 to close dialog
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
-        
+
+
     }
 
     /**
@@ -84,42 +91,42 @@ public class FormLoad extends javax.swing.JDialog  {
         javax.swing.GroupLayout curvesPanel1Layout = new javax.swing.GroupLayout(curvesPanel1);
         curvesPanel1.setLayout(curvesPanel1Layout);
         curvesPanel1Layout.setHorizontalGroup(
-            curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(curvesPanel1Layout.createSequentialGroup()
-                .addContainerGap(277, Short.MAX_VALUE)
-                .addGroup(curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(278, Short.MAX_VALUE))
+                curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(curvesPanel1Layout.createSequentialGroup()
+                                .addContainerGap(277, Short.MAX_VALUE)
+                                .addGroup(curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(pro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(278, Short.MAX_VALUE))
         );
         curvesPanel1Layout.setVerticalGroup(
-            curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(curvesPanel1Layout.createSequentialGroup()
-                .addContainerGap(107, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(pro, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbStatus)
-                .addContainerGap(108, Short.MAX_VALUE))
+                curvesPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(curvesPanel1Layout.createSequentialGroup()
+                                .addContainerGap(107, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(pro, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbStatus)
+                                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(curvesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(curvesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(3, 3, 3))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(curvesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(curvesPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(3, 3, 3))
         );
 
         pack();
@@ -127,6 +134,7 @@ public class FormLoad extends javax.swing.JDialog  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -134,31 +142,32 @@ public class FormLoad extends javax.swing.JDialog  {
                     // Load dữ liệu thực tế cho OrderGUI
 
                     doTask("Loading...", 5);
-                    ConnectDB.connect();
-                    categoryBUS  = new CategoryBUSImpl(ConnectDB.getEntityManager());
-                    itemBUS  = new ItemBUSImpl(ConnectDB.getEntityManager());
-                    floorBUS  = new FloorBUSImpl (ConnectDB.getEntityManager());
-                    tableBUS  = new TableBUSImpl(ConnectDB.getEntityManager());
-                    customerBUS  = new CustomerBUSImpl(ConnectDB.getEntityManager());
-                    orderBUS  = new OrderBUSImpl(ConnectDB.getEntityManager());
-                    orderDetailBUS  = new OrderDetailBUSImpl(ConnectDB.getEntityManager());
-                    employeeBUS = new EmployeeBUSImpl (ConnectDB.getEntityManager());
-                    promotionBUS  = new PromotionBUSImpl(ConnectDB.getEntityManager());
-                    toppingBUS  = new ToppingBUSImpl(ConnectDB.getEntityManager());
-                    itemToppingBUS  = new ItemToppingBUSImpl(ConnectDB.getEntityManager());
-                    promotionDetailBUS  = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
-                    roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
-                    
+
+                    categoryBUS = (CategoryBUS ) ((Object) Naming.lookup(getURI(SERVER_HOST_NAME, CategoryBUS.class)));
+                    itemBUS = (ItemBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemBUS.class));
+                    floorBUS = (FloorBUS) Naming.lookup(getURI(SERVER_HOST_NAME, FloorBUS.class));
+                    tableBUS = (TableBUS) Naming.lookup(getURI(SERVER_HOST_NAME, TableBUS.class));
+                    customerBUS = (CustomerBUS) Naming.lookup(getURI(SERVER_HOST_NAME, CustomerBUS.class));
+                    orderBUS = (OrderBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderBUS.class));
+                    orderDetailBUS = (OrderDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderDetailBUS.class));
+                    employeeBUS = (EmployeeBUS) Naming.lookup(getURI(SERVER_HOST_NAME, EmployeeBUS.class));
+                    promotionBUS = (PromotionBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionBUS.class));
+                    toppingBUS = (ToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ToppingBUS.class));
+                    itemToppingBUS = (ItemToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemToppingBUS.class));
+                    promotionDetailBUS = (PromotionDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionDetailBUS.class));
+                    roleBUS = (RoleBUS) Naming.lookup(getURI(SERVER_HOST_NAME, RoleBUS.class));
+
+
                     doTask("Loading...", 50);
-                    
+
                     doTask("Loading...", 5);
                     // Gọi tầng bus để tải dữ liệu thực tế
-                    
+
                     // Hoàn tất
                     doTask("Done ...", 20);
 
-                    dispose(); 
-                    curvesPanel1.stop(); 
+                    dispose();
+                    curvesPanel1.stop();
                     new LoginGUI().setVisible(true);
 
                 } catch (Exception e) {
@@ -180,7 +189,7 @@ public class FormLoad extends javax.swing.JDialog  {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

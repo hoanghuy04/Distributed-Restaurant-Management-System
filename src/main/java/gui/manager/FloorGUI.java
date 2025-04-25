@@ -10,7 +10,7 @@ import model.FloorEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -31,7 +31,7 @@ public class FloorGUI extends javax.swing.JPanel {
     /**
      * Creates new form FloorGUI
      */
-    public FloorGUI() throws RemoteException {
+    public FloorGUI() throws Exception {
         floorBUS = FormLoad.floorBUS;
         headers = new String[]{"Mã lầu", "Tên lầu", "Sức chứa"};
         len = Arrays.asList(100, 200, 50);
@@ -137,7 +137,7 @@ public class FloorGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnFindActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -151,7 +151,7 @@ public class FloorGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnAddActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -165,7 +165,7 @@ public class FloorGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnUpdateActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -287,7 +287,7 @@ public class FloorGUI extends javax.swing.JPanel {
         clearText();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
             String name = lblName.getText().trim();
             int capacity = 0;
@@ -307,7 +307,7 @@ public class FloorGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnFindActionPerformed
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnFindActionPerformed
         String name = lblName.getText().trim();
         if (name.isBlank() || name.isEmpty()) {
             deleteAllTable();
@@ -325,7 +325,7 @@ public class FloorGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnFindActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
@@ -367,7 +367,7 @@ public class FloorGUI extends javax.swing.JPanel {
         
     }
 
-    private void loadData() throws RemoteException {
+    private void loadData() throws Exception {
         floorBUS.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
                 f.getFloorId(), f.getName(), f.getCapacity()

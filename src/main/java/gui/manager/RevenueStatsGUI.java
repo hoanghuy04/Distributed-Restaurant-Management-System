@@ -12,7 +12,7 @@ import gui.FormLoad;
 import gui.custom.TableDesign;
 import gui.custom.chart.ModelChart;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
      */
     private TableDesign tableDesign;
     private OrderBUS orderBUS;
-    public RevenueStatsGUI() throws RemoteException {
+    public RevenueStatsGUI() throws Exception {
         orderBUS = FormLoad.orderBUS;
         String headers[] = {"Mã hóa đơn","Khách hàng","Nhân viên","Ngày lập","Tổng tiền"};
         List<Integer> tableWidth = Arrays.asList(50,80,80,120,150);
@@ -138,7 +138,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     btnThongKeActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -346,7 +346,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 try {
                     comboStatsItemStateChanged(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -464,7 +464,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_endedDayActionPerformed
 
-    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws RemoteException {//GEN-FIRST:event_comboStatsItemStateChanged
+    private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_comboStatsItemStateChanged
         String selectedItem = comboStats.getSelectedItem().toString(); 
         if(selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
@@ -511,7 +511,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboStatsItemStateChanged
 
-    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_btnThongKeActionPerformed
+    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnThongKeActionPerformed
         LocalDate startedDate = LocalDate.parse(startedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(endedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if (endedDate.isAfter(LocalDate.now())) {
@@ -549,7 +549,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnThongKeActionPerformed
    
-    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) throws RemoteException {
+    private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         stats.removeAll();
         Chart chart = new Chart();
         stats.add(chart);
@@ -558,7 +558,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         stats.revalidate();
     }
 
-    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws RemoteException {
+    private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         chart.clear();
 
         if (year != null) {

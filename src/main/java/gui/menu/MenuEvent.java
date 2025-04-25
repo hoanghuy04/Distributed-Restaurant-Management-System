@@ -1,6 +1,5 @@
 package gui.menu;
 
-import java.rmi.RemoteException;
 
 /**
  *
@@ -8,5 +7,5 @@ import java.rmi.RemoteException;
  */
 public interface MenuEvent {
 
-    public void menuSelected(int index, int subIndex, MenuAction action) throws RemoteException;
+    public void menuSelected(int index, int subIndex, MenuAction action) throws Exception;
 }

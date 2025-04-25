@@ -4,8 +4,8 @@
  */
 package gui.staff;
 
-import bus.impl.CategoryBUSImpl;
-import bus.impl.ItemBUSImpl;
+import bus.CategoryBUS;
+import bus.ItemBUS;
 import common.Constants;
 import model.CategoryEntity;
 import model.ItemEntity;
@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -57,18 +58,18 @@ public class ItemGUI extends javax.swing.JPanel {
     private DefaultTableModel defaultTableModel;
     private TableColumnModel columnModel;
 
-    private CategoryBUSImpl categoryBUSImpl;
-    private ItemBUSImpl itemBUSImpl;
+    private CategoryBUS categoryBUS;
+    private ItemBUS itemBUS;
 
     /**
      * Creates new form ItemGUI
      */
-    public ItemGUI() {
+    public ItemGUI() throws Exception {
         initComponents();
         this.i = new ItemEntity();
     }
 
-    private void customTable() {
+    private void customTable() throws Exception {
         headers = new String[]{"Mã", "Tên", "Nhóm hàng", "Giá vốn", "Giá bán", "Số lượng", "Trạng thái", "Ảnh", "Mô tả"};
         tableWidth = Arrays.asList(100, 100, 100, 100, 100, 100, 100, 200, 200);
         this.tableDesign = new TableDesign(headers, tableWidth);
@@ -79,19 +80,19 @@ public class ItemGUI extends javax.swing.JPanel {
         this.columnModel = tableDesign.getColumnModel();
         table.setColumnModel(columnModel);
 
-        this.categoryBUSImpl = FormLoad.categoryBUSImpl;
-        this.itemBUSImpl = FormLoad.itemBUSImpl;
+        this.categoryBUS = FormLoad.categoryBUS;
+        this.itemBUS = FormLoad.itemBUS;
         loadData();
 
     }
 
-    private void loadData() {
-        categoryBUSImpl.getAllEntities().stream()
+    private void loadData() throws Exception {
+        categoryBUS.getAllEntities().stream()
                 .forEach(c -> {
                     cbbCategory.addItem(c.getName());
                 });
 
-        itemBUSImpl.getAllEntities().stream()
+        itemBUS.getAllEntities().stream()
                 .forEach(i -> {
                     FillOneRow(i);
                 });
@@ -129,7 +130,7 @@ public class ItemGUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws Exception {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -183,7 +184,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnImport.setBackground(new java.awt.Color(0, 153, 51));
         btnImport.setForeground(new java.awt.Color(255, 255, 255));
-        btnImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnImport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnImport.setText("Import");
         btnImport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnImport.addActionListener(new java.awt.event.ActionListener() {
@@ -197,12 +198,16 @@ public class ItemGUI extends javax.swing.JPanel {
 
         btnExport.setBackground(new java.awt.Color(0, 153, 51));
         btnExport.setForeground(new java.awt.Color(255, 255, 255));
-        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnExport.setIcon(new ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
         btnExport.setText("Export");
         btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportActionPerformed(evt);
+                try {
+                    btnExportActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -477,7 +482,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 50));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnAdd);
@@ -497,7 +506,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnSearch.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnSearch);
@@ -507,7 +520,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnClear.setPreferredSize(new java.awt.Dimension(150, 50));
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
+                try {
+                    btnClearActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnClear);
@@ -567,7 +584,11 @@ public class ItemGUI extends javax.swing.JPanel {
         customTable();
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                try {
+                    tableMouseClicked(evt);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jScrollPane3.setViewportView(table);
@@ -623,14 +644,14 @@ public class ItemGUI extends javax.swing.JPanel {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
             i.setName(txtName.getText());
-            i.setCategory(categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString()));
+            i.setCategory(categoryBUS.findByName(cbbCategory.getSelectedItem().toString()));
             i.setCostPrice(Double.parseDouble(txtCostPrice.getText()));
             i.setStockQuantity(Integer.parseInt(txtStockQty.getText()));
             i.setDescription(txtDesc.getText().trim());
             i.setActive(cbStatus.isSelected());
             i.setImg(this.imgPath);
             
-            itemBUSImpl.updateEntity(i);
+            itemBUS.updateEntity(i);
             // Cập nhật vào bảng
             int selectedRow = table.getSelectedRow(); // Lấy hàng được chọn
             if (selectedRow != -1) { // Nếu có hàng nào đang được chọn
@@ -657,14 +678,14 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         String name = txtName.getText();
-        String categoryId = categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString()).getCategoryId();
+        String categoryId = categoryBUS.findByName(cbbCategory.getSelectedItem().toString()).getCategoryId();
         Double costPrice = txtCostPrice.getText().trim().length() != 0 ? Double.parseDouble(txtCostPrice.getText().trim()) : null;
         Integer stockQty = txtStockQty.getText().trim().length() != 0 ? Integer.parseInt(txtStockQty.getText().trim()) : null;
         boolean active = cbStatus.isSelected();
         defaultTableModel.setRowCount(0);
-        itemBUSImpl.getItemsWithKeyword(name, categoryId, costPrice, stockQty, active)
+        itemBUS.getItemsWithKeyword(name, categoryId, costPrice, stockQty, active)
                 .forEach(i -> {
                     FillOneRow(i);
                 });
@@ -675,7 +696,7 @@ public class ItemGUI extends javax.swing.JPanel {
         fileChooser.setDialogTitle("Chọn ảnh");
 
         // Đặt thư mục mặc định
-        fileChooser.setCurrentDirectory(new java.io.File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
+        fileChooser.setCurrentDirectory(new File("E:\\Dương Hoàng Huy - 12A2\\HK1_Nam3\\PTUD\\PJ\\RestaurantManagement\\src\\main\\resources\\img\\item"));
 
         // Chỉ hiển thị các tệp hình ảnh
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
@@ -683,7 +704,7 @@ public class ItemGUI extends javax.swing.JPanel {
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            java.io.File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = fileChooser.getSelectedFile();
             ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
 
             // Resize và hiển thị ảnh trên JLabel
@@ -712,11 +733,11 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lblImgMouseClicked
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         ItemEntity itemEntity;
         if (isValidate()) {
             String name = txtName.getText();
-            CategoryEntity category = categoryBUSImpl.findByName(cbbCategory.getSelectedItem().toString());
+            CategoryEntity category = categoryBUS.findByName(cbbCategory.getSelectedItem().toString());
             double costPrice = Double.parseDouble(txtCostPrice.getText());
             double sellingPrice = Double.parseDouble(txtSellingPrice.getText());
             int stockQty = Integer.parseInt(txtStockQty.getText());
@@ -724,9 +745,9 @@ public class ItemGUI extends javax.swing.JPanel {
             boolean active = cbStatus.isSelected();
 
             itemEntity = new ItemEntity(name, costPrice, stockQty, desc, active, category, this.imgPath);
-            itemBUSImpl.insertEntity(itemEntity);
+            itemBUS.insertEntity(itemEntity);
 
-            itemEntity = itemBUSImpl.findOneByName(name, cbbCategory.getSelectedItem().toString());
+            itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
 
             FillOneRow(itemEntity);
             clear();
@@ -734,7 +755,7 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws RemoteException {//GEN-FIRST:event_tableMouseClicked
 
         int row = table.getSelectedRow(); // Lấy chỉ số hàng đã chọn
 
@@ -760,7 +781,7 @@ public class ItemGUI extends javax.swing.JPanel {
             lblImg.setIcon(ResizeImage.resizeImage(new ImageIcon("src/main/resources/img/item/" + imgPath), 154, 142));
             txtDesc.setText(desc);
         }
-        this.i = itemBUSImpl.findOneByName(txtName.getText().trim(), cbbCategory.getSelectedItem().toString());
+        this.i = itemBUS.findOneByName(txtName.getText().trim(), cbbCategory.getSelectedItem().toString());
     }//GEN-LAST:event_tableMouseClicked
 
     private void txtCostPriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCostPriceKeyReleased
@@ -773,18 +794,18 @@ public class ItemGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtCostPriceKeyReleased
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnClearActionPerformed
         clear();
         defaultTableModel.setRowCount(0);
-        itemBUSImpl.getAllEntities()
+        itemBUS.getAllEntities()
                 .forEach(i -> {
                     FillOneRow(i);
                 });
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnExportActionPerformed
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH-mm");
-        exportItemsToExcel(itemBUSImpl.getAllEntities(), Constants.REPORT_FILE_PATH + "/items/" + "report_items_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
+        exportItemsToExcel(itemBUS.getAllEntities(), Constants.REPORT_FILE_PATH + "/items/" + "report_items_" + LocalDateTime.now().format(DatetimeFormatterUtil.getDateFormatter()) + "_" + LocalTime.now().format(formatter) + ".xlsx");
         
         JOptionPane.showMessageDialog(
                         null,
@@ -796,7 +817,11 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         importItemsToExcel().stream().forEach(i -> {
-            itemBUSImpl.insertEntity(i);
+            try {
+                itemBUS.insertEntity(i);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
         JOptionPane.showMessageDialog(
                         null,
@@ -848,7 +873,7 @@ public class ItemGUI extends javax.swing.JPanel {
                     String imgName = row.getCell(7).getStringCellValue();
 
                     // Tạo đối tượng ItemEntity
-                    ItemEntity item = new ItemEntity(name, costPrice, stockQuantity, description, true, categoryBUSImpl.findByName(category), imgName);
+                    ItemEntity item = new ItemEntity(name, costPrice, stockQuantity, description, true, categoryBUS.findByName(category), imgName);
                     items.add(item);
                 }
             } catch (IOException e) {

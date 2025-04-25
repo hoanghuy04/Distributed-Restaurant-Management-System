@@ -11,7 +11,7 @@ import common.Constants;
 import gui.custom.curvechart.CurveChart;
 import gui.custom.curvechart.ModelChart2;
 
-import java.rmi.RemoteException;
+import java.lang.Exception;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -306,7 +306,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     jButton1ActionPerformed(evt);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -489,7 +489,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         add(jPanel5, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws RemoteException {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton1ActionPerformed
         LocalDate startedDate = LocalDate.parse(this.startedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(this.endedDate.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         
@@ -515,7 +515,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws RemoteException {
+    private void createChartByOrderType(LocalDateTime startDate, LocalDateTime endDate, JPanel panel) throws Exception {
         panel.removeAll();
         CurveChart chart = new CurveChart();
         panel.add(chart);
@@ -524,7 +524,7 @@ public class PromotionStatsGUI extends javax.swing.JPanel {
         panel.revalidate();
     }
 
-    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) throws RemoteException {
+    private void updateChartByOrderType(CurveChart chart, LocalDateTime startDate, LocalDateTime endDate) throws Exception {
         chart.clear();
         chart.addLegend("ORDER", Constants.COLOR_REVENUE, Constants.COLOR_REVENUE);
         chart.addLegend("ITEM", Constants.COLOR_CAPITAL, Constants.COLOR_CAPITAL);

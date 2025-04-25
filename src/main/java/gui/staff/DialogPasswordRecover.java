@@ -4,18 +4,15 @@
  */
 package gui.staff;
 
-import bus.impl.EmployeeBUSImpl;
+import bus.EmployeeBUS;
 import common.Constants;
-import model.EmployeeEntity;
 import gui.FormLoad;
 import gui.main.LoginGUI;
+import model.EmployeeEntity;
+import util.MailSenderUtil;
 
-import java.awt.Frame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-
-import util.*;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -26,7 +23,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     private LoginGUI loginGUI;
     private EmployeeEntity emp;
     private String confirmCode;
-    private EmployeeBUSImpl employeeBUS;
+    private EmployeeBUS employeeBUS;
 
     /**
      * Creates new form DialogPasswordRecover
@@ -47,7 +44,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelCodeConfirm = new javax.swing.JPanel();
+        panelCodeConfirm = new JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txtCode = new gui.custom.RoundedTextField();
@@ -57,7 +54,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         lblResendCode = new javax.swing.JLabel();
-        panelResetPassword = new javax.swing.JPanel();
+        panelResetPassword = new JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtPassword = new gui.custom.RoundedTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -66,8 +63,8 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         jLabel13 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         txtPasswordConfirm = new gui.custom.RoundedTextField();
-        panelWrapper = new javax.swing.JPanel();
-        panelEmailConfirm = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
+        panelEmailConfirm = new JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         txtEmail = new gui.custom.RoundedTextField();
@@ -130,7 +127,11 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         lblResendCode.setText("Gửi lại mã");
         lblResendCode.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblResendCodeMouseClicked(evt);
+                try {
+                    lblResendCodeMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -209,7 +210,11 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         btnContinue3.setPreferredSize(new java.awt.Dimension(70, 36));
         btnContinue3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnContinue3ActionPerformed(evt);
+                try {
+                    btnContinue3ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -317,7 +322,11 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         btnSearch.setPreferredSize(new java.awt.Dimension(70, 36));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
+                try {
+                    btnSearchActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -412,7 +421,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPasswordActionPerformed
 
-    private void btnContinue3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinue3ActionPerformed
+    private void btnContinue3ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnContinue3ActionPerformed
         String password = txtPassword.getText().trim();
         String confirmPassword = txtPasswordConfirm.getText().trim();
 
@@ -452,7 +461,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
         EmployeeEntity e = employeeBUS.findByEmail(txtEmail.getText().trim());
         if (e == null) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên có email: " + txtEmail.getText());
@@ -462,10 +471,10 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
             switchPanel(panelWrapper, panelCodeConfirm);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
-    private void sendEmailInBackground() {
+    private void sendEmailInBackground() throws Exception {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
-            protected Void doInBackground() {
+            protected Void doInBackground() throws Exception {
                 confirmCode = employeeBUS.generateConfirmationCode();
 
                 // Gửi email nếu là đơn đặt chỗ mới
@@ -492,7 +501,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPasswordConfirmActionPerformed
 
-    private void lblResendCodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblResendCodeMouseClicked
+    private void lblResendCodeMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_lblResendCodeMouseClicked
         lblResendCode.setText("Vui lòng đợi trong giấy lát...");
         sendEmailInBackground();
     }//GEN-LAST:event_lblResendCodeMouseClicked
@@ -568,10 +577,10 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel lblResendCode;
-    private javax.swing.JPanel panelCodeConfirm;
-    private javax.swing.JPanel panelEmailConfirm;
-    private javax.swing.JPanel panelResetPassword;
-    private javax.swing.JPanel panelWrapper;
+    private JPanel panelCodeConfirm;
+    private JPanel panelEmailConfirm;
+    private JPanel panelResetPassword;
+    private JPanel panelWrapper;
     private gui.custom.RoundedTextField txtCode;
     private gui.custom.RoundedTextField txtEmail;
     private gui.custom.RoundedTextField txtPassword;

@@ -5,53 +5,40 @@
 package gui.staff;
 //Duong Hoang Huy
 
-import  bus.*;
-import bus.impl.CustomerBUSImpl;
-import bus.impl.EmployeeBUSImpl;
-import bus.impl.FloorBUSImpl;
-import bus.impl.OrderBUSImpl;
-import bus.impl.TableBUSImpl;
+import bus.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.zxing.WriterException;
 import dal.connectDB.ConnectDB;
-import model.CustomerEntity;
-import model.EmployeeEntity;
-import model.FloorEntity;
-import model.OrderEntity;
-import model.TableEntity;
 import gui.FormLoad;
 import gui.custom.combo_suggestion.ComboBoxSuggestion;
 import gui.main.LoginGUI;
 import jakarta.mail.MessagingException;
-import java.util.*;
 import jakarta.persistence.EntityManager;
-import java.awt.Color;
+import model.*;
+import model.enums.*;
+import raven.toast.Notifications;
+import util.DatetimeFormatterUtil;
+import util.MailSenderUtil;
+import util.QrCodeGenerationUtil;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import java.util.stream.Collectors;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import model.enums.OrderStatusEnum;
-import model.enums.OrderTypeEnum;
-import model.enums.PaymentMethodEnum;
-import model.enums.PaymentStatusEnum;
-import model.enums.ReservationStatusEnum;
-import raven.toast.Notifications;
-import util.*;
 
 /**
  *
@@ -114,7 +101,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
     /**
      * Creates new form DialogAddReservation
      */
-    public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation) {
+    public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation) throws Exception {
         super(new JFrame(), true);
         this.tabReservation = tabReservation;
         this.oldDate = LocalDate.now();
@@ -130,7 +117,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         availableTables = new ArrayList<>();
         // availableTables = tableBUS.getAllEntities().stream().map(t -> ("Bàn " + Integer.parseInt(t.getTableId().substring(1)))).collect(Collectors.toList());
 
-        floors = floorBus .getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
+        floors = floorBus.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
         paymentMethods = Arrays.stream(PaymentMethodEnum.values())
                 .map(PaymentMethodEnum::getPaymentMethod)
                 .toArray(String[]::new);
@@ -146,7 +133,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 loadCbbTime();
-                loadTables();
+                try {
+                    loadTables();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
                 loadCombinedTables();
             }
 
@@ -163,20 +154,20 @@ public class DialogAddReservation extends javax.swing.JDialog {
         loadCombinedTables();
     }
 
-    public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation, OrderEntity preOrder) {
+    public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation, OrderEntity preOrder) throws Exception {
         super(new JFrame(), true);
         this.tabReservation = tabReservation;
         this.oldDate = LocalDate.now();
         this.orderEntity = preOrder;
         em = ConnectDB.getEntityManager();
-        customerBUS  = new CustomerBUS (em);
-        employeeBUS = new EmployeeBUSImpl(em);
-        floorBusImpl = new FloorBUSImpl(em);
-        tableBUSImpl = new TableBUSImpl(em);
-        orderBUSImpl = new OrderBUSImpl(em);
+        customerBUS  = FormLoad.customerBUS;
+        employeeBUS = FormLoad.employeeBUS;
+        floorBus = FormLoad.floorBUS ;
+        tableBUS = FormLoad.tableBUS;
+        orderBUS = FormLoad.orderBUS;
         this.mapOfAllReservations = mapOfAllReservations;
         availableTables = new ArrayList<>();
-        floors = floorBusImpl.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
+        floors = floorBus.getAllEntities().stream().map(f -> f.getName()).collect(Collectors.toList());
 
         preNumberOfCust = "0";
         paymentMethods = Arrays.stream(PaymentMethodEnum.values())
@@ -194,7 +185,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 loadCbbTime();
-                loadTables();
+                try {
+                    loadTables();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
                 loadCombinedTables();
             }
 
@@ -270,7 +265,13 @@ public class DialogAddReservation extends javax.swing.JDialog {
             this.cbbFloor.setSelectedItem(this.orderEntity.getTable().getFloor().getName());
             this.txtDeposit.setText(this.orderEntity.getDeposit() + "");
 
-            List<String> listOfCombinedTableName = this.orderEntity.getCombinedTables().stream().map(t -> tableBUSImpl.getEntityById(t.getTableId()).getName()).toList();
+            List<String> listOfCombinedTableName = this.orderEntity.getCombinedTables().stream().map(t -> {
+                try {
+                    return tableBUS.getEntityById(t.getTableId()).getName();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList();
             listOfCombinedTableName.stream()
                     .forEach(tableName -> {
                         this.cbbCombinedTables.addItemObject(tableName);
@@ -313,11 +314,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
         }
     }
 
-    private void loadTables() {
+    private void loadTables() throws Exception {
         reservationDateTime = LocalDateTime.of(LocalDate.parse(txtDate.getText(), DatetimeFormatterUtil.getDateFormatter()), LocalTime.parse(cbbTime.getSelectedItem().toString(), DatetimeFormatterUtil.getTimeFormatter()));
         String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
 
-        availableTables = tableBUSImpl.getListOfAvailableTables(floorId, reservationDateTime, 0).stream().map(t -> t.getName()).collect(Collectors.toList());
+        availableTables = tableBUS.getListOfAvailableTables(floorId, reservationDateTime, 0).stream().map(t -> t.getName()).collect(Collectors.toList());
 
         if (this.orderEntity != null) {
             defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -346,7 +347,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         cbbCombinedTables.setModel(defaultComboBoxModel2);
     }
 
-    private boolean createReservation() {
+    private boolean createReservation() throws Exception {
         if (this.customerEntity == null && txtName.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin khách hàng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return false;
@@ -363,14 +364,14 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
             String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
 
-            TableEntity table = tableBUSImpl.findByName(cbbTable.getSelectedItem().toString(), floorId);
+            TableEntity table = tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId);
 
             List<TableEntity> listOfCombinedTable = new ArrayList<>();
 
             List<String> strs = cbbCombinedTables.getSelectedItems();
 
             for (String tableName : strs) {
-                TableEntity t = tableBUSImpl.findByName(tableName, floorId);
+                TableEntity t = tableBUS.findByName(tableName, floorId);
                 listOfCombinedTable.add(t);
             }
 
@@ -378,7 +379,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE,
                         OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
                         PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
-                orderBUSImpl.insertEntity(orderEntity);
+                orderBUS.insertEntity(orderEntity);
                 tabReservation.getListOfAllReservations().add(orderEntity);
                 this.tabReservation.addToMapOfAllReservations(orderEntity);
             } else {
@@ -408,7 +409,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 }
 
                 this.orderEntity.setCombinedTables(listOfCombinedTable);
-                orderBUSImpl.updateEntity(orderEntity);
+                orderBUS.updateEntity(orderEntity);
                 this.tabReservation.addToMapOfAllReservations(orderEntity);
             }
             return true;
@@ -464,10 +465,10 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private void initComponents() {
 
         dateChooser1 = new gui.custom.datechooser.DateChooser(false);
-        panelWrapper = new javax.swing.JPanel();
-        panelHead = new javax.swing.JPanel();
+        panelWrapper = new JPanel();
+        panelHead = new JPanel();
         lblTitle = new javax.swing.JLabel();
-        panelBody = new javax.swing.JPanel();
+        panelBody = new JPanel();
         lblReservationTime = new javax.swing.JLabel();
         txtDate = new gui.custom.RoundedTextField();
         lblTable = new javax.swing.JLabel();
@@ -493,7 +494,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         cbbCombinedTables = new gui.custom.ComboBoxMultiSelection();
         cbbCompletionTime = new gui.custom.RoundedComboBox(completionTimes);
 
-        dateChooser1.setForeground(new java.awt.Color(51, 153, 255));
+        dateChooser1.setForeground(new Color(51, 153, 255));
         dateChooser1.setTextRefernce(txtDate);
         dateChooser1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -509,9 +510,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panelWrapper.setBackground(new java.awt.Color(255, 255, 255));
+        panelWrapper.setBackground(new Color(255, 255, 255));
 
-        panelHead.setBackground(new java.awt.Color(204, 204, 204));
+        panelHead.setBackground(new Color(204, 204, 204));
 
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -544,7 +545,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 txtDateMousePressed(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                txtDateMouseReleased(evt);
+                try {
+                    txtDateMouseReleased(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         txtDate.addActionListener(new java.awt.event.ActionListener() {
@@ -553,7 +558,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
             }
         });
         txtDate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 txtDateKeyReleased(evt);
             }
         });
@@ -564,7 +569,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
         txtPhoneNumber.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtPhoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPhoneNumberFocusLost(evt);
+                try {
+                    txtPhoneNumberFocusLost(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         txtPhoneNumber.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -581,11 +590,15 @@ public class DialogAddReservation extends javax.swing.JDialog {
             }
         });
         txtPhoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+            public void keyPressed(KeyEvent evt) {
                 txtPhoneNumberKeyPressed(evt);
             }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPhoneNumberKeyReleased(evt);
+            public void keyReleased(KeyEvent evt) {
+                try {
+                    txtPhoneNumberKeyReleased(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -661,7 +674,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
         cbbFloor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbbFloor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbbFloorItemStateChanged(evt);
+                try {
+                    cbbFloorItemStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         cbbFloor.addActionListener(new java.awt.event.ActionListener() {
@@ -703,7 +720,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
         btnSave.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
+                try {
+                    btnSaveActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -712,7 +733,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
         cbbTime.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbbTime.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbbTimeItemStateChanged(evt);
+                try {
+                    cbbTimeItemStateChanged(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         cbbTime.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -925,13 +950,13 @@ public class DialogAddReservation extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSaveActionPerformed
         if (!checkPhoneNumber()) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được để trống hoặc độ dài phải từ 10 đến 15 ký số", "Warning", JOptionPane.WARNING_MESSAGE);
             txtPhoneNumber.requestFocus();
         } else if (!checkAvailableSeats()) {
             boolean check = false;
-            List<TableEntity> list = tableBUSImpl.getListOfAvailableTables(null, reservationDateTime, 0);
+            List<TableEntity> list = tableBUS.getListOfAvailableTables(null, reservationDateTime, 0);
             Map<FloorEntity, Integer> map = list.stream().collect(Collectors.groupingBy(TableEntity::getFloor, Collectors.summingInt(table -> 1)));
 
             for (Map.Entry<FloorEntity, Integer> entry : map.entrySet()) {
@@ -971,7 +996,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void txtPhoneNumberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyPressed
+    private void txtPhoneNumberKeyPressed(KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyPressed
 //        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 //            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
 //            if (customerEntity == null) {
@@ -987,7 +1012,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         txtNumberOfCust.setText((num + 1) + "");
     }//GEN-LAST:event_btnPlusNumberActionPerformed
 
-    private void cbbFloorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbFloorItemStateChanged
+    private void cbbFloorItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_cbbFloorItemStateChanged
         cbbCombinedTables.clearSelectedItems();
         loadTables();
         loadCombinedTables();
@@ -1004,12 +1029,12 @@ public class DialogAddReservation extends javax.swing.JDialog {
 //        loadCombinedTables();
     }//GEN-LAST:event_txtDateMouseExited
 
-    private void cbbTimeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTimeItemStateChanged
+    private void cbbTimeItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_cbbTimeItemStateChanged
         loadTables();
         loadCombinedTables();
     }//GEN-LAST:event_cbbTimeItemStateChanged
 
-    private void txtDateMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseReleased
+    private void txtDateMouseReleased(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_txtDateMouseReleased
 
         loadCbbTime();
         loadTables();
@@ -1025,7 +1050,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
     }//GEN-LAST:event_dateChooser1MouseClicked
 
-    private void txtDateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDateKeyReleased
+    private void txtDateKeyReleased(KeyEvent evt) {//GEN-FIRST:event_txtDateKeyReleased
         // TODO add your handling code here:
 
     }//GEN-LAST:event_txtDateKeyReleased
@@ -1058,11 +1083,11 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtPhoneNumberMouseReleased
 
-    private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
+    private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) throws Exception {//GEN-FIRST:event_txtPhoneNumberFocusLost
         if (!checkPhoneNumber()) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không được để trống hoặc độ dài phải từ 10 đến 15 ký số", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            this.customerEntity = customerBUSImpl.findByPhone(txtPhoneNumber.getText().trim());
+            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
             if (customerEntity == null) {
                 JOptionPane.showMessageDialog(null, "Khách hàng chưa tồn tại");
             } else {
@@ -1088,9 +1113,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
 //        }
     }//GEN-LAST:event_txtDepositFocusLost
 
-    private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
+    private void txtPhoneNumberKeyReleased(KeyEvent evt) throws Exception {//GEN-FIRST:event_txtPhoneNumberKeyReleased
                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            this.customerEntity = customerBUSImpl.findByPhone(txtPhoneNumber.getText().trim());
+            this.customerEntity = customerBUS.findByPhone(txtPhoneNumber.getText().trim());
             if (customerEntity == null) {
                 JOptionPane.showMessageDialog(null, "Khách hàng chưa tồn tại");
             } else {
@@ -1117,15 +1142,15 @@ public class DialogAddReservation extends javax.swing.JDialog {
         return true;
     }
 
-    private boolean checkAvailableSeats() {
+    private boolean checkAvailableSeats() throws Exception {
         List<TableEntity> listTable = new ArrayList<>();
         int totalSeats = 0;
 
         String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
-        totalSeats += tableBUSImpl.findByName(cbbTable.getSelectedItem().toString(), floorId).getCapacity();
+        totalSeats += tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId).getCapacity();
 
         for (Object t : cbbCombinedTables.getSelectedItems()) {
-            totalSeats += tableBUSImpl.findByName(t.toString(), floorId).getCapacity();
+            totalSeats += tableBUS.findByName(t.toString(), floorId).getCapacity();
         }
 
         return Integer.parseInt(txtNumberOfCust.getText()) <= totalSeats;
@@ -1152,9 +1177,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private javax.swing.JLabel lblReservationTime;
     private javax.swing.JLabel lblTable;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JPanel panelBody;
-    private javax.swing.JPanel panelHead;
-    private javax.swing.JPanel panelWrapper;
+    private JPanel panelBody;
+    private JPanel panelHead;
+    private JPanel panelWrapper;
     private gui.custom.RoundedTextField txtDate;
     private gui.custom.RoundedTextField txtDeposit;
     private gui.custom.RoundedTextField txtName;

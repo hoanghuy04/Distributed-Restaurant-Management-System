@@ -4,7 +4,7 @@
  */
 package gui.staff;
 
-import bus.impl.OrderBUSImpl;
+import bus.OrderBUS;
 import common.Constants;
 import model.OrderEntity;
 import gui.FormLoad;
@@ -29,7 +29,7 @@ public class PanelDate extends RoundedPanel {
      */
     private LocalDate date;
     private EntityManager em;
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
     private TabReservation tabReservation;
 
     public PanelDate() {
@@ -59,7 +59,11 @@ public class PanelDate extends RoundedPanel {
 
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelDateMouseClicked(evt); // Gọi sự kiện click
+                try {
+                    panelDateMouseClicked(evt); // Gọi sự kiện click
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 tabReservation.updatePanelBackground();
                 isSelected = true;
 
@@ -69,18 +73,18 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        this.orderBUSImpl = FormLoad.orderBUSImpl;
+        this.orderBUS = (OrderBUS) FormLoad.orderBUS;
         this.date = d;
         this.tabReservation = tab;
     }
 
-    public void fillContent() {
+    public void fillContent() throws Exception {
 
         if (lblDate.getText().contains("Hôm nay")) {
-            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, LocalTime.now().minusHours(2), OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         } else {
-            List<OrderEntity> reservations = orderBUSImpl.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
+            List<OrderEntity> reservations = orderBUS.getListOfReservations(date, null, OrderTypeEnum.ADVANCE.getOrderType());
             this.tabReservation.setListOfReservationsByOption(reservations);
         }
 
@@ -105,9 +109,9 @@ public class PanelDate extends RoundedPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelDate = new gui.custom.RoundedPanel();
-        lblDate = new javax.swing.JLabel();
-        lblnumber = new javax.swing.JLabel();
+        panelDate = new RoundedPanel();
+        lblDate = new JLabel();
+        lblnumber = new JLabel();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -115,12 +119,16 @@ public class PanelDate extends RoundedPanel {
             }
         });
 
-        panelDate.setBackground(new java.awt.Color(255, 255, 255));
-        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelDate.setBackground(new Color(255, 255, 255));
+        panelDate.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
         panelDate.setPreferredSize(new java.awt.Dimension(288, 77));
         panelDate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelDateMouseClicked(evt);
+                try {
+                    panelDateMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -160,7 +168,7 @@ public class PanelDate extends RoundedPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void panelDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelDateMouseClicked
+    private void panelDateMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_panelDateMouseClicked
         fillContent();
         tabReservation.updatePanelBackground();
         this.panelDate.setBackground(Constants.COLOR_PRIMARY);
@@ -196,9 +204,9 @@ public class PanelDate extends RoundedPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblDate;
-    private javax.swing.JLabel lblnumber;
-    private gui.custom.RoundedPanel panelDate;
+    private JLabel lblDate;
+    private JLabel lblnumber;
+    private RoundedPanel panelDate;
     // End of variables declaration//GEN-END:variables
 
     public void deselectPanel() {
