@@ -61,7 +61,7 @@ public class PromotionEntity extends BaseEntity implements Serializable {
     private List<OrderEntity> orders;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "promotion", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "promotion", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<PromotionDetailEntity> promotionDetails;
     
     public PromotionEntity(String description, double discountPercentage, LocalDateTime startedDate, LocalDateTime endedDate,

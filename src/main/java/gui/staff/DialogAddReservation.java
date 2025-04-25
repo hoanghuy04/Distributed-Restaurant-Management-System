@@ -9,7 +9,6 @@ import bus.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.zxing.WriterException;
-import dal.connectDB.ConnectDB;
 import gui.FormLoad;
 import gui.custom.combo_suggestion.ComboBoxSuggestion;
 import gui.main.LoginGUI;
@@ -159,7 +158,6 @@ public class DialogAddReservation extends javax.swing.JDialog {
         this.tabReservation = tabReservation;
         this.oldDate = LocalDate.now();
         this.orderEntity = preOrder;
-        em = ConnectDB.getEntityManager();
         customerBUS  = FormLoad.customerBUS;
         employeeBUS = FormLoad.employeeBUS;
         floorBus = FormLoad.floorBUS ;
