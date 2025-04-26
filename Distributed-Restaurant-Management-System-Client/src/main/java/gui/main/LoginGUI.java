@@ -90,6 +90,10 @@ public class LoginGUI extends javax.swing.JFrame {
     }
 
     private void encryptPassword() throws RemoteException {
+        while (empBUS == null) {
+            System.out.println("EmpBus null");
+        }
+
         List<EmployeeEntity> list = empBUS.getAllEntities(); // Thêm dấu ngoặc tròn
         for (EmployeeEntity e : list) {
             if (!isBCryptHash(e.getPassword())) { // Kiểm tra định dạng BCrypt

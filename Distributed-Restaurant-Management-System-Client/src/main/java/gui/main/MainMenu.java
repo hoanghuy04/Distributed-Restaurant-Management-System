@@ -166,6 +166,7 @@ public class MainMenu extends JLayeredPane {
                 new DialogAboutPage(null, true, this).setVisible(true);
             } else if (index == 13) {
                 new LoginGUI().setVisible(true);
+                application.logout();
                 this.setVisible(false);
             } else {
                 action.cancel();

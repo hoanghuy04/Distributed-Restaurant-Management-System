@@ -45,13 +45,13 @@ public class Application extends javax.swing.JFrame {
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }
 
-//    public static void logout() {
-//        FlatAnimatedLafChange.showSnapshot();
-//        app.setContentPane(app.mainMenu);
+    public static void logout() {
+        FlatAnimatedLafChange.showSnapshot();
+        app.setContentPane(app.mainMenu);
 //        app.loginForm.applyComponentOrientation(app.getComponentOrientation());
 //        SwingUtilities.updateComponentTreeUI(app.loginForm);
-//        FlatAnimatedLafChange.hideSnapshotWithAnimation();
-//    }
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
     public static void setSelectedMenu(int index, int subIndex) throws Exception {
         app.mainMenu.setSelectedMenu(index, subIndex);
     }
