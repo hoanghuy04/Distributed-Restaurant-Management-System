@@ -6,6 +6,8 @@ package bus.impl;
 
 import bus.OrderBUS;
 import bus.TableBUS;
+import bus.request.ClientCallback;
+import bus.request.OrderRequest;
 import dal.OrderDAL;
 import dal.connectDB.ConnectDB;
 import model.OrderEntity;
@@ -40,27 +42,22 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
 
     private OrderDAL orderDAL;
     private TableBUS tableBUS;
+    private OrderQueueProcessor queueProcessor;
 
     public OrderBUSImpl(EntityManager em)  throws RemoteException {
         orderDAL = new OrderDAL(em);
         tableBUS = new TableBUSImpl(em);
+        queueProcessor = new OrderQueueProcessor(this);
     }
 
     @Override
     public OrderEntity insertEntity(OrderEntity orderEntity)  throws RemoteException {
         String tableId = orderEntity.getTable().getTableId();
-        // Kiểm tra và khóa bàn
-        if (!tableBUS.lockTable(tableId)) {
-            throw new RemoteException("Bàn đang được xử lý bởi máy khác. Vui lòng thử lại sau!");
-        }
-
         try {
             // Lưu đơn hàng
             OrderEntity savedOrder = orderDAL.insert(orderEntity);
-
             // Cập nhật trạng thái bàn thành OCCUPIED
             tableBUS.unlockTable(tableId, TableStatusEnum.OCCUPIED);
-
             return savedOrder;
         } catch (Exception e) {
             // Nếu có lỗi, mở khóa bàn
@@ -72,27 +69,25 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     @Override
     public boolean updateEntity(OrderEntity orderEntity)  throws RemoteException {
         String tableId = orderEntity.getTable().getTableId();
-        // Kiểm tra và khóa bàn
-        if (!tableBUS.lockTable(tableId)) {
-            throw new RemoteException("Bàn đang được xử lý bởi máy khác. Vui lòng thử lại sau!");
-        }
-
         try {
             // Cập nhật đơn hàng
             boolean updated = orderDAL.update(orderEntity);
-
             // Cập nhật trạng thái bàn
             TableStatusEnum finalStatus = (orderEntity.getPaymentStatus() == PaymentStatusEnum.PAID)
                     ? TableStatusEnum.AVAILABLE
                     : TableStatusEnum.OCCUPIED;
             tableBUS.unlockTable(tableId, finalStatus);
-
             return updated;
         } catch (Exception e) {
             // Nếu có lỗi, mở khóa bàn
             tableBUS.unlockTable(tableId, TableStatusEnum.AVAILABLE);
             throw new RemoteException("Lỗi khi cập nhật đơn hàng: " + e.getMessage());
         }
+    }
+
+    public void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws RemoteException {
+        OrderRequest request = new OrderRequest(orderEntity, paymentStatus, callback);
+        queueProcessor.addOrderRequest(request);
     }
 
     @Override
