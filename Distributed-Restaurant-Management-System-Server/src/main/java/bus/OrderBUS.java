@@ -66,6 +66,5 @@ public interface OrderBUS extends BaseBUS<OrderEntity, String>, Remote {
     Map<String, Map<Integer, Integer>> getFrequencyPromotionStatsbyDatetime(LocalDateTime startedDate, LocalDateTime endedDate) throws RemoteException;
 
     double getTotalDiscount(LocalDateTime startedDate, LocalDateTime endedDate) throws RemoteException;
-
     void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws RemoteException;
 }

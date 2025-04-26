@@ -43,11 +43,20 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     private OrderDAL orderDAL;
     private TableBUS tableBUS;
     private OrderQueueProcessor queueProcessor;
+    private final EntityManager em;
 
     public OrderBUSImpl(EntityManager em)  throws RemoteException {
+        this.em = em;
         orderDAL = new OrderDAL(em);
-        tableBUS = new TableBUSImpl(em);
         queueProcessor = new OrderQueueProcessor(this);
+    }
+
+    // Lazy initialization của tableBUS
+    private TableBUS getTableBUS() throws RemoteException {
+        if (tableBUS == null) {
+            tableBUS = new TableBUSImpl(em);
+        }
+        return tableBUS;
     }
 
     @Override
@@ -57,11 +66,11 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
             // Lưu đơn hàng
             OrderEntity savedOrder = orderDAL.insert(orderEntity);
             // Cập nhật trạng thái bàn thành OCCUPIED
-            tableBUS.unlockTable(tableId, TableStatusEnum.OCCUPIED);
+            getTableBUS().unlockTable(tableId, TableStatusEnum.OCCUPIED);
             return savedOrder;
         } catch (Exception e) {
             // Nếu có lỗi, mở khóa bàn
-            tableBUS.unlockTable(tableId, TableStatusEnum.AVAILABLE);
+            getTableBUS().unlockTable(tableId, TableStatusEnum.AVAILABLE);
             throw new RemoteException("Lỗi khi tạo đơn hàng: " + e.getMessage());
         }
     }
@@ -76,11 +85,11 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
             TableStatusEnum finalStatus = (orderEntity.getPaymentStatus() == PaymentStatusEnum.PAID)
                     ? TableStatusEnum.AVAILABLE
                     : TableStatusEnum.OCCUPIED;
-            tableBUS.unlockTable(tableId, finalStatus);
+            getTableBUS().unlockTable(tableId, finalStatus);
             return updated;
         } catch (Exception e) {
             // Nếu có lỗi, mở khóa bàn
-            tableBUS.unlockTable(tableId, TableStatusEnum.AVAILABLE);
+            getTableBUS().unlockTable(tableId, TableStatusEnum.AVAILABLE);
             throw new RemoteException("Lỗi khi cập nhật đơn hàng: " + e.getMessage());
         }
     }
