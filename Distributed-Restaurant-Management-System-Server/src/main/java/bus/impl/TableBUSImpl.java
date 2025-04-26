@@ -1,6 +1,6 @@
 package bus.impl;
 
-import bus.BaseBUS;
+import bus.TableBUS;
 import dal.TableDAL;
 import model.OrderEntity;
 import model.TableEntity;
@@ -24,6 +24,38 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     public TableBUSImpl(EntityManager entityManager)  throws RemoteException {
         this.tableDAL = new TableDAL(entityManager);
         this.orderBUSImpl = new OrderBUSImpl(entityManager);
+    }
+
+    @Override
+    public synchronized boolean lockTable(String tableId) throws RemoteException {
+        try {
+            TableEntity table = getEntityById(tableId); // Giả sử có phương thức này
+            if (table == null) {
+                throw new RemoteException("Bàn không tồn tại");
+            }
+            if (table.getTableStatus() == TableStatusEnum.PROCESSING) {
+                return false; // Bàn đang được xử lý
+            }
+            // Đánh dấu bàn là PROCESSING
+            table.setTableStatus(TableStatusEnum.PROCESSING);
+            updateEntity(table);
+            return true;
+        } catch (Exception e) {
+            throw new RemoteException("Lỗi khi khóa bàn: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public synchronized void unlockTable(String tableId, TableStatusEnum finalStatus) throws RemoteException {
+        try {
+            TableEntity table = getEntityById(tableId);
+            if (table != null) {
+                table.setTableStatus(finalStatus);
+                updateEntity(table);
+            }
+        } catch (Exception e) {
+            throw new RemoteException("Lỗi khi mở khóa bàn: " + e.getMessage());
+        }
     }
 
     @Override

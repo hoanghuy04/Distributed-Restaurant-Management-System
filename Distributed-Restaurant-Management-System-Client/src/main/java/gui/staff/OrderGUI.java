@@ -1145,145 +1145,130 @@ public class OrderGUI extends JPanel {
                 floorBUS.findByName(cbbFloor.getSelectedItem().toString()).getFloorId());
         FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
 
-        // Thử khóa bàn
-        TableLockManager lockManager = TableLockManager.getInstance();
-        boolean isLocked = lockManager.acquireLock(tableCBB.getTableId(), 5000); // Chờ tối đa 5 giây
+        this.o = orderBUS.findByTableId(tableCBB.getTableId());
+        boolean isNewOrder = false;
 
-        if (!isLocked) {
-            JOptionPane.showMessageDialog(null, "Bàn đang được xử lý bởi nhân viên khác. Vui lòng thử lại sau!",
-                    "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-
-        try {
-            this.o = orderBUS.findByTableId(tableCBB.getTableId());
-            boolean isNewOrder = false;
-
-            if (o == null) {
-                if (table.equals(tableCBB) ||
-                        (orderBUS.findByTableId(table.getTableId()) == null &&
-                                orderBUS.findByTableId(tableCBB.getTableId()) == null)) {
-                    isNewOrder = true;
-                    o = new OrderEntity();
-                } else {
-                    o = orderBUS.findByTableId(table.getTableId());
-                }
-            }
-
-            o.setPaymentMethod(PaymentMethodEnum.convertToEnum(cbbPayment.getSelectedItem().toString()));
-            o.setPaymentStatus(paymentStatus);
-
-            if (isNewOrder) {
-                CustomerEntity customerG = getCustomer();
-                o.setCustomer(customerG != null ? customerG : dfCus);
-                o.setEmployee(LoginGUI.emp);
-                o.setTable(tableCBB);
-                o.setNumberOfCustomer(1);
-            }
-
-            boolean isSwitched = true;
-            if (table.equals(tableCBB)) {
-                updateTableStatus(table, TableStatusEnum.OCCUPIED);
-            } else if (o.getCombinedTables().isEmpty() && !o.getCombinedTables().contains(table)) {
-                updateTableStatus(table, TableStatusEnum.AVAILABLE);
-                updateTableStatus(tableCBB, TableStatusEnum.OCCUPIED);
+        if (o == null) {
+            if (table.equals(tableCBB) ||
+                    (orderBUS.findByTableId(table.getTableId()) == null &&
+                            orderBUS.findByTableId(tableCBB.getTableId()) == null)) {
+                isNewOrder = true;
+                o = new OrderEntity();
             } else {
-                isSwitched = false;
-                JOptionPane.showMessageDialog(null, "Không thể chuyển bàn gộp!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-                cbbTable.clearSelectedItems();
-                List<TableEntity> temp = new ArrayList<>();
-                temp.add(o.getTable());
-                o.getCombinedTables().forEach(x -> temp.add(x));
-                cbbTable.setSelectedItems(temp.stream().map(x -> x.getName()).collect(Collectors.toList()));
+                o = orderBUS.findByTableId(table.getTableId());
             }
-
-            List<TableEntity> listCombinedTables = (List<TableEntity>) cbbTable.getSelectedItems()
-                    .stream()
-                    .map(x -> {
-                        try {
-                            return tableBUS.findByName(x.toString(), floor.getFloorId());
-                        } catch (RemoteException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .filter(x -> !x.equals(tableCBB))
-                    .collect(Collectors.toList());
-
-            List<TableEntity> tabless = o.getCombinedTables();
-            if (tabless == null) {
-                tabless = new ArrayList<>();
-            }
-
-            for (TableEntity t : tabless) {
-                if (!listCombinedTables.contains(t)) {
-                    t.setTableStatus(TableStatusEnum.AVAILABLE);
-                    tableBUS.updateEntity(t);
-                    combinedTables.remove(t);
-                }
-            }
-
-            for (TableEntity t : listCombinedTables) {
-                if (!tabless.contains(t)) {
-                    combinedTables.add(t);
-                }
-            }
-            o.setCombinedTables(listCombinedTables);
-
-            if (isSwitched) {
-                o.setTable(tableCBB);
-                int count = cbbTable.getSelectedItems().size();
-                updateOrderWithoutOrderDetails(o);
-
-                if (!isNewOrder) {
-                    o.getOrderDetails().forEach(od -> {
-                        try {
-                            orderDetailBUS.deleteEntity(new OrderDetailId(
-                                    od.getItem().getItemId(),
-                                    od.getOrder().getOrderId(),
-                                    od.getTopping().getToppingId()));
-                            updateItemStock(od.getItem(), od.getQuantity());
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-
-                updatePriceOrder(getListOrderDetail(o), o);
-                if (count > 1) {
-                    mergeTable(o, listCombinedTables);
-                }
-
-                if (paymentStatus == PaymentStatusEnum.PAID) {
-                    if (o.getOrderDetails().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Đơn hàng trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    } else {
-                        processPaidOrder(o);
-                    }
-                }
-
-                try {
-                    if (isNewOrder) {
-                        OrderEntity oTmp = orderBUS.insertEntity(o);
-                        if (oTmp == null) {
-                            JOptionPane.showMessageDialog(null, "Không thể thực hiện");
-                            return false;
-                        }
-                    } else {
-                        orderBUS.updateEntity(o);
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Không thể thực hiện");
-                    return false;
-                }
-            }
-
-            return isSwitched;
-        } finally {
-            // Giải phóng khóa sau khi hoàn thành hoặc xảy ra lỗi
-            lockManager.releaseLock(tableCBB.getTableId());
         }
+
+        o.setPaymentMethod(PaymentMethodEnum.convertToEnum(cbbPayment.getSelectedItem().toString()));
+        o.setPaymentStatus(paymentStatus);
+
+        if (isNewOrder) {
+            CustomerEntity customerG = getCustomer();
+            o.setCustomer(customerG != null ? customerG : dfCus);
+            o.setEmployee(LoginGUI.emp);
+            o.setTable(tableCBB);
+            o.setNumberOfCustomer(1);
+        }
+
+        boolean isSwitched = true;
+        if (table.equals(tableCBB)) {
+            updateTableStatus(table, TableStatusEnum.OCCUPIED);
+        } else if (o.getCombinedTables().isEmpty() && !o.getCombinedTables().contains(table)) {
+            updateTableStatus(table, TableStatusEnum.AVAILABLE);
+            updateTableStatus(tableCBB, TableStatusEnum.OCCUPIED);
+        } else {
+            isSwitched = false;
+            JOptionPane.showMessageDialog(null, "Không thể chuyển bàn gộp!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            cbbTable.clearSelectedItems();
+            List<TableEntity> temp = new ArrayList<>();
+            temp.add(o.getTable());
+            o.getCombinedTables().forEach(x -> temp.add(x));
+            cbbTable.setSelectedItems(temp.stream().map(x -> x.getName()).collect(Collectors.toList()));
+        }
+
+        List<TableEntity> listCombinedTables = (List<TableEntity>) cbbTable.getSelectedItems()
+                .stream()
+                .map(x -> {
+                    try {
+                        return tableBUS.findByName(x.toString(), floor.getFloorId());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(Objects::nonNull)
+                .filter(x -> !x.equals(tableCBB))
+                .collect(Collectors.toList());
+
+        List<TableEntity> tabless = o.getCombinedTables();
+        if (tabless == null) {
+            tabless = new ArrayList<>();
+        }
+
+        for (TableEntity t : tabless) {
+            if (!listCombinedTables.contains(t)) {
+                t.setTableStatus(TableStatusEnum.AVAILABLE);
+                tableBUS.updateEntity(t);
+                combinedTables.remove(t);
+            }
+        }
+
+        for (TableEntity t : listCombinedTables) {
+            if (!tabless.contains(t)) {
+                combinedTables.add(t);
+            }
+        }
+        o.setCombinedTables(listCombinedTables);
+
+        if (isSwitched) {
+            o.setTable(tableCBB);
+            int count = cbbTable.getSelectedItems().size();
+            updateOrderWithoutOrderDetails(o);
+
+            if (!isNewOrder) {
+                o.getOrderDetails().forEach(od -> {
+                    try {
+                        orderDetailBUS.deleteEntity(new OrderDetailId(
+                                od.getItem().getItemId(),
+                                od.getOrder().getOrderId(),
+                                od.getTopping().getToppingId()));
+                        updateItemStock(od.getItem(), od.getQuantity());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            updatePriceOrder(getListOrderDetail(o), o);
+            if (count > 1) {
+                mergeTable(o, listCombinedTables);
+            }
+
+            if (paymentStatus == PaymentStatusEnum.PAID) {
+                if (o.getOrderDetails().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Đơn hàng trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                } else {
+                    processPaidOrder(o);
+                }
+            }
+
+            try {
+                if (isNewOrder) {
+                    OrderEntity oTmp = orderBUS.insertEntity(o);
+                    if (oTmp == null) {
+                        JOptionPane.showMessageDialog(null, "Không thể thực hiện");
+                        return false;
+                    }
+                } else {
+                    orderBUS.updateEntity(o);
+                }
+            } catch (RemoteException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        return isSwitched;
     }
 
     private void updateTableStatus(TableEntity table, TableStatusEnum status) throws Exception {
