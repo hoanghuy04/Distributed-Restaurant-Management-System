@@ -14,6 +14,8 @@ import gui.main.LoginGUI;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class FormLoad extends javax.swing.JDialog {
     public static ToppingBUS toppingBUS;
     public static ItemToppingBUS itemToppingBUS;
     public static RoleBUS roleBUS;
+    public static FileBUS fileBUS;
 
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -160,6 +163,7 @@ public class FormLoad extends javax.swing.JDialog {
                 lookupTasks.add(() -> lookupBus("ItemToppingBUS", ItemToppingBUS.class));
                 lookupTasks.add(() -> lookupBus("PromotionDetailBUS", PromotionDetailBUS.class));
                 lookupTasks.add(() -> lookupBus("RoleBUS", RoleBUS.class));
+                lookupTasks.add(() -> lookupBus("FileBUS", FileBUS.class));
 
                 // Cập nhật tiến trình
                 doTask("Loading...", 5);
@@ -177,6 +181,21 @@ public class FormLoad extends javax.swing.JDialog {
 
                 // Hoàn tất
                 doTask("Done ...", 20);
+
+               ;
+
+                for (String s:  fileBUS.listFiles("")) {
+                    System.out.println(s);
+
+                    byte [] mydata = fileBUS.downloadFileFromServer(s);
+                    System.out.println("downloading...");
+                    System.out.println(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item");
+                    File clientpathfile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item"+ "\\" + s);
+                    FileOutputStream out= new FileOutputStream(clientpathfile);
+                    out.write(mydata);
+                    out.flush();
+                    out.close();
+                }
 
                 // Đóng form hiện tại và mở LoginGUI
                 dispose();
@@ -234,6 +253,9 @@ public class FormLoad extends javax.swing.JDialog {
                     break;
                 case "RoleBUS":
                     roleBUS = (RoleBUS) bus;
+                    break;
+                case "FileBUS":
+                    fileBUS = (FileBUS) bus;
                     break;
             }
             System.out.println("Connected to " + busName + " server");
