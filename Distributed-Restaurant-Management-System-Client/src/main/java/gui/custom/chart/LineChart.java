@@ -172,10 +172,10 @@ public class LineChart extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        blankPlotChart = new gui.custom.blankchart.BlankPlotChart();
+        blankPlotChart = new BlankPlotChart();
         panelLegend = new javax.swing.JPanel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new Color(255, 255, 255));
 
         panelLegend.setOpaque(false);
         panelLegend.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 0));
@@ -203,7 +203,7 @@ public class LineChart extends javax.swing.JPanel {
     }// </editor-fold>                        
 
     // Variables declaration - do not modify                     
-    private gui.custom.blankchart.BlankPlotChart blankPlotChart;
+    private BlankPlotChart blankPlotChart;
     private javax.swing.JPanel panelLegend;
     // End of variables declaration                   
 }
