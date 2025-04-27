@@ -8,6 +8,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +16,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Data
-@Table(name = "floors")
+@Table(
+        name = "floors",
+        indexes = {
+                @Index(name = "idx_floors_floor_id", columnList = "floor_id"), // Đổi tên chỉ mục cho bảng floors
+                @Index(name = "idx_floors_name", columnList = "name")  // Đổi tên chỉ mục cho bảng floors
+        }
+)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-    @NamedQuery(name = "FloorEntity.findAll", query = "select f from FloorEntity f")
+        @NamedQuery(name = "FloorEntity.findAll", query = "select f from FloorEntity f")
 })
 public class FloorEntity implements Serializable {
 
@@ -27,7 +34,7 @@ public class FloorEntity implements Serializable {
     @EqualsAndHashCode.Include
     private String floorId;
 
-    @Column(name = "name", nullable = false, columnDefinition = "nvarchar(50)")
+    @Column(name = "name", nullable = false, columnDefinition = "nvarchar(50)", unique = true)
     private String name;
 
     @Column(name = "capacity", nullable = false)

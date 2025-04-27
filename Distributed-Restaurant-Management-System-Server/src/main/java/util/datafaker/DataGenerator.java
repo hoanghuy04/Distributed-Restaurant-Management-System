@@ -65,15 +65,14 @@ public class DataGenerator {
         String prefix = "";
         int maxIndex = 0;
 
-        SizeEnum chosenSize = null;
         if (category.getName().trim().equalsIgnoreCase("Pizza")) {
             String baseName = "Pizza " + (rand.nextBoolean() ? faker.food().spice() : faker.food().ingredient());
 
-            for (SizeEnum size : SizeEnum.values()) {
-                String nameCheck = "(" + size.getSize() + ") - " + baseName;
-                if (itemDAL.findByName(nameCheck) != null) {
-                    return null;
-                }
+            SizeEnum chosenSize = SizeEnum.values()[rand.nextInt(SizeEnum.values().length)];
+            String name = "(" + chosenSize.getSize() + ") - " + baseName;
+
+            if (itemDAL.findByName(name) != null) {
+                return null;
             }
 
             prefix = "item_c1_";
@@ -81,20 +80,16 @@ public class DataGenerator {
             int imgIndex = rand.nextInt(maxIndex + 1);
             img = prefix + imgIndex + ".png";
 
-            chosenSize = SizeEnum.values()[rand.nextInt(SizeEnum.values().length)];
-            String name = "(" + chosenSize.getSize() + ") - " + baseName;
-
             double costPrice = rand.nextDouble() * 150_000 + 50_000;
             int stockQuantity = rand.nextInt(100) + 1;
             String description = faker.lorem().sentence();
 
             return new ItemEntity(
-                    "", name, costPrice, stockQuantity,
+                    "", baseName, costPrice, stockQuantity,
                     description, img, true, chosenSize, category, new HashSet<>()
             );
 
         } else {
-            // Các danh mục khác vẫn xử lý như bình thường
             String name = "";
             if (category.getName().trim().equalsIgnoreCase("Khai Vị")) {
                 name = "Khai Vị " + faker.food().dish();

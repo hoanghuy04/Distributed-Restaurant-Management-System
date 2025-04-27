@@ -25,4 +25,6 @@ public interface FloorBUS extends BaseBUS<FloorEntity, String>, Remote {
     FloorEntity findByName(String name) throws RemoteException;
 
     List<FloorEntity> getTablesWithKeyword(Integer capacity, String name) throws RemoteException;
+
+    List<FloorEntity> findByCriteria(FloorEntity criteria) throws RemoteException;
 }

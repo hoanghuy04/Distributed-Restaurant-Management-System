@@ -155,7 +155,11 @@ public class ItemEntity extends BaseEntity implements Serializable {
         if (name.trim().isEmpty() || name.trim().isBlank()) {
             throw new Exception("Tên sản phẩm không được để trống");
         }
-        this.name = name;
+        if(size != null) {
+            this.name = "(" + size.getSize() +") - " + name;
+        } else {
+            this.name = name;
+        }
     }
 
     public void setCostPrice(double costPrice) {
