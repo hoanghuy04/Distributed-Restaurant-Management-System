@@ -51,7 +51,7 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
 
             if (orderEntity.getOrderDetails() != null) {
                 for (OrderDetailEntity detail : orderEntity.getOrderDetails()) {
-                    detail.setOrder(orderEntity);
+//                    detail.setOrder(orderEntity);
                     detail.setItem(detail.getItem());
                     detail.setTopping(detail.getTopping());
                     detail.setLineTotal();
@@ -286,12 +286,12 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
         return q.getResultList();
     }
 
-    //test getOrdersbyDateAndOption
-    public static void main(String[] args) {
-        ConnectDB.connect();
-        OrderDAL orderDAL = new OrderDAL();
-        orderDAL.getReservationsByDateTime(null, null, "Đơn đặt trước").stream()
-                .forEach(x -> System.out.println(x.getOrderId()));
-    }
+//    //test getOrdersbyDateAndOption
+//    public static void main(String[] args) {
+//        ConnectDB.connect();
+//        OrderDAL orderDAL = new OrderDAL();
+//        orderDAL.getReservationsByDateTime(null, null, "Đơn đặt trước").stream()
+//                .forEach(x -> System.out.println(x.getOrderId()));
+//    }
 
 }

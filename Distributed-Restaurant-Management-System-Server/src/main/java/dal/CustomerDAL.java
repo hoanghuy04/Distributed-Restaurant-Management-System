@@ -84,7 +84,7 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
                 .orElse(null);
     }
 
-    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB, String address) {
+    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB) {
         StringBuilder queryBuilder = new StringBuilder("SELECT c FROM CustomerEntity c WHERE 1=1 ");
         List<Object> parameters = new ArrayList<>();
 
@@ -100,9 +100,6 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
         if (dOB != null) {
             queryBuilder.append("AND c.dateOfBirth = :dOB ");
         }
-        if (address != null && !address.isEmpty()) {
-            queryBuilder.append("AND c.address LIKE :address ");
-        }
 
         Query query = em.createQuery(queryBuilder.toString(), CustomerEntity.class);
 
@@ -117,9 +114,6 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
         }
         if (dOB != null) {
             query.setParameter("dOB", dOB);
-        }
-        if (address != null && !address.isEmpty()) {
-            query.setParameter("address", "%" + address + "%");
         }
         return query.getResultList();
     }
