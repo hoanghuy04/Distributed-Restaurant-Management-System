@@ -15,5 +15,13 @@ public enum TableStatusEnum {
         return tableStatus;
     }
 
+    public static TableStatusEnum convertToEnum(String pMethod) {
+        for (TableStatusEnum tableStatus : TableStatusEnum.values()) {
+            if (tableStatus.getTableStatus().equalsIgnoreCase(pMethod)) {
+                return tableStatus;
+            }
+        }
+        throw new IllegalArgumentException("Phương thức " + pMethod + " không tồn tại!");
+    }
 
 }

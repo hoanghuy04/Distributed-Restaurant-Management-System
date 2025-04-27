@@ -30,4 +30,6 @@ public interface TableBUS  extends BaseBUS<TableEntity, String> {
     TableEntity findByName(String name, String floorId) throws RemoteException;
 
     List<TableEntity> getTablesWithKeyword(String floorId, Integer capacity, String tableName) throws RemoteException;
+
+    List<TableEntity> findByCriteria(TableEntity criteria) throws RemoteException;
 }

@@ -148,4 +148,9 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     public List<TableEntity> getTablesWithKeyword(String floorId, Integer capacity, String tableName)  throws RemoteException {
         return tableDAL.getTablesWithKeyword(floorId, capacity, tableName);
     }
+
+    @Override
+    public List<TableEntity> findByCriteria(TableEntity criteria) throws RemoteException {
+        return tableDAL.findByCriteria(criteria);
+    }
 }

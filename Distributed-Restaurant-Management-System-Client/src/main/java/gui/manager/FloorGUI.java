@@ -176,7 +176,11 @@ public class FloorGUI extends javax.swing.JPanel {
         btnClear.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
+                try {
+                    btnClearActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnClear);
@@ -283,16 +287,18 @@ public class FloorGUI extends javax.swing.JPanel {
         add(jPanel5, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        clearText();
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnClearActionPerformed
+        clearData();
+        loadData();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
-        FloorEntity f = getFloorDataFromUI(null);
-        if(floorBUS.findByName(f.getName()) == null) {
+        FloorEntity f = getFloorDataFromUI();
+        if (floorBUS.findByName(f.getName()) == null) {
             if (floorBUS.insertEntity(f) != null) {
                 JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
                 loadData();
+                clearData();
             } else {
                 JOptionPane.showMessageDialog(null, "Thêm tầng không thành công");
             }
@@ -342,6 +348,7 @@ public class FloorGUI extends javax.swing.JPanel {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy kết quả!");
+                loadData();
             }
         }
     }//GEN-LAST:event_btnFindActionPerformed
@@ -353,10 +360,12 @@ public class FloorGUI extends javax.swing.JPanel {
         } else {
             if (validData()) {
                 String id = table.getValueAt(selectedRow, 0).toString();
-                FloorEntity f = getFloorDataFromUI(id);
+                FloorEntity f = getFloorDataFromUI();
+                f.setFloorId(id);
                 if (floorBUS.updateEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
                     loadData();
+                    clearData();
                 } else {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng không thành công");
                 }
@@ -373,11 +382,6 @@ public class FloorGUI extends javax.swing.JPanel {
             lblCapacity.setText(capacity);
         }
     }//GEN-LAST:event_tableMouseClicked
-
-    private void clearText() {
-        lblCapacity.setText("");
-        lblName.setText("");
-    }
 
     private void loadData() throws Exception {
         modelTable.setRowCount(0);
@@ -411,27 +415,26 @@ public class FloorGUI extends javax.swing.JPanel {
         return true;
     }
 
-    private FloorEntity getFloorDataFromUI(String id) {
+    private FloorEntity getFloorDataFromUI() {
         String name = "";
         int capacity = 0;
-        if (id == null) {
-            if (validData()) {
-                name = lblName.getText().trim();
-                try {
-                    capacity = Integer.parseInt(lblCapacity.getText().trim());
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            } else {
+        if (validData()) {
+            name = lblName.getText().trim();
+            try {
+                capacity = Integer.parseInt(lblCapacity.getText().trim());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
                 return null;
             }
         } else {
-            id = table.getValueAt(table.getSelectedRow(), 0).toString();
-            name = table.getValueAt(table.getSelectedRow(), 1).toString();
-            capacity = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString());
+            return null;
         }
-        return new FloorEntity(id, name, capacity);
+        return new FloorEntity(null, name, capacity);
+    }
+
+    private void clearData() {
+        lblCapacity.setText("");
+        lblName.setText("");
     }
 
 
