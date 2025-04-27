@@ -97,34 +97,34 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(48, Short.MAX_VALUE))
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel10Layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jLabel1))
+                                        .addGroup(jPanel10Layout.createSequentialGroup()
+                                                .addGap(103, 103, 103)
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
+                                                .addComponent(jLabel3)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(lblCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(48, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(25, 25, 25)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(25, 25, 25)
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(25, 25, 25))
         );
 
         jPanel6.add(jPanel10, java.awt.BorderLayout.NORTH);
@@ -206,12 +206,12 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1275, Short.MAX_VALUE)
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1275, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE)
         );
 
         jPanel9.add(jPanel8, java.awt.BorderLayout.NORTH);
@@ -227,12 +227,12 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1355, Short.MAX_VALUE)
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1355, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 40, Short.MAX_VALUE)
         );
 
         add(jPanel2, java.awt.BorderLayout.NORTH);
@@ -242,12 +242,12 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1355, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1355, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 40, Short.MAX_VALUE)
         );
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
@@ -257,12 +257,12 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         add(jPanel4, java.awt.BorderLayout.WEST);
@@ -272,12 +272,12 @@ public class FloorGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 40, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 780, Short.MAX_VALUE)
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 780, Short.MAX_VALUE)
         );
 
         add(jPanel5, java.awt.BorderLayout.EAST);
@@ -288,39 +288,60 @@ public class FloorGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
-        if (validData()) {
-            String name = lblName.getText().trim();
-            int capacity = 0;
-            try {
-                capacity = Integer.parseInt(lblCapacity.getText().trim());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            FloorEntity f = new FloorEntity(null, name, capacity);
+        FloorEntity f = getFloorDataFromUI(null);
+        if(floorBUS.findByName(f.getName()) == null) {
             if (floorBUS.insertEntity(f) != null) {
                 JOptionPane.showMessageDialog(null, "Thêm tầng thành công");
-                deleteAllTable();
                 loadData();
             } else {
                 JOptionPane.showMessageDialog(null, "Thêm tầng không thành công");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Tên tầng đã tồn tại");
         }
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnFindActionPerformed
         String name = lblName.getText().trim();
-        if (name.isBlank() || name.isEmpty()) {
-            deleteAllTable();
+        String capacityText = lblCapacity.getText().trim();
+        if (name.isEmpty() && capacityText.isEmpty()) {
             loadData();
         } else {
-            FloorEntity f = floorBUS.findByName(name);
-            if (f != null) {
-                deleteAllTable();
-                modelTable.addRow(new Object[]{
-                    f.getFloorId(), f.getName(), f.getCapacity()
-                });
+            FloorEntity f = new FloorEntity();
+
+            if (!name.isEmpty()) {
+                f.setName(name);
+            }
+
+            int capacity = -1;
+            if (!capacityText.isEmpty()) {
+                try {
+                    capacity = Integer.parseInt(capacityText);
+                    if (capacity <= 0) {
+                        JOptionPane.showMessageDialog(null, "Sức chứa phải lớn hơn 0!");
+                        return;
+                    }
+                    f.setCapacity(capacity);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Sức chứa phải là một số hợp lệ!");
+                    return;
+                }
+            }
+
+            List<FloorEntity> result = floorBUS.findByCriteria(f);
+
+            modelTable.setRowCount(0);
+
+            if (result != null && !result.isEmpty()) {
+                for (int i = 0; i < result.size(); i++) {
+                    FloorEntity floor = result.get(i);
+                    modelTable.addRow(new Object[]{
+                            floor.getFloorId(), floor.getName(), floor.getCapacity()
+                    });
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Không tồn tại!");
+                JOptionPane.showMessageDialog(null, "Không tìm thấy kết quả!");
             }
         }
     }//GEN-LAST:event_btnFindActionPerformed
@@ -331,18 +352,10 @@ public class FloorGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
         } else {
             if (validData()) {
-                String name = lblName.getText().trim();
                 String id = table.getValueAt(selectedRow, 0).toString();
-                int capacity = 0;
-                try {
-                    capacity = Integer.parseInt(lblCapacity.getText().trim());
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-                FloorEntity f = new FloorEntity(id, name, capacity);
+                FloorEntity f = getFloorDataFromUI(id);
                 if (floorBUS.updateEntity(f)) {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng thành công");
-                    deleteAllTable();
                     loadData();
                 } else {
                     JOptionPane.showMessageDialog(null, "Cập nhật tầng không thành công");
@@ -364,19 +377,15 @@ public class FloorGUI extends javax.swing.JPanel {
     private void clearText() {
         lblCapacity.setText("");
         lblName.setText("");
-        
     }
 
     private void loadData() throws Exception {
+        modelTable.setRowCount(0);
         floorBUS.getAllEntities().stream().forEach(f -> {
             modelTable.addRow(new Object[]{
-                f.getFloorId(), f.getName(), f.getCapacity()
+                    f.getFloorId(), f.getName(), f.getCapacity()
             });
         });
-    }
-
-    private void deleteAllTable() {
-        modelTable.setRowCount(0);
     }
 
     private boolean validData() {
@@ -385,6 +394,7 @@ public class FloorGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Tên không được rỗng");
             return false;
         }
+
         int capacity = 0;
         try {
             capacity = Integer.parseInt(lblCapacity.getText().trim());
@@ -392,8 +402,38 @@ public class FloorGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Sức chứa phải là số!");
             return false;
         }
-        return capacity > 0;
+
+        if (capacity <= 0) {
+            JOptionPane.showMessageDialog(null, "Sức chứa phải lớn hơn 0!");
+            return false;
+        }
+
+        return true;
     }
+
+    private FloorEntity getFloorDataFromUI(String id) {
+        String name = "";
+        int capacity = 0;
+        if (id == null) {
+            if (validData()) {
+                name = lblName.getText().trim();
+                try {
+                    capacity = Integer.parseInt(lblCapacity.getText().trim());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            id = table.getValueAt(table.getSelectedRow(), 0).toString();
+            name = table.getValueAt(table.getSelectedRow(), 1).toString();
+            capacity = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString());
+        }
+        return new FloorEntity(id, name, capacity);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private gui.custom.RoundedButton btnAdd;
