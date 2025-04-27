@@ -27,4 +27,6 @@ public interface ToppingBUS extends BaseBUS<ToppingEntity, String> {
     void updateTopping(ToppingDTO toppingDTO, String id) throws RemoteException;
 
     List<ToppingEntity> findTopping(ToppingDTO toppingDTO) throws RemoteException;
+
+    ToppingEntity findByName(String name ) throws  RemoteException;
 }

@@ -132,4 +132,9 @@ public class ToppingBUSImpl extends UnicastRemoteObject implements bus.ToppingBU
     public List<ToppingEntity> findTopping(ToppingDTO toppingDTO)  throws RemoteException {
         return toppingDAL.findByCriteria(toppingDTO);
     }
+
+    @Override
+    public ToppingEntity findByName(String name) throws RemoteException {
+        return toppingDAL.findByName(name);
+    }
 }

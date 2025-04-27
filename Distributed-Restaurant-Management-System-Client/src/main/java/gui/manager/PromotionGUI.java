@@ -147,21 +147,6 @@ public class PromotionGUI extends javax.swing.JPanel {
 
         PromotionTypeEnum selectedType = PromotionTypeEnum.valueOf(cbbType.getSelectedItem().toString());
         PromotionEntity proNEW = new PromotionEntity(scrip, discount, startDate, endDate, true, null, selectedRanks, selectedType, minPrice);
-        if (cbbType.getSelectedItem().toString().equals("ITEM")) {
-            String itemIDsString = txtItem.getText();
-            String[] itemIDs = itemIDsString.split(",");
-            Set<PromotionDetailEntity> promotionDetails = new HashSet<>();
-            for (String itemID : itemIDs) {
-                itemID = itemID.trim();
-                if (!itemID.isEmpty()) {
-                    ItemEntity item = itemBUS.getEntityById(itemID);
-                    PromotionDetailEntity promotionDetail = new PromotionDetailEntity(proNEW, item);
-                    promotionDetails.add(promotionDetail);
-                    item.setPromotionDetails(promotionDetails);
-                }
-            }
-            proNEW.setPromotionDetails(promotionDetails);
-        }
         return proNEW;
     }
 
@@ -650,17 +635,21 @@ public class PromotionGUI extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
-            PromotionEntity proNEW = convertData();
-            proBUS.insertEntity(proNEW);
-            if (proNEW.getPromotionDetails() != null) {
-                proNEW.getPromotionDetails().forEach(x -> {
-                    try {
-                        proDetailBUS.insertEntity(x);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+            PromotionEntity proNEW = proBUS.insertEntity(convertData());
+            if (cbbType.getSelectedItem().toString().equals("ITEM")) {
+                String itemIDsString = txtItem.getText();
+                String[] itemIDs = itemIDsString.split(",");
+                Set<PromotionDetailEntity> promotionDetails = new HashSet<>();
+                for (String itemID : itemIDs) {
+                    itemID = itemID.trim();
+                    if (!itemID.isEmpty()) {
+                        ItemEntity item = itemBUS.getEntityById(itemID);
+                        PromotionDetailEntity promotionDetail = proDetailBUS.insertEntity(new PromotionDetailEntity(proNEW, item));
+                        promotionDetails.add(promotionDetail);
+                        item.setPromotionDetails(promotionDetails);
                     }
-                });
-                proNEW.setPromotionDetails(proNEW.getPromotionDetails());
+                }
+                proNEW.setPromotionDetails(promotionDetails);
                 proBUS.updateEntity(proNEW);
             }
             tableModel.addRow(new Object[]{proNEW.getPromotionId(), proNEW.getStartedDate(), proNEW.getEndedDate(), proNEW.getDescription(),

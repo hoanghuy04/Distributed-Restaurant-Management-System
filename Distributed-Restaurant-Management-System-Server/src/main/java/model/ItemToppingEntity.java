@@ -15,7 +15,14 @@ import java.io.Serializable;
  */
 @Data
 @Entity
-@Table(name = "items_toppings")
+@Table(
+        name = "items_toppings",
+        indexes = {
+                @Index(name = "idx_item_id", columnList = "item_id"),
+                @Index(name = "idx_topping_id", columnList = "topping_id"),
+                @Index(name = "idx_item_topping", columnList = "item_id, topping_id")
+        }
+)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NamedQueries({
         @NamedQuery(name = "ItemToppingEntity.findAll", query = "select it from ItemToppingEntity it"),
