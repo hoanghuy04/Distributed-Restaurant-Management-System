@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -501,7 +502,11 @@ public class ItemGUI extends javax.swing.JPanel {
         btnUpdate.setPreferredSize(new java.awt.Dimension(150, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel8.add(btnUpdate);
@@ -646,7 +651,7 @@ public class ItemGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         if (isValidate()) {
             try {
                 i.setName(txtName.getText());
@@ -811,7 +816,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
                 imgPath = table.getValueAt(row, 7).toString();
             }
-
+            this.imgPath = imgPath;
             // Cập nhật các trường tương ứng
             txtName.setText(name);
             cbbCategory.setSelectedItem(categoryName);
@@ -1028,7 +1033,7 @@ public class ItemGUI extends javax.swing.JPanel {
 //        }
     }
 
-    private boolean isValidate() {
+    private boolean isValidate() throws Exception {
         String name = txtName.getText();
         String cost = txtCostPrice.getText();
         String inStock = txtStockQty.getText();
@@ -1036,7 +1041,7 @@ public class ItemGUI extends javax.swing.JPanel {
         // Validate Name
         if (name == null || name.trim().isEmpty()) {
 
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT, "Tên sản phẩm không dược để trống!");
 
             return false;
@@ -1044,7 +1049,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         if (cost == null || cost.trim().isEmpty()) {
             System.out.println("Cost cannot be empty or null.");
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT,
                     "Giá sản phẩm không được để trống!");
             return false;
@@ -1053,39 +1058,47 @@ public class ItemGUI extends javax.swing.JPanel {
 
             double costValue = Double.parseDouble(cost.trim());
             if (costValue < 0) {
-                Notifications.getInstance().show(Notifications.Type.SUCCESS,
+                Notifications.getInstance().show(Notifications.Type.ERROR,
                         Notifications.Location.TOP_RIGHT,
                         "Giá sản phẩm không hợp  lệ!");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT,
                     "Giá sản phẩm không hợp  lệ!");
             return false;
         }
 
         if (inStock == null || inStock.trim().isEmpty()) {
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT, "Số lượng sản phẩm không được để trống!");
             return false;
         }
         try {
             int stockQty = Integer.parseInt(inStock.trim());
             if (stockQty < 0) {
-                Notifications.getInstance().show(Notifications.Type.SUCCESS,
+                Notifications.getInstance().show(Notifications.Type.ERROR,
                         Notifications.Location.TOP_RIGHT, "Số lượng sản phẩm không hợp lệ!");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT, "Số lượng sản phẩm không hợp lệ!");
             return false;
         }
 
         if (imgPath.isBlank() || imgPath.isBlank()) {
-            Notifications.getInstance().show(Notifications.Type.SUCCESS,
+            Notifications.getInstance().show(Notifications.Type.ERROR,
                     Notifications.Location.TOP_RIGHT, "Vui lòng chọn hình ảnh cho món ăn!");
+            return false;
+        }
+
+       ItemEntity itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
+
+        if(itemEntity!=null) {
+            Notifications.getInstance().show(Notifications.Type.ERROR,
+                    Notifications.Location.TOP_RIGHT, "Tên món đã tồn tại!");
             return false;
         }
         return true;
