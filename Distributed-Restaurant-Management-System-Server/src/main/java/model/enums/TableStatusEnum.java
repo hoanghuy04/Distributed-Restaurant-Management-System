@@ -1,7 +1,9 @@
 package model.enums;
 
 public enum TableStatusEnum {
-    AVAILABLE("Bàn trống"), OCCUPIED("Đang phục vụ");
+    AVAILABLE("Bàn trống"),
+    OCCUPIED("Đang phục vụ"),
+    PROCESSING("Đang xử lý"),;
 
     private String tableStatus;
 

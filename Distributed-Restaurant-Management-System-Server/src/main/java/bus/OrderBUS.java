@@ -1,7 +1,9 @@
 package bus;
 
+import bus.request.ClientCallback;
 import model.OrderEntity;
 import model.TableEntity;
+import model.enums.PaymentStatusEnum;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -64,4 +66,5 @@ public interface OrderBUS extends BaseBUS<OrderEntity, String>, Remote {
     Map<String, Map<Integer, Integer>> getFrequencyPromotionStatsbyDatetime(LocalDateTime startedDate, LocalDateTime endedDate) throws RemoteException;
 
     double getTotalDiscount(LocalDateTime startedDate, LocalDateTime endedDate) throws RemoteException;
+    void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws RemoteException;
 }
