@@ -17,11 +17,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>foureach</groupId>
-            <artifactId>Restaurant_Management</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
