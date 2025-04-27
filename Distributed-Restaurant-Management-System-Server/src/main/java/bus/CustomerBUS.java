@@ -24,5 +24,5 @@ public interface CustomerBUS extends BaseBUS<CustomerEntity, String> {
 
     CustomerEntity findByPhone(String phoneNumber) throws RemoteException;
 
-    List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB, String address) throws RemoteException;
+    List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB) throws RemoteException;
 }

@@ -55,8 +55,8 @@ public class CustomerGUI extends javax.swing.JPanel {
     }
 
     private void customTable() throws Exception {
-        headers = new String[]{"Mã", "Tên", "Số điện thoại", "Email", "Ngày sinh", "Điểm thưởng", "Hạng", "Địa chỉ"};
-        tableWidth = Arrays.asList(100, 100, 100, 200, 100, 100, 100, 200);
+        headers = new String[]{"Mã", "Tên", "Số điện thoại", "Email", "Ngày sinh", "Điểm thưởng", "Hạng"};
+        tableWidth = Arrays.asList(100, 200, 100, 300, 100, 100, 100);
         this.tableDesign = new TableDesign(headers, tableWidth);
         table = tableDesign.getTable();
         this.defaultTableModel = tableDesign.getModelTable();
@@ -84,7 +84,7 @@ public class CustomerGUI extends javax.swing.JPanel {
         txtDOB.setText("");
         txtRewardPoint.setText("");
         txtLevel.setText("");
-        txtAddress.setText("");
+//        txtAddress.setText("");
     }
 
     private void FillOneRow(CustomerEntity customerEntity) {
@@ -95,8 +95,8 @@ public class CustomerGUI extends javax.swing.JPanel {
             customerEntity.getEmail(),
             customerEntity.getDayOfBirth().format(DatetimeFormatterUtil.getDateFormatter()),
             customerEntity.getRewardedPoint(),
-            customerEntity.getLevelCustomer().getCustomerLevel(),
-            customerEntity.getAddress()
+            customerEntity.getLevelCustomer().getCustomerLevel()
+//            customerEntity.getAddress()
         });
     }
 
@@ -126,10 +126,6 @@ public class CustomerGUI extends javax.swing.JPanel {
         jPanel10 = new javax.swing.JPanel();
         txtPhoneNumber = new gui.custom.RoundedTextField();
         txtEmail = new gui.custom.RoundedTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtAddress = new gui.custom.RoundedTextArea();
         jPanel7 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         txtDOB = new gui.custom.RoundedTextField();
@@ -147,9 +143,10 @@ public class CustomerGUI extends javax.swing.JPanel {
         btnSearch1 = new gui.custom.RoundedButton();
         jPanel16 = new javax.swing.JPanel();
         jPanel21 = new javax.swing.JPanel();
+        jPanel20 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        jPanel20 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
 
         dateChooser1.setTextRefernce(txtDOB);
 
@@ -311,35 +308,6 @@ public class CustomerGUI extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setText("Địa chỉ khách hàng");
-        jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        jLabel5.setPreferredSize(new java.awt.Dimension(80, 40));
-
-        txtAddress.setColumns(20);
-        txtAddress.setRows(5);
-        txtAddress.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jScrollPane2.setViewportView(txtAddress);
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1483, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(88, 88, 88))
-            .addComponent(jScrollPane2)
-        );
-
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setText("Ngày sinh");
         jLabel6.setPreferredSize(new java.awt.Dimension(80, 40));
@@ -497,12 +465,11 @@ public class CustomerGUI extends javax.swing.JPanel {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 1681, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 1651, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(161, 161, 161)
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1818, 1818, 1818)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 1681, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -514,13 +481,15 @@ public class CustomerGUI extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -542,20 +511,6 @@ public class CustomerGUI extends javax.swing.JPanel {
 
         jPanel16.add(jPanel21);
 
-        customTable();
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                try {
-                    tableMouseClicked(evt);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        jScrollPane3.setViewportView(table);
-
-        jPanel16.add(jScrollPane3);
-
         jPanel20.setMaximumSize(new java.awt.Dimension(30, 30));
         jPanel20.setPreferredSize(new java.awt.Dimension(20, 30));
 
@@ -572,6 +527,37 @@ public class CustomerGUI extends javax.swing.JPanel {
 
         jPanel16.add(jPanel20);
 
+        customTable();
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                try {
+                    tableMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        jScrollPane3.setViewportView(table);
+
+        jPanel16.add(jScrollPane3);
+
+        jPanel6.setMaximumSize(new java.awt.Dimension(50, 50));
+        jPanel6.setMinimumSize(new java.awt.Dimension(50, 50));
+        jPanel6.setPreferredSize(new java.awt.Dimension(50, 36));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        jPanel16.add(jPanel6);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -587,10 +573,10 @@ public class CustomerGUI extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -630,14 +616,13 @@ public class CustomerGUI extends javax.swing.JPanel {
                 String phoneNumber = txtPhoneNumber.getText();
                 String email = txtEmail.getText();
                 String dOB = txtDOB.getText();
-                String address = txtAddress.getText().trim();
+//                String address = txtAddress.getText().trim();
 
                 LocalDate date = LocalDate.parse(dOB, DatetimeFormatterUtil.getDateFormatter());
 //                customerEntity = new CustomerEntity(name, email, phoneNumber, address, date.atStartOfDay()); //Sửa chổ này
                 customerEntity = new CustomerEntity(); //Sửa chổ này
                 customerBUS.insertEntity(customerEntity);
 
-                customerEntity = customerBUS.findByPhone(phoneNumber);
 
                 FillOneRow(customerEntity);
                 clear();
@@ -673,7 +658,7 @@ public class CustomerGUI extends javax.swing.JPanel {
                 model.setValueAt(c.getDayOfBirth().format(DatetimeFormatterUtil.getDateFormatter()), selectedRow, 4);
                 model.setValueAt(c.getRewardedPoint() + "", selectedRow, 5);
                 model.setValueAt(c.getLevelCustomer().getCustomerLevel(), selectedRow, 6);
-                model.setValueAt(c.getAddress(), selectedRow, 7);
+//                model.setValueAt(c.getAddress(), selectedRow, 7);
 
                 // Thông báo cập nhật thành công
                 JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
@@ -696,10 +681,10 @@ public class CustomerGUI extends javax.swing.JPanel {
 
         }
 
-        String address = txtAddress.getText();
+//        String address = txtAddress.getText();
 
         defaultTableModel.setRowCount(0);
-        customerBUS.getCustomersByKeyword(name, phoneNumber, email, dOB, address)
+        customerBUS.getCustomersByKeyword(name, phoneNumber, email, dOB)
                 .forEach(c -> {
                     FillOneRow(c);
                 });
@@ -726,7 +711,7 @@ public class CustomerGUI extends javax.swing.JPanel {
             String dOB = table.getValueAt(row, 4).toString();
             int rewardPoint = Integer.parseInt(table.getValueAt(row, 5).toString());
             String level = table.getValueAt(row, 6).toString();
-            String address = table.getValueAt(row, 7).toString();
+//            String address = table.getValueAt(row, 7).toString();
 
             // Cập nhật các trường tương ứng
             txtName.setText(name);
@@ -734,7 +719,7 @@ public class CustomerGUI extends javax.swing.JPanel {
             txtEmail.setText(email);
             txtRewardPoint.setText(String.valueOf(rewardPoint));
             txtLevel.setText(String.valueOf(level));
-            txtAddress.setText(address);
+//            txtAddress.setText(address);
             SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             try {
                 Date date = df.parse(dOB);
@@ -762,7 +747,6 @@ public class CustomerGUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -776,18 +760,17 @@ public class CustomerGUI extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel21;
+    private javax.swing.JPanel jPanel22;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblImg;
     private gui.custom.RoundedPanel panelImg;
     private javax.swing.JTable table;
-    private gui.custom.RoundedTextArea txtAddress;
     private gui.custom.RoundedTextField txtDOB;
     private gui.custom.RoundedTextField txtEmail;
     private gui.custom.RoundedTextField txtLevel;

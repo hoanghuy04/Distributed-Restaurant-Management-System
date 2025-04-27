@@ -153,14 +153,5 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         return query.getResultList();
     }
 
-    //test getPromotionsWithKeywordfit
-    public static void main(String[] args) {
-        ConnectDB.connect();
-        EntityManager em = ConnectDB.getEntityManager();
-        PromotionDAL promotionDAL = new PromotionDAL(em);
-        PromotionEntity promotions = promotionDAL.getPromotionsByCustomerLevelAndTotalPrice(700000, CustomerLevelEnum.VIP );
-        System.out.println(promotions);
-    }
-
 }
 
