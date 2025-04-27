@@ -662,7 +662,6 @@ public class PromotionGUI extends javax.swing.JPanel {
                 });
                 proNEW.setPromotionDetails(proNEW.getPromotionDetails());
                 proBUS.updateEntity(proNEW);
-
             }
             tableModel.addRow(new Object[]{proNEW.getPromotionId(), proNEW.getStartedDate(), proNEW.getEndedDate(), proNEW.getDescription(),
                 proNEW.getDiscountPercentage(), proNEW.getMinPrice(), proNEW.getCustomerLevels(),
@@ -786,6 +785,7 @@ public class PromotionGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_txtItemMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
+
         String scrip = txtScrip.getText();
         Double discount = null;
         String discountText = txtDiscount.getText();
@@ -810,9 +810,7 @@ public class PromotionGUI extends javax.swing.JPanel {
         if (chkVip.isSelected()) {
             selectedRanks.add(CustomerLevelEnum.VIP);
         }
-        String ranks = selectedRanks.stream()
-                .map(Enum::name)
-                .collect(Collectors.joining(","));
+
 
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
@@ -829,17 +827,17 @@ public class PromotionGUI extends javax.swing.JPanel {
             endDate = endedDate.atTime(23, 59, 59, 999999999); // 23:59:59.999999999
         }
 
-//        JOptionPane.showMessageDialog(this,startDate);
         PromotionTypeEnum selectedType = PromotionTypeEnum.valueOf(cbbType.getSelectedItem().toString());
 
         tableModel.setRowCount(0);
+
         List<PromotionEntity> pros = proBUS.getPromotionsWithKeywordfit(startDate, endDate, scrip, discount, minPrice, selectedRanks, selectedType, active);
-//        JOptionPane.showMessageDialog(this,pros);
 
         if (pros.isEmpty()) {
             pros = proBUS.getAllEntities();
             JOptionPane.showMessageDialog(this, "Không tìm thấy khuyến mãi nào");
         }
+
         for (PromotionEntity pro : pros) {
 
             tableModel.addRow(new Object[]{pro.getPromotionId(), pro.getStartedDate(), pro.getEndedDate(), pro.getDescription(),

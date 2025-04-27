@@ -318,17 +318,17 @@ public final class DateChooser extends javax.swing.JPanel {
             }
         };
         header = new javax.swing.JPanel();
-        cmdForward = new gui.custom.datechooser.Button();
+        cmdForward = new Button();
         MY = new javax.swing.JLayeredPane();
-        cmdMonth = new gui.custom.datechooser.Button();
+        cmdMonth = new Button();
         lb = new javax.swing.JLabel();
-        cmdYear = new gui.custom.datechooser.Button();
-        cmdPrevious = new gui.custom.datechooser.Button();
-        slide = new gui.custom.datechooser.Slider();
+        cmdYear = new Button();
+        cmdPrevious = new Button();
+        slide = new Slider();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new Color(255, 255, 255));
 
-        header.setBackground(new java.awt.Color(204, 93, 93));
+        header.setBackground(new Color(204, 93, 93));
         header.setMaximumSize(new java.awt.Dimension(260, 40));
 
         cmdForward.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -346,7 +346,7 @@ public final class DateChooser extends javax.swing.JPanel {
         MY.setLayout(flowLayout1);
 
         cmdMonth.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        cmdMonth.setForeground(new java.awt.Color(255, 255, 255));
+        cmdMonth.setForeground(new Color(255, 255, 255));
         cmdMonth.setText("January");
         cmdMonth.setFocusPainted(false);
         cmdMonth.setFont(new java.awt.Font("Kh Content", 0, 18)); // NOI18N
@@ -358,13 +358,13 @@ public final class DateChooser extends javax.swing.JPanel {
         });
         MY.add(cmdMonth);
 
-        lb.setForeground(new java.awt.Color(255, 255, 255));
+        lb.setForeground(new Color(255, 255, 255));
         lb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lb.setText("-");
         MY.add(lb);
 
         cmdYear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        cmdYear.setForeground(new java.awt.Color(255, 255, 255));
+        cmdYear.setForeground(new Color(255, 255, 255));
         cmdYear.setText("2018");
         cmdYear.setFocusPainted(false);
         cmdYear.setFont(new java.awt.Font("Kh Content", 0, 18)); // NOI18N
@@ -386,7 +386,7 @@ public final class DateChooser extends javax.swing.JPanel {
             }
         });
         cmdPrevious.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+            public void keyPressed(KeyEvent evt) {
                 cmdPreviousKeyPressed(evt);
             }
         });
@@ -514,7 +514,7 @@ public final class DateChooser extends javax.swing.JPanel {
         }
     }
 
-    private void cmdPreviousKeyPressed(java.awt.event.KeyEvent evt) {
+    private void cmdPreviousKeyPressed(KeyEvent evt) {
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             Component com = slide.getComponent(0);
             if (com instanceof Dates) {
@@ -573,14 +573,14 @@ public final class DateChooser extends javax.swing.JPanel {
 
     // Variables declaration - do not modify                     
     private javax.swing.JLayeredPane MY;
-    private gui.custom.datechooser.Button cmdForward;
-    private gui.custom.datechooser.Button cmdMonth;
-    private gui.custom.datechooser.Button cmdPrevious;
-    private gui.custom.datechooser.Button cmdYear;
+    private Button cmdForward;
+    private Button cmdMonth;
+    private Button cmdPrevious;
+    private Button cmdYear;
     private javax.swing.JPanel header;
     private javax.swing.JLabel lb;
     private javax.swing.JPopupMenu popup;
-    private gui.custom.datechooser.Slider slide;
+    private Slider slide;
     // End of variables declaration                   
 
     public SelectedDate getSelectedDate() {

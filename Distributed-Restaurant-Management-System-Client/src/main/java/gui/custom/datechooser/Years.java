@@ -41,26 +41,26 @@ public final class Years extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        cmd1 = new gui.custom.datechooser.Button();
-        cmd2 = new gui.custom.datechooser.Button();
-        cmd3 = new gui.custom.datechooser.Button();
-        cmd4 = new gui.custom.datechooser.Button();
-        cmd5 = new gui.custom.datechooser.Button();
-        cmd6 = new gui.custom.datechooser.Button();
-        cmd7 = new gui.custom.datechooser.Button();
-        cmd8 = new gui.custom.datechooser.Button();
-        cmd9 = new gui.custom.datechooser.Button();
-        cmd10 = new gui.custom.datechooser.Button();
-        cmd11 = new gui.custom.datechooser.Button();
-        cmd12 = new gui.custom.datechooser.Button();
-        cmd13 = new gui.custom.datechooser.Button();
-        cmd14 = new gui.custom.datechooser.Button();
-        cmd15 = new gui.custom.datechooser.Button();
-        cmd16 = new gui.custom.datechooser.Button();
-        cmd17 = new gui.custom.datechooser.Button();
-        cmd18 = new gui.custom.datechooser.Button();
-        cmd19 = new gui.custom.datechooser.Button();
-        cmd20 = new gui.custom.datechooser.Button();
+        cmd1 = new Button();
+        cmd2 = new Button();
+        cmd3 = new Button();
+        cmd4 = new Button();
+        cmd5 = new Button();
+        cmd6 = new Button();
+        cmd7 = new Button();
+        cmd8 = new Button();
+        cmd9 = new Button();
+        cmd10 = new Button();
+        cmd11 = new Button();
+        cmd12 = new Button();
+        cmd13 = new Button();
+        cmd14 = new Button();
+        cmd15 = new Button();
+        cmd16 = new Button();
+        cmd17 = new Button();
+        cmd18 = new Button();
+        cmd19 = new Button();
+        cmd20 = new Button();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.GridLayout(5, 4));
@@ -225,26 +225,26 @@ public final class Years extends javax.swing.JPanel {
         return startYear;
     }
     // Variables declaration - do not modify                     
-    private gui.custom.datechooser.Button cmd1;
-    private gui.custom.datechooser.Button cmd10;
-    private gui.custom.datechooser.Button cmd11;
-    private gui.custom.datechooser.Button cmd12;
-    private gui.custom.datechooser.Button cmd13;
-    private gui.custom.datechooser.Button cmd14;
-    private gui.custom.datechooser.Button cmd15;
-    private gui.custom.datechooser.Button cmd16;
-    private gui.custom.datechooser.Button cmd17;
-    private gui.custom.datechooser.Button cmd18;
-    private gui.custom.datechooser.Button cmd19;
-    private gui.custom.datechooser.Button cmd2;
-    private gui.custom.datechooser.Button cmd20;
-    private gui.custom.datechooser.Button cmd3;
-    private gui.custom.datechooser.Button cmd4;
-    private gui.custom.datechooser.Button cmd5;
-    private gui.custom.datechooser.Button cmd6;
-    private gui.custom.datechooser.Button cmd7;
-    private gui.custom.datechooser.Button cmd8;
-    private gui.custom.datechooser.Button cmd9;
+    private Button cmd1;
+    private Button cmd10;
+    private Button cmd11;
+    private Button cmd12;
+    private Button cmd13;
+    private Button cmd14;
+    private Button cmd15;
+    private Button cmd16;
+    private Button cmd17;
+    private Button cmd18;
+    private Button cmd19;
+    private Button cmd2;
+    private Button cmd20;
+    private Button cmd3;
+    private Button cmd4;
+    private Button cmd5;
+    private Button cmd6;
+    private Button cmd7;
+    private Button cmd8;
+    private Button cmd9;
     // End of variables declaration                   
 
 }

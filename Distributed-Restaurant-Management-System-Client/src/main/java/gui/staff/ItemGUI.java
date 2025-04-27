@@ -5,6 +5,7 @@
 package gui.staff;
 
 import bus.CategoryBUS;
+import bus.FileBUS;
 import bus.ItemBUS;
 import common.Constants;
 import model.CategoryEntity;
@@ -60,7 +61,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private CategoryBUS categoryBUS;
     private ItemBUS itemBUS;
-
+    private FileBUS fileBUS;
     /**
      * Creates new form ItemGUI
      */
@@ -82,6 +83,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
         this.categoryBUS = FormLoad.categoryBUS;
         this.itemBUS = FormLoad.itemBUS;
+        this.fileBUS = FormLoad.fileBUS;
         loadData();
 
     }
@@ -652,6 +654,20 @@ public class ItemGUI extends javax.swing.JPanel {
             i.setImg(this.imgPath);
             
             itemBUS.updateEntity(i);
+
+
+            String asbPath = "src/main/resources/img/item/" + imgPath;
+
+            if (new File(asbPath)!=null) {
+                File fileClient = new File(asbPath);
+                byte[] img = new byte[(int) fileClient.length()];
+                FileInputStream in = new FileInputStream(fileClient);
+
+                System.out.println("Uploading img");
+                in.read(img, 0 , img.length);
+                fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+            }
+
             // Cập nhật vào bảng
             int selectedRow = table.getSelectedRow(); // Lấy hàng được chọn
             if (selectedRow != -1) { // Nếu có hàng nào đang được chọn
@@ -751,6 +767,19 @@ public class ItemGUI extends javax.swing.JPanel {
 
             FillOneRow(itemEntity);
             clear();
+
+            String asbPath = "src/main/resources/img/item/" + imgPath;
+
+            if (new File(asbPath)!=null) {
+                File fileClient = new File(asbPath);
+                byte[] img = new byte[(int) fileClient.length()];
+                FileInputStream in = new FileInputStream(fileClient);
+
+                System.out.println("Uploading img");
+                in.read(img, 0 , img.length);
+                fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+            }
+
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Thêm sản phẩm " + name + " thành công!");
         }
     }//GEN-LAST:event_btnAddActionPerformed
