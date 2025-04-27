@@ -5,6 +5,9 @@
 package bus.impl;
 
 import bus.OrderBUS;
+import bus.TableBUS;
+import bus.request.ClientCallback;
+import bus.request.OrderRequest;
 import dal.OrderDAL;
 import dal.connectDB.ConnectDB;
 import model.OrderEntity;
@@ -27,6 +30,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import model.enums.PaymentStatusEnum;
+import model.enums.TableStatusEnum;
 import util.SortOrderByReservaionTimeUtil;
 
 /**
@@ -36,19 +41,62 @@ import util.SortOrderByReservaionTimeUtil;
 public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
 
     private OrderDAL orderDAL;
+    private TableBUS tableBUS;
+    private OrderQueueProcessor queueProcessor;
+    private final EntityManager em;
 
     public OrderBUSImpl(EntityManager em)  throws RemoteException {
+        this.em = em;
         orderDAL = new OrderDAL(em);
+        queueProcessor = new OrderQueueProcessor(this);
+    }
+
+    // Lazy initialization của tableBUS
+    private TableBUS getTableBUS() throws RemoteException {
+        if (tableBUS == null) {
+            tableBUS = new TableBUSImpl(em);
+        }
+        return tableBUS;
     }
 
     @Override
     public OrderEntity insertEntity(OrderEntity orderEntity)  throws RemoteException {
-        return orderDAL.insert(orderEntity);
+        String tableId = orderEntity.getTable().getTableId();
+        try {
+            // Lưu đơn hàng
+            OrderEntity savedOrder = orderDAL.insert(orderEntity);
+            // Cập nhật trạng thái bàn thành OCCUPIED
+            getTableBUS().unlockTable(tableId, TableStatusEnum.OCCUPIED);
+            return savedOrder;
+        } catch (Exception e) {
+            // Nếu có lỗi, mở khóa bàn
+            getTableBUS().unlockTable(tableId, TableStatusEnum.AVAILABLE);
+            throw new RemoteException("Lỗi khi tạo đơn hàng: " + e.getMessage());
+        }
     }
 
     @Override
     public boolean updateEntity(OrderEntity orderEntity)  throws RemoteException {
-        return orderDAL.update(orderEntity);
+        String tableId = orderEntity.getTable().getTableId();
+        try {
+            // Cập nhật đơn hàng
+            boolean updated = orderDAL.update(orderEntity);
+            // Cập nhật trạng thái bàn
+            TableStatusEnum finalStatus = (orderEntity.getPaymentStatus() == PaymentStatusEnum.PAID)
+                    ? TableStatusEnum.AVAILABLE
+                    : TableStatusEnum.OCCUPIED;
+            getTableBUS().unlockTable(tableId, finalStatus);
+            return updated;
+        } catch (Exception e) {
+            // Nếu có lỗi, mở khóa bàn
+            getTableBUS().unlockTable(tableId, TableStatusEnum.AVAILABLE);
+            throw new RemoteException("Lỗi khi cập nhật đơn hàng: " + e.getMessage());
+        }
+    }
+
+    public void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws RemoteException {
+        OrderRequest request = new OrderRequest(orderEntity, paymentStatus, callback);
+        queueProcessor.addOrderRequest(request);
     }
 
     @Override

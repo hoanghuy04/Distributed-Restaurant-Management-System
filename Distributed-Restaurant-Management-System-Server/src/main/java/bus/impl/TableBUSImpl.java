@@ -1,6 +1,7 @@
 package bus.impl;
 
-import bus.BaseBUS;
+import bus.OrderBUS;
+import bus.TableBUS;
 import dal.TableDAL;
 import model.OrderEntity;
 import model.TableEntity;
@@ -19,11 +20,52 @@ import model.enums.TableStatusEnum;
 public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
 
     private TableDAL tableDAL;
-    private OrderBUSImpl orderBUSImpl;
+    private OrderBUS orderBUS;
+    private final EntityManager em;
 
     public TableBUSImpl(EntityManager entityManager)  throws RemoteException {
+        this.em = entityManager;
         this.tableDAL = new TableDAL(entityManager);
-        this.orderBUSImpl = new OrderBUSImpl(entityManager);
+    }
+
+    // Lazy initialization của orderBUS
+    private OrderBUS getOrderBUS() throws RemoteException {
+        if (orderBUS == null) {
+            orderBUS = new OrderBUSImpl(em);
+        }
+        return orderBUS;
+    }
+
+    @Override
+    public synchronized boolean lockTable(String tableId) throws RemoteException {
+        try {
+            TableEntity table = getEntityById(tableId); // Giả sử có phương thức này
+            if (table == null) {
+                throw new RemoteException("Bàn không tồn tại");
+            }
+            if (table.getTableStatus() == TableStatusEnum.PROCESSING) {
+                return false; // Bàn đang được xử lý
+            }
+            // Đánh dấu bàn là PROCESSING
+            table.setTableStatus(TableStatusEnum.PROCESSING);
+            updateEntity(table);
+            return true;
+        } catch (Exception e) {
+            throw new RemoteException("Lỗi khi khóa bàn: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public synchronized void unlockTable(String tableId, TableStatusEnum finalStatus) throws RemoteException {
+        try {
+            TableEntity table = getEntityById(tableId);
+            if (table != null) {
+                table.setTableStatus(finalStatus);
+                updateEntity(table);
+            }
+        } catch (Exception e) {
+            throw new RemoteException("Lỗi khi mở khóa bàn: " + e.getMessage());
+        }
     }
 
     @Override
@@ -54,7 +96,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     @Override
     public List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime, int option)  throws RemoteException {
         List<TableEntity> tables = tableDAL.getListOfAvailableTables(floorId, reservationDateTime);
-        List<OrderEntity> orders = orderBUSImpl.getCurrentOrdersAndReservations(reservationDateTime, option);
+        List<OrderEntity> orders = getOrderBUS().getCurrentOrdersAndReservations(reservationDateTime, option);
 
         //Nếu trong tables có tableEntity nào nằm trong orderEntity.getCombinedTables() thì xóa tableEntity khỏi tables
         for (OrderEntity o : orders)   {
@@ -76,7 +118,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     @Override
     public List<TableEntity> getListTablesByStatus(String floorId, String status)  throws RemoteException {
         List<TableEntity> list = tableDAL.findAll().stream().filter(x -> x.getFloor().getFloorId().equals(floorId)).collect(Collectors.toList());
-        List<OrderEntity> orders = orderBUSImpl.getListOfReservations(LocalDate.now(), LocalTime.now(), "ADVANCE");
+        List<OrderEntity> orders = getOrderBUS().getListOfReservations(LocalDate.now(), LocalTime.now(), "ADVANCE");
         List<TableEntity> reservedList = orders.stream().map(x -> x.getTable()).collect(Collectors.toList());
         if (status.equals("Bàn trống")) {
             return list.stream()
@@ -101,9 +143,9 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     public TableEntity findByName(String name, String floorId)  throws RemoteException {
         return tableDAL.findByName(name, floorId);
     }
-    
+
     @Override
     public List<TableEntity> getTablesWithKeyword(String floorId, Integer capacity, String tableName)  throws RemoteException {
         return tableDAL.getTablesWithKeyword(floorId, capacity, tableName);
-    }    
+    }
 }
