@@ -17,7 +17,7 @@ public class ConnectDB {
         connect();
     }
 
-    public static void connect() {
+    private void connect() {
         try {
             Dotenv dotenv = Dotenv.load();
             Map<String, Object> props = Map.of(
@@ -36,7 +36,7 @@ public class ConnectDB {
         if (emf == null) {
             instance.connect();
         }
-        return emf.createEntityManager(); // Tạo EntityManager mới
+        return emf.createEntityManager();
     }
 
     public static void close() {

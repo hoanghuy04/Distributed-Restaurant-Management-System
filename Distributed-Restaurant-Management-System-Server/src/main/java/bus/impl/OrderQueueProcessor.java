@@ -101,9 +101,6 @@ public class OrderQueueProcessor {
         } finally {
             lock.unlock();
             tableLocks.remove(tableId);
-            if (em != null && em.isOpen()) {
-                em.close(); // Đóng EntityManager
-            }
         }
     }
 }
