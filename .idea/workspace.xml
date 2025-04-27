@@ -30,6 +30,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Huyhoang120904"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/hoanghuy04/Distributed-Restaurant-Management-System.git",
+    "accountId": "639617d8-fbf4-4ff6-a1bb-b95f0e6e6443"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -53,9 +65,10 @@
     "Maven.Restaurant_Management [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Huyen",
+    "git-widget-placeholder": "Hoang",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/IUH/HKII-2024-2025/LTPT/Distributed-Restaurant-Management-System/Distributed-Restaurant-Management-System-Server",
+    "last_opened_file_path": "D:/Sturdy/BaiTapLonLTPT/Distributed-Restaurant-Management-System/Distributed-Restaurant-Management-System-Client",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -160,8 +173,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
       </set>
     </attachedChunks>
   </component>
@@ -217,6 +230,7 @@
       <workItem from="1745558232826" duration="617000" />
       <workItem from="1745561397672" duration="609000" />
       <workItem from="1745571248995" duration="2033000" />
+      <workItem from="1745642412646" duration="29000" />
     </task>
     <servers />
   </component>
