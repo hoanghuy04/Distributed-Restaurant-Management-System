@@ -146,10 +146,11 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
                 query.setParameter("endDateTime", endDateTime);
             }
         } else {
-            jpql += " AND o.reservationTime >= :dateTime";
-            LocalDateTime dateTime = LocalDateTime.now().minusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES);
+//            jpql += " AND o.reservationTime >= :dateTime";
+//            LocalDateTime dateTime = LocalDateTime.now().minusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES);
+//            System.out.println(dateTime);
             query = em.createQuery(jpql, OrderEntity.class);
-            query.setParameter("dateTime", dateTime);
+//            query.setParameter("dateTime", dateTime);
         }
 
         return query.getResultList();
@@ -289,18 +290,8 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
     public static void main(String[] args) {
         ConnectDB.connect();
         OrderDAL orderDAL = new OrderDAL();
-        LocalDateTime startDate = LocalDateTime.of(2025, 1, 1, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(2025, 5, 31, 23, 59);
-        String option = "IMMEDIATE";
-        List<OrderEntity> orders = orderDAL.getOrdersbyDateAndOption(startDate, endDate, option);
-        for (OrderEntity order : orders) {
-            System.out.println("Order ID: " + order.getOrderId());
-            System.out.println("Reservation Time: " + order.getReservationTime());
-            System.out.println("Order Type: " + order.getOrderType());
-            System.out.println("Payment Status: " + order.getPaymentStatus());
-            System.out.println("Customer Name: " + order.getCustomer().getName());
-            System.out.println("-----------------------------");
-        }
+        orderDAL.getReservationsByDateTime(null, null, "Đơn đặt trước").stream()
+                .forEach(x -> System.out.println(x.getOrderId()));
     }
 
 }

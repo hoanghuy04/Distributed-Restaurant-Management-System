@@ -17,7 +17,7 @@ public class LegendItem extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        lbColor = new gui.custom.chart.LabelColor();
+        lbColor = new LabelColor();
         lbName = new javax.swing.JLabel();
 
         lbColor.setText("labelColor1");
@@ -51,7 +51,7 @@ public class LegendItem extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify                     
-    private gui.custom.chart.LabelColor lbColor;
+    private LabelColor lbColor;
     private javax.swing.JLabel lbName;
     // End of variables declaration                   
 }

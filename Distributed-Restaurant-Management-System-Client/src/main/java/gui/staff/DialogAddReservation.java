@@ -29,6 +29,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -377,9 +378,19 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE,
                         OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
                         PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
-                this.orderEntity = orderBUS.insertEntity(orderEntity);
-                tabReservation.getListOfAllReservations().add(orderEntity);
-                this.tabReservation.addToMapOfAllReservations(orderEntity);
+                try {
+                    this.orderEntity = orderBUS.insertEntity(orderEntity);
+                    if (this.orderEntity.getOrderId() != null){
+                        tabReservation.getListOfAllReservations().add(orderEntity);
+                        this.tabReservation.addToMapOfAllReservations(orderEntity);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không thể thực hện");
+                        return false;
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Không thể thực hện");
+                    return false;
+                }
             } else {
                 this.checkNewReservation = false;
                 this.orderEntity.setReservationTime(reservationDateTime);
@@ -407,8 +418,18 @@ public class DialogAddReservation extends javax.swing.JDialog {
                 }
 
                 this.orderEntity.setCombinedTables(listOfCombinedTable);
-                orderBUS.updateEntity(orderEntity);
-                this.tabReservation.addToMapOfAllReservations(orderEntity);
+
+                try {
+                    if (orderBUS.updateEntity(orderEntity)) {
+                        this.tabReservation.addToMapOfAllReservations(orderEntity);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không thể thực hiện");
+                        return false;
+                    }
+                } catch (RemoteException e) {
+                    JOptionPane.showMessageDialog(null, "Không thể thực hiện");
+                    return false;
+                }
             }
             return true;
         }

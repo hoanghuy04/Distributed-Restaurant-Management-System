@@ -29,7 +29,7 @@ public final class MailSenderUtil {
 
         // Thông tin người gửi
         String fromUser = "duonghoanghuydhi12@gmail.com";
-        String fromUserPassword = "ufoh onun mhou rqby";
+        String fromUserPassword = "vcil nksh okpn ftgn";
 
         // Tạo phiên làm việc và xác thực với email server
         Session mailSession = Session.getInstance(properties, new Authenticator() {

@@ -1,6 +1,8 @@
 package gui.custom.curvechart;
 
-import gui.custom.blankchart.*;
+import gui.custom.curvechart.blankchart.BlankPlotChart;
+import gui.custom.curvechart.blankchart.BlankPlotChatRender;
+import gui.custom.curvechart.blankchart.SeriesSize;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -139,7 +141,7 @@ public class CurveChart extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        blankPlotChart = new BlankPlotChart();
+        blankPlotChart = new gui.custom.curvechart.blankchart.BlankPlotChart();
         panelLegend = new javax.swing.JPanel();
 
         panelLegend.setOpaque(false);
@@ -168,7 +170,7 @@ public class CurveChart extends javax.swing.JPanel {
     }// </editor-fold>                        
 
     // Variables declaration - do not modify                     
-    private BlankPlotChart blankPlotChart;
+    private gui.custom.curvechart.blankchart.BlankPlotChart blankPlotChart;
     private javax.swing.JPanel panelLegend;
     // End of variables declaration                   
 }

@@ -41,7 +41,9 @@ public class OrderQueueProcessor {
                 try {
                     OrderRequest request = orderQueue.take(); // Lấy yêu cầu từ hàng đợi
                     processRequest(request);
-                } catch (InterruptedException e) {
+                    Thread.sleep(1000); // Đợi 1 giây sau khi xử lý xong yêu cầu
+                } catch (Exception e) {
+                    System.out.println("Error processing order request: " + e.getMessage());
                     Thread.currentThread().interrupt();
                     break;
                 }
