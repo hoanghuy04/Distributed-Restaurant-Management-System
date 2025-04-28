@@ -60,7 +60,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     }
 
     @Override
-    public OrderEntity insertEntity(OrderEntity orderEntity)  throws RemoteException {
+    public synchronized OrderEntity insertEntity(OrderEntity orderEntity)  throws RemoteException {
         String tableId = orderEntity.getTable().getTableId();
         try {
             // Lưu đơn hàng
