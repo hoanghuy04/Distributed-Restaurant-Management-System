@@ -661,7 +661,7 @@ public class PromotionGUI extends javax.swing.JPanel {
                     }
                 });
                 proNEW.setPromotionDetails(proNEW.getPromotionDetails());
-                proBUS.updateEntity(proNEW);
+                proNEW = proBUS.updateEntity(proNEW);
             }
             tableModel.addRow(new Object[]{proNEW.getPromotionId(), proNEW.getStartedDate(), proNEW.getEndedDate(), proNEW.getDescription(),
                 proNEW.getDiscountPercentage(), proNEW.getMinPrice(), proNEW.getCustomerLevels(),
@@ -717,7 +717,7 @@ public class PromotionGUI extends javax.swing.JPanel {
                 }
             });
             pro.setPromotionDetails(null);
-            proBUS.updateEntity(pro);
+            pro=proBUS.updateEntity(pro);
         }
         if (cbbType.getSelectedItem().toString().equals("ITEM")) {
             String itemIDsString = txtItem.getText();
@@ -732,14 +732,14 @@ public class PromotionGUI extends javax.swing.JPanel {
                 promotionDetails.add(promotionDetail);
             }
             item.setPromotionDetails(promotionDetails);
-            itemBUS.updateEntity(item);
+            item=itemBUS.updateEntity(item);
             pro.setPromotionDetails(promotionDetails);
         }
 
         pro.setEndedDate(endDate);
         pro.setStartedDate(startDate);
 
-        proBUS.updateEntity(pro);
+        pro = proBUS.updateEntity(pro);
 
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {

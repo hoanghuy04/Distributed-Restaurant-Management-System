@@ -1024,7 +1024,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 for (TableEntity tablee : this.o.getCombinedTables()) {
                     combinedTables.remove(tablee);
                 }
-                tableBUS.updateEntity(table);
+                table = tableBUS.updateEntity(table);
                 DialogReceipt dialog = new DialogReceipt(mainGUI, o);
                 dialog.setVisible(true);
             }
@@ -1130,7 +1130,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
             return false;
         }
         item.setStockQuantity(newStock);
-        return itemBUS.updateEntity(item);
+        return itemBUS.updateEntity(item) != null;
     }
 
     public void removePanelOrderDetail(PanelOrderDetail pnOD) {
@@ -1343,7 +1343,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
         for (TableEntity t : tabless) {
             if (!listCombinedTables.contains(t)) {
                 t.setTableStatus(TableStatusEnum.AVAILABLE);
-                tableBUS.updateEntity(t);
+                t = tableBUS.updateEntity(t);
                 combinedTables.remove(t);
             }
         }
@@ -1398,7 +1398,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                     return false;
                 }
             } else {
-                orderBUS.updateEntity(o);
+                o = orderBUS.updateEntity(o);
             }
         }
 
@@ -1406,7 +1406,10 @@ public class OrderGUI extends JPanel implements ClientCallback {
     }
     private void updateTableStatus(TableEntity table, TableStatusEnum status) throws Exception {
         table.setTableStatus(status);
-        tableBUS.updateEntity(table);
+        TableEntity updatedTable = tableBUS.updateEntity(table);
+        if (updatedTable == null) {
+            throw new RemoteException("Cập nhật trạng thái bàn thất bại");
+        }
     }
 
     private void processPaidOrder(OrderEntity o) throws Exception {
@@ -1428,7 +1431,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 if (order != null) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
                     try {
-                        orderBUS.updateEntity(order);
+                        order = orderBUS.updateEntity(order);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -1444,7 +1447,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
             o.getCustomer().setOrders(orders);
             o.getCustomer().setRewardedPoint();
             o.getCustomer().setCustomerLevel();
-            customerBUS.updateEntity(o.getCustomer());
+            o.setCustomer(customerBUS.updateEntity(o.getCustomer()));
         }
     }
 
@@ -1567,15 +1570,16 @@ public class OrderGUI extends JPanel implements ClientCallback {
         orderOfCombineTables.forEach(o -> {
             o.setOrderStatus(OrderStatusEnum.MERGED);
             try {
-                orderBUS.updateEntity(o);
+                o = orderBUS.updateEntity(o);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         });
 
         //OrderDetails mới
+        OrderEntity finalO = o0;
         Set<OrderDetailEntity> newODs = mergedODs.entrySet().stream()
-                .map(entry -> new OrderDetailEntity(entry.getValue(), entry.getKey().getDescription(), entry.getKey().getItem(), o0,
+                .map(entry -> new OrderDetailEntity(entry.getValue(), entry.getKey().getDescription(), entry.getKey().getItem(), finalO,
                         entry.getKey().getItemTopping().getTopping()))
                 .collect(Collectors.toSet());
 
@@ -1598,7 +1602,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
         loadPrice(newODs);
         updatePriceOrder(newODs, o0);
         o0.setExpectedCompletionTime(LocalDateTime.now().plusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES));
-        orderBUS.updateEntity(o0);
+        o0=orderBUS.updateEntity(o0);
 
         orderOfCombineTables.stream()
                 .flatMap(o -> o.getOrderDetails().stream())
@@ -1614,7 +1618,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 .forEach(o -> {
                     try {
                         updatePriceOrder(null, o);
-                        orderBUS.updateEntity(o);
+                        o=orderBUS.updateEntity(o);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -1922,7 +1926,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 try {
                     if (order.getPaymentStatus() == PaymentStatusEnum.PAID) {
                         table.setTableStatus(TableStatusEnum.AVAILABLE);
-                        tableBUS.updateEntity(table);
+                        table = tableBUS.updateEntity(table);
                         combinedTables.clear();
                         DialogReceipt dialog = new DialogReceipt(mainGUI, o);
                         dialog.setVisible(true);

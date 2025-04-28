@@ -649,7 +649,7 @@ public class CustomerGUI extends javax.swing.JPanel {
 //            c.setAddress(txtAddress.getText());//Sửa chổ này
             LocalDate date = LocalDate.parse(txtDOB.getText().trim(), DatetimeFormatterUtil.getDateFormatter());
             c.setDayOfBirth(date.atStartOfDay());
-            customerBUS.updateEntity(c);
+            c = customerBUS.updateEntity(c);
             // Cập nhật vào bảng
             int selectedRow = table.getSelectedRow(); // Lấy hàng được chọn
             if (selectedRow != -1) { // Nếu có hàng nào đang được chọn

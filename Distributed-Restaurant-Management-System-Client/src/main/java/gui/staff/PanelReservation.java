@@ -359,14 +359,14 @@ public class PanelReservation extends RoundedPanel {
                         .forEach(t -> {
                             t.setTableStatus(TableStatusEnum.OCCUPIED);
                             try {
-                                tableBUS.updateEntity(t);
+                                t = tableBUS.updateEntity(t);
                             } catch (RemoteException e) {
                                 throw new RuntimeException(e);
                             }
                         });
 
-                tableBUS.updateEntity(this.order.getTable());
-                orderBUS.updateEntity(tempO);
+                this.order.setTable(tableBUS.updateEntity(this.order.getTable()));
+                tempO = orderBUS.updateEntity(tempO);
                 panelReservationByDate.removePanelReservation(this);
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, 3000, "Khách hàng: " + this.order.getCustomer().getName() + " - Đã nhận bàn thành công!");
 
@@ -428,7 +428,7 @@ public class PanelReservation extends RoundedPanel {
         if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa đơn đặt này?", "Cảnh báo", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             this.order.setReservationStatus(ReservationStatusEnum.CANCELED);
             this.order.setPaymentStatus(PaymentStatusEnum.PAID);
-            orderBUS.updateEntity(order);
+            order = orderBUS.updateEntity(order);
             panelReservationByDate.removePanelReservation(this);
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, 3000, "Đã hủy đơn đặt của khách hàng: " + this.order.getCustomer().getName());
         }

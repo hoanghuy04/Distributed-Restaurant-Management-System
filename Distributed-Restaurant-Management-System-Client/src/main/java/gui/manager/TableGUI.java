@@ -327,8 +327,8 @@ public class TableGUI extends javax.swing.JPanel {
         tbl.setCapacity(Integer.parseInt(txtCapacity.getText()));
         tbl.setName(txtName.getText());
         tbl.setFloor(floorBUS.findByName(cbbFloor.getSelectedItem().toString()));
-        
-        tableBUS.updateEntity(tbl);
+
+        tbl = tableBUS.updateEntity(tbl);
         
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) { 
