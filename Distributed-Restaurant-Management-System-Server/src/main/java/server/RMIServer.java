@@ -38,7 +38,7 @@ public class RMIServer {
             ItemToppingBUS itemToppingBUS = new ItemToppingBUSImpl(ConnectDB.getEntityManager());
             PromotionDetailBUS promotionDetailBUS = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
             RoleBUS roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
-            FileBUS fileBUS = new FileBUSImpl();
+            FileBUS fileBUS = new FileBUSImpl("/resources");
 
             context.bind(getURI(getHostName(), CategoryBUS.class), categoryBUS);
             System.out.println("CategoryBUS is bound to RMI registry");
