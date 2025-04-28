@@ -17,7 +17,17 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "promotions")
+@Table(
+        name = "promotions",
+        indexes = {
+                @Index(name = "idx_promotion_id", columnList = "promotion_id"),
+                @Index(name = "idx_promotion_active", columnList = "active"),
+                @Index(name = "idx_promotion_type", columnList = "promotion_type"),
+                @Index(name = "idx_promotion_active_type", columnList = "active, promotion_type"),
+                @Index(name = "idx_promotion_date", columnList = "started_date, ended_date"),
+                @Index(name = "idx_promotion_min_price", columnList = "min_price")
+        }
+)
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @NamedQueries({
         @NamedQuery(name = "PromotionEntity.findAll", query = "select p from PromotionEntity p")

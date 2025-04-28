@@ -37,6 +37,7 @@ import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 
 import java.time.format.DateTimeFormatter;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import raven.toast.Notifications;
@@ -818,11 +819,15 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
     }
 
     private static void generateMonthlyReport(Workbook workbook, Sheet sheet, List<OrderEntity> orderEntities, LocalDate startDate, LocalDate endDate) {
-        Map<Integer, Double> monthlyRevenue = orderEntities.stream()
+        // Sử dụng TreeMap với Comparator tùy chỉnh để sắp xếp theo tháng-năm
+        Map<String, Double> monthlyRevenue = orderEntities.stream()
                 .filter(order -> !order.getReservationTime().toLocalDate().isBefore(startDate) &&
                         !order.getReservationTime().toLocalDate().isAfter(endDate))
                 .collect(Collectors.groupingBy(
-                        order -> order.getReservationTime().getMonthValue(),
+                        order -> String.format("%02d-%d",
+                                order.getReservationTime().getMonthValue(),
+                                order.getReservationTime().getYear()),
+                        TreeMap::new,
                         Collectors.summingDouble(OrderEntity::getTotalPrice)
                 ));
 
@@ -860,22 +865,30 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         // Ghi dữ liệu
         int rowIndex = 5;
         int serialNo = 1;
-        for (Map.Entry<Integer, Double> entry : monthlyRevenue.entrySet()) {
+        for (Map.Entry<String, Double> entry : monthlyRevenue.entrySet()) {
             Row row = sheet.createRow(rowIndex++);
+
+            // STT
             Cell cell0 = row.createCell(0);
-            cell0.setCellValue(serialNo++); // STT
+            cell0.setCellValue(serialNo++);
             cell0.setCellStyle(dataStyle);
 
+            // Tháng
             Cell cell1 = row.createCell(1);
-            cell1.setCellValue("Tháng " + entry.getKey()); // Tháng
+            cell1.setCellValue("Tháng " + entry.getKey());
             cell1.setCellStyle(dataStyle);
 
+            // Tổng tiền
             Cell cell2 = row.createCell(2);
-            cell2.setCellValue(DoubleFormatUlti.format(entry.getValue())); // Doanh thu
+            cell2.setCellValue(DoubleFormatUlti.format(entry.getValue()));
             cell2.setCellStyle(dataStyle);
 
+            // Quý
+            String monthYear = entry.getKey(); // "MM-yyyy"
+            int month = Integer.parseInt(monthYear.split("-")[0]); // Lấy tháng
+            int quarter = (month - 1) / 3 + 1; // Tính quý
             Cell cell3 = row.createCell(3);
-            cell3.setCellValue((entry.getKey() - 1) / 3 + 1); // Quý
+            cell3.setCellValue(quarter);
             cell3.setCellStyle(dataStyle);
         }
 
@@ -884,6 +897,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
             sheet.autoSizeColumn(i);
         }
     }
+
     private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         chart.clear();
 

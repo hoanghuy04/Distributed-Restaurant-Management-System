@@ -13,6 +13,7 @@ import gui.custom.RoundedTextField;
 import gui.custom.TableDesign;
 
 import java.lang.Exception;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -615,13 +616,17 @@ public class ToppingGUI extends javax.swing.JPanel  {
         return dto;
     }
 
-    private boolean validData() {
+    private boolean validData() throws RemoteException {
         String name = txtName.getText();
         String stockQtyStr = txtStockQty.getText();
         String costPriceStr = txtCostPrice.getText();
 
-        if (name.trim().equals("")) {
+        if (name.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Tên không được để rỗng");
+            return false;
+        }
+        if (toppingBUS.findByName(name.trim()) != null) {
+            JOptionPane.showMessageDialog(null, "Tên topping đã tồn tại");
             return false;
         }
 

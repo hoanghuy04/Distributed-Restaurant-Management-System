@@ -9,7 +9,7 @@ import gui.custom.TableDesign;
 import model.*;
 import gui.*;
 
-import java.lang.Exception;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -17,7 +17,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import model.enums.TableStatusEnum;
+import org.apache.commons.math3.analysis.function.Floor;
 import util.NumberUltis;
+
 
 /**
  *
@@ -40,6 +42,11 @@ public class TableGUI extends javax.swing.JPanel {
         floorBUS = FormLoad.floorBUS;
         tbl = new TableEntity();
         initComponents();
+        loadData();
+        for (TableStatusEnum status : TableStatusEnum.values()) {
+            cbbStatus.addItem(status.toString());
+        }
+        floorBUS.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
     }
 
     private void customTable() throws Exception {
@@ -50,42 +57,8 @@ public class TableGUI extends javax.swing.JPanel {
         table.setRowHeight(50);
         tableModel = tableDesign.getModelTable();
         columnModel = tableDesign.getColumnModel();
-        loadData();
-
     }
 
-    private void loadData() throws Exception {
-        tableModel.setRowCount(0);
-        List<TableEntity> tabs = tableBUS.getAllEntities();
-        floorBUS.getAllEntities().forEach(x -> cbbFloor.addItem(x.getName()));
-        for (TableEntity tab : tabs) {
-            addOneLine(tab);
-        }
-    }
-    
-    private void addOneLine(TableEntity tab) {
-        tableModel.addRow(new Object[]{tab.getTableId(), tab.getFloor().getFloorId(), tab.getName(), 
-            tab.getCapacity(), tab.getTableStatus()});
-    }
-    private void clear() {
-        txtName.setText("");
-        txtCapacity.setText("");
-    }
-    
-    private TableEntity getTable() throws Exception {
-        String capacityStr = txtCapacity.getText();
-        String name = txtName.getText();
-        String floorStr = cbbFloor.getSelectedItem().toString();
-        
-        //check 
-        int capacity = 1;
-        if(NumberUltis.isInt(capacityStr)) {
-            capacity = Integer.parseInt(capacityStr);
-        }
-        
-        return new TableEntity(name, capacity, TableStatusEnum.AVAILABLE, floorBUS.findByName(floorStr));
-        
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -110,6 +83,8 @@ public class TableGUI extends javax.swing.JPanel {
         btnSearch1 = new gui.custom.RoundedButton();
         lblName1 = new javax.swing.JLabel();
         cbbFloor = new javax.swing.JComboBox<>();
+        lblName2 = new javax.swing.JLabel();
+        cbbStatus = new javax.swing.JComboBox<>();
         panelTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
@@ -123,18 +98,18 @@ public class TableGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout panelImgTblLayout = new javax.swing.GroupLayout(panelImgTbl);
         panelImgTbl.setLayout(panelImgTblLayout);
         panelImgTblLayout.setHorizontalGroup(
-            panelImgTblLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelImgTblLayout.createSequentialGroup()
-                .addContainerGap(813, Short.MAX_VALUE)
-                .addComponent(lblImgTbl)
-                .addContainerGap(814, Short.MAX_VALUE))
+                panelImgTblLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelImgTblLayout.createSequentialGroup()
+                                .addContainerGap(813, Short.MAX_VALUE)
+                                .addComponent(lblImgTbl)
+                                .addContainerGap(814, Short.MAX_VALUE))
         );
         panelImgTblLayout.setVerticalGroup(
-            panelImgTblLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelImgTblLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(lblImgTbl, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                panelImgTblLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelImgTblLayout.createSequentialGroup()
+                                .addContainerGap(25, Short.MAX_VALUE)
+                                .addComponent(lblImgTbl, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelInfo.add(panelImgTbl, java.awt.BorderLayout.NORTH);
@@ -175,7 +150,7 @@ public class TableGUI extends javax.swing.JPanel {
                 try {
                     btnUpdateActionPerformed(evt);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         });
@@ -189,7 +164,7 @@ public class TableGUI extends javax.swing.JPanel {
                 try {
                     btnSearchActionPerformed(evt);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         });
@@ -200,7 +175,11 @@ public class TableGUI extends javax.swing.JPanel {
         btnSearch1.setPreferredSize(new java.awt.Dimension(150, 50));
         btnSearch1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearch1ActionPerformed(evt);
+                try {
+                    btnSearch1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         panelEdit.add(btnSearch1);
@@ -209,52 +188,65 @@ public class TableGUI extends javax.swing.JPanel {
         lblName1.setText("Lầu");
         lblName1.setPreferredSize(new java.awt.Dimension(100, 20));
 
+        lblName2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblName2.setText("Trạng thái");
+        lblName2.setPreferredSize(new java.awt.Dimension(100, 20));
+
         javax.swing.GroupLayout panelDetailInfoLayout = new javax.swing.GroupLayout(panelDetailInfo);
         panelDetailInfo.setLayout(panelDetailInfoLayout);
         panelDetailInfoLayout.setHorizontalGroup(
-            panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                .addContainerGap(520, Short.MAX_VALUE)
-                .addComponent(lblSpace, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                        .addComponent(lblName1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbbFloor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(520, Short.MAX_VALUE))
-            .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(panelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 1715, Short.MAX_VALUE)))
+                panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                .addContainerGap(519, Short.MAX_VALUE)
+                                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                                .addComponent(lblSpace, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                                .addComponent(lblName2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(12, 12, 12)
+                                                .addComponent(cbbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                                .addComponent(lblName1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(cbbFloor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(519, Short.MAX_VALUE))
+                        .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(panelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 1715, Short.MAX_VALUE)))
         );
         panelDetailInfoLayout.setVerticalGroup(
-            panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblSpace, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblName1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(cbbFloor))
-                .addContainerGap(167, Short.MAX_VALUE))
-            .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelDetailInfoLayout.createSequentialGroup()
-                    .addGap(201, 201, 201)
-                    .addComponent(panelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(lblSpace, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(lblName1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                                .addComponent(lblName2, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                                .addComponent(cbbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(cbbFloor))
+                                .addContainerGap(168, Short.MAX_VALUE))
+                        .addGroup(panelDetailInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelDetailInfoLayout.createSequentialGroup()
+                                        .addGap(201, 201, 201)
+                                        .addComponent(panelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         panelInfo.add(panelDetailInfo, java.awt.BorderLayout.CENTER);
@@ -264,7 +256,11 @@ public class TableGUI extends javax.swing.JPanel {
         customTable();
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMouseClicked(evt);
+                try {
+                    tableMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jScrollPane1.setViewportView(table);
@@ -272,19 +268,19 @@ public class TableGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout panelTableLayout = new javax.swing.GroupLayout(panelTable);
         panelTable.setLayout(panelTableLayout);
         panelTableLayout.setHorizontalGroup(
-            panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1727, Short.MAX_VALUE)
-            .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelTableLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1703, Short.MAX_VALUE)
-                    .addContainerGap()))
+                panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1727, Short.MAX_VALUE)
+                        .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelTableLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1703, Short.MAX_VALUE)
+                                        .addContainerGap()))
         );
         panelTableLayout.setVerticalGroup(
-            panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 107, Short.MAX_VALUE)
-            .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 120, Short.MAX_VALUE)
+                        .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
         );
 
         add(panelTable, java.awt.BorderLayout.CENTER);
@@ -294,78 +290,161 @@ public class TableGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCapacityActionPerformed
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tableMouseClicked
         int selectedRow = table.getSelectedRow();
-        if(selectedRow ==-1)
+        if (selectedRow == -1)
             return;
         String space = table.getValueAt(selectedRow, 3).toString();
         String name = table.getValueAt(selectedRow, 2).toString();
         txtCapacity.setText(space);
         txtName.setText(name);
+        cbbStatus.setSelectedItem(table.getValueAt(selectedRow, 4).toString());
+        cbbFloor.setSelectedItem(floorBUS.getEntityById(table.getValueAt(selectedRow, 1).toString()).getName());
     }//GEN-LAST:event_tableMouseClicked
 
-    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
-        clear();
+    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearch1ActionPerformed
+        clearData();
+        loadData();
     }//GEN-LAST:event_btnSearch1ActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
-        TableEntity tableNew = getTable();
-        tableBUS.insertEntity(tableNew);
-        addOneLine(tableNew);
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
-        
+        TableEntity f = getTableDataFromUI();
+        if (tableBUS.findByName(f.getName(), f.getFloor().getFloorId()) == null) {
+            if (tableBUS.insertEntity(f) != null) {
+                JOptionPane.showMessageDialog(null, "Thêm bàn thành công");
+                loadData();
+                clearData();
+            } else {
+                JOptionPane.showMessageDialog(null, "Thêm bàn không thành công");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Tên bàn đã tồn tại");
+        }
+
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
-        int row = table.getSelectedRow();
-        if (row == -1) {
-            return;
-        }
-        
-        tbl = tableBUS.getEntityById(table.getValueAt(row, 0).toString());
-        
-        tbl.setCapacity(Integer.parseInt(txtCapacity.getText()));
-        tbl.setName(txtName.getText());
-        tbl.setFloor(floorBUS.findByName(cbbFloor.getSelectedItem().toString()));
-
-        tbl = tableBUS.updateEntity(tbl);
-        
         int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) { 
-            tableModel.setValueAt(tbl.getFloor().getFloorId(), selectedRow, 1);
-            tableModel.setValueAt(tbl.getName(), selectedRow, 2);
-            tableModel.setValueAt(tbl.getCapacity(), selectedRow, 3);
-            JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
         } else {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng để cập nhật");
+            if (validData()) {
+                String id = table.getValueAt(selectedRow, 0).toString();
+                TableEntity f = getTableDataFromUI();
+                f.setTableId(id);
+                if (tableBUS.updateEntity(f) != null) {
+                    JOptionPane.showMessageDialog(null, "Cập nhật bàn thành công");
+                    loadData();
+                    clearData();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cập nhật bàn không thành công");
+                }
+            }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSearchActionPerformed
-        int Capacity = 0;
-        try {
-            String capacityText = txtCapacity.getText().trim();
-            if (!capacityText.isEmpty()) {
-                Capacity = Integer.parseInt(capacityText);
-            }
-        } catch (NumberFormatException e) {
-           
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập một giá trị hợp lệ cho Capacity.");
-            return;
-        }
-        String Name = txtName.getText();
+        String name = txtName.getText().trim();
+        String capacityText = txtCapacity.getText().trim();
         FloorEntity floor = floorBUS.findByName(cbbFloor.getSelectedItem().toString());
-        
-        tableModel.setRowCount(0);
-        List<TableEntity> tbls = tableBUS.getTablesWithKeyword(floor.getFloorId(), Capacity, Name);
-        if(tbls.isEmpty()) {
-            tbls = tableBUS.getAllEntities();
+        TableStatusEnum status = TableStatusEnum.valueOf(cbbStatus.getSelectedItem().toString());
+        TableEntity f = new TableEntity();
+        f.setFloor(floor);
+        f.setTableStatus(status);
+
+        if (!name.isEmpty()) {
+            f.setName(name);
         }
-        for(TableEntity tbl : tbls) {
-            addOneLine(tbl);
+
+        int capacity = 0;
+        if (!capacityText.isEmpty()) {
+            try {
+                capacity = Integer.parseInt(capacityText);
+                if (capacity <= 0) {
+                    JOptionPane.showMessageDialog(null, "Sức chứa phải lớn hơn 0!");
+                    return;
+                }
+                f.setCapacity(capacity);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Sức chứa phải là một số hợp lệ!");
+                return;
+            }
+        }
+
+        List<TableEntity> result = tableBUS.findByCriteria(f);
+        if (result != null && !result.isEmpty()) {
+            tableModel.setRowCount(0);
+            result.forEach(t -> {
+                tableModel.addRow(new Object[]{
+                        t.getTableId(), t.getFloor().getFloorId(), t.getName(), t.getCapacity(), t.getTableStatus().toString()
+                });
+            });
+        } else {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy kết quả!");
+            loadData();
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private boolean validData() {
+        String name = txtName.getText().trim();
+        if (name.isEmpty() || name.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Tên không được rỗng");
+            return false;
+        }
+
+        int capacity = 0;
+        try {
+            capacity = Integer.parseInt(txtCapacity.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Sức chứa phải là số!");
+            return false;
+        }
+
+        if (capacity <= 0) {
+            JOptionPane.showMessageDialog(null, "Sức chứa phải lớn hơn 0!");
+            return false;
+        }
+
+        return true;
+    }
+
+    private TableEntity getTableDataFromUI() throws RemoteException {
+        String name = "";
+        int capacity = 0;
+        String floorName = cbbFloor.getSelectedItem().toString();
+        FloorEntity floor = floorBUS.findByName(floorName);
+        TableStatusEnum status = TableStatusEnum.valueOf(cbbStatus.getSelectedItem().toString());
+        if (validData()) {
+            name = txtName.getText().trim();
+            try {
+                capacity = Integer.parseInt(txtCapacity.getText().trim());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+        return new TableEntity(null, name, capacity, status, floor);
+    }
+
+    private void loadData() throws Exception {
+        tableModel.setRowCount(0);
+        tableBUS.getAllEntities().stream().forEach(t -> {
+            tableModel.addRow(new Object[]{
+                    t.getTableId(), t.getFloor().getFloorId(), t.getName(), t.getCapacity(), t.getTableStatus().toString()
+            });
+        });
+
+    }
+
+    private void clearData() {
+        txtName.setText("");
+        txtCapacity.setText("");
+        cbbFloor.setSelectedIndex(0);
+        cbbStatus.setSelectedIndex(0);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private gui.custom.RoundedButton btnAdd;
@@ -373,10 +452,12 @@ public class TableGUI extends javax.swing.JPanel {
     private gui.custom.RoundedButton btnSearch1;
     private gui.custom.RoundedButton btnUpdate;
     private javax.swing.JComboBox<String> cbbFloor;
+    private javax.swing.JComboBox<String> cbbStatus;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblImgTbl;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblName1;
+    private javax.swing.JLabel lblName2;
     private javax.swing.JLabel lblSpace;
     private javax.swing.JPanel panelDetailInfo;
     private javax.swing.JPanel panelEdit;
