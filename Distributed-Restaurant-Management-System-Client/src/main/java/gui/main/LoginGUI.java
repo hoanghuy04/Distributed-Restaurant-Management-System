@@ -98,7 +98,7 @@ public class LoginGUI extends javax.swing.JFrame {
         for (EmployeeEntity e : list) {
             if (!isBCryptHash(e.getPassword())) { // Kiểm tra định dạng BCrypt
                 e.setPassword(empBUS.hashPassword(e.getPassword())); // Mã hóa mật khẩu
-                empBUS.updateEntity(e); // Cập nhật vào DB
+                e = empBUS.updateEntity(e); // Cập nhật vào DB
             }
         }
     }

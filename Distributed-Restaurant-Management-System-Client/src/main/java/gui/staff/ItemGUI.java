@@ -662,7 +662,7 @@ public class ItemGUI extends javax.swing.JPanel {
                 i.setActive(cbStatus.isSelected());
                 i.setImg(this.imgPath);
 
-                itemBUS.updateEntity(i);
+                i = itemBUS.updateEntity(i);
 
 
                 String asbPath = "src/main/resources/img/item/" + imgPath;

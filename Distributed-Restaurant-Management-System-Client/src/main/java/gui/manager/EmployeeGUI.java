@@ -493,7 +493,7 @@ public class EmployeeGUI extends javax.swing.JPanel {
         emp.setActive(chkActive.isSelected());
 
         if (validatePhoneAndEmail(emp)) {
-            empBUS.updateEntity(emp);
+            emp = empBUS.updateEntity(emp);
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
                 tableModel.setValueAt(emp.getFullname(), selectedRow, 1);
