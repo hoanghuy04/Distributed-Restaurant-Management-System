@@ -15,7 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tables")
+@Table(
+        name = "tables",
+        indexes = {
+                @Index(name = "idx_tables_table_id", columnList = "table_id"),
+                @Index(name = "idx_tables_name", columnList = "name"),
+                @Index(name = "idx_tables_table_status", columnList = "table_status"),
+                @Index(name = "idx_tables_floor_id", columnList = "floor_id")
+        }
+)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class TableEntity implements Serializable {
     @Id

@@ -1,5 +1,6 @@
 package dal;
 
+import jakarta.persistence.TypedQuery;
 import model.FloorEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -96,5 +97,27 @@ public class FloorDAL implements BaseDAL<FloorEntity, String> {
 
         return query.getResultList();
     }
-    
+
+    public List<FloorEntity> findByCriteria(FloorEntity criteria) {
+        StringBuilder jpql = new StringBuilder("SELECT f FROM FloorEntity f WHERE 1=1");
+
+        if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+            jpql.append(" AND f.name LIKE :name");
+        }
+        if (criteria.getCapacity() > 0) {
+            jpql.append(" AND f.capacity = :capacity");
+        }
+
+        TypedQuery<FloorEntity> query = em.createQuery(jpql.toString(), FloorEntity.class);
+
+        if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+            query.setParameter("name", "%" + criteria.getName() + "%");
+        }
+        if (criteria.getCapacity() > 0) {
+            query.setParameter("capacity", criteria.getCapacity());
+        }
+
+        return query.getResultList();
+    }
+
 }

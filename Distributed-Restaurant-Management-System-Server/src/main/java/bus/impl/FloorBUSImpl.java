@@ -47,5 +47,10 @@ public class FloorBUSImpl extends UnicastRemoteObject implements bus.FloorBUS {
     @Override
     public List<FloorEntity> getTablesWithKeyword(Integer capacity, String name)  throws RemoteException {
         return floorDAL.getTablesWithKeyword(capacity, name);
-    }        
+    }
+
+    @Override
+    public List<FloorEntity> findByCriteria(FloorEntity criteria) throws RemoteException {
+        return floorDAL.findByCriteria(criteria);
+    }
 }

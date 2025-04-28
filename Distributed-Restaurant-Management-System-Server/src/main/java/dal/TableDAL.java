@@ -1,5 +1,6 @@
 package dal;
 
+import jakarta.persistence.TypedQuery;
 import model.TableEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -144,5 +145,45 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
 
         return query.getResultList();
     }
+
+    public List<TableEntity> findByCriteria(TableEntity criteria) {
+        StringBuilder jpql = new StringBuilder("SELECT t FROM TableEntity t WHERE 1=1");
+        if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+            jpql.append(" AND t.name LIKE :name");
+        }
+
+        if (criteria.getCapacity() > 0) {
+            jpql.append(" AND t.capacity = :capacity");
+        }
+
+        if (criteria.getTableStatus() != null) {
+            jpql.append(" AND t.tableStatus = :tableStatus");
+        }
+
+        if (criteria.getFloor() != null && criteria.getFloor().getFloorId() != null) {
+            jpql.append(" AND t.floor.floorId = :floorId");
+        }
+
+        TypedQuery<TableEntity> query = this.em.createQuery(jpql.toString(), TableEntity.class);
+        if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+            query.setParameter("name", "%" + criteria.getName() + "%");
+        }
+
+        if (criteria.getCapacity() > 0) {
+            query.setParameter("capacity", criteria.getCapacity());
+        }
+
+        if (criteria.getTableStatus() != null) {
+            query.setParameter("tableStatus", criteria.getTableStatus());
+        }
+
+        if (criteria.getFloor() != null && criteria.getFloor().getFloorId() != null) {
+            query.setParameter("floorId", criteria.getFloor().getFloorId());
+        }
+
+        return query.getResultList();
+    }
+
+
 
 }
