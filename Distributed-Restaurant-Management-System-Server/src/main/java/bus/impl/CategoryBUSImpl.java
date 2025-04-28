@@ -29,7 +29,7 @@ public class CategoryBUSImpl extends UnicastRemoteObject implements bus.Category
     }
 
     @Override
-    public boolean updateEntity(CategoryEntity category)  throws RemoteException {
+    public CategoryEntity updateEntity(CategoryEntity category)  throws RemoteException {
         return categoryDAL.update(category);
     }
 

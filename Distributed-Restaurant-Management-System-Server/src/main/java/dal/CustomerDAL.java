@@ -56,8 +56,11 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
     }
 
     @Override
-    public boolean update(CustomerEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public CustomerEntity update(CustomerEntity t) {
+        if (t.getCustomerId() == null) {
+            t.setCustomerId(IDGeneratorUtility.generateIDWithCreatedDate("Cust", "customers", "customer_id", "created_date", em, LocalDateTime.now()));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

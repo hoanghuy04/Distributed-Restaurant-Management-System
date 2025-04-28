@@ -11,7 +11,7 @@ public interface FloorBUS extends BaseBUS<FloorEntity, String>, Remote {
     FloorEntity insertEntity(FloorEntity floor) throws RemoteException;
 
     @Override
-    boolean updateEntity(FloorEntity floor) throws RemoteException;
+    FloorEntity updateEntity(FloorEntity floor) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public interface BaseDAL <T, ID>{
     T insert(T t);
-    boolean update(T t);
+    T update(T t);
     boolean deleteById(ID id);
     T findById(ID id);
     List<T> findAll();

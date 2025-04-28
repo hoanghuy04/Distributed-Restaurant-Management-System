@@ -51,8 +51,8 @@ public class ItemToppingDAL implements BaseDAL<ItemToppingEntity, ItemToppingId>
     }
 
     @Override
-    public boolean update(ItemToppingEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public ItemToppingEntity update(ItemToppingEntity t) {
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

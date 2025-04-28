@@ -12,7 +12,7 @@ public interface PromotionDetailBUS extends BaseBUS<PromotionDetailEntity, Promo
     PromotionDetailEntity insertEntity(PromotionDetailEntity t) throws RemoteException;
 
     @Override
-    boolean updateEntity(PromotionDetailEntity t) throws RemoteException;
+    PromotionDetailEntity updateEntity(PromotionDetailEntity t) throws RemoteException;
 
     @Override
     boolean deleteEntity(PromotionDetailId id) throws RemoteException;

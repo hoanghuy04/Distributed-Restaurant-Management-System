@@ -28,7 +28,7 @@ public class PromotionBUSImpl extends UnicastRemoteObject implements bus.Promoti
     }
 
     @Override
-    public boolean updateEntity(PromotionEntity promotion)  throws RemoteException {
+    public PromotionEntity updateEntity(PromotionEntity promotion)  throws RemoteException {
         return promotionDAL.update(promotion);
     }
 

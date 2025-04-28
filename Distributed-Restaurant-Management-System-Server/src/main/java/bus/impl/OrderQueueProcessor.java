@@ -75,11 +75,11 @@ public class OrderQueueProcessor  {
             try {
                 if (paymentStatus == PaymentStatusEnum.PAID) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
-                    success = orderBUSImpl.updateEntity(order);
+                    success = orderBUSImpl.updateEntity(order).getOrderId() != null;
                     message = success ? "Thanh toán đơn hàng thành công!" : "Lỗi khi thanh toán đơn hàng.";
                 } else {
                     if (order.getTable().getTableStatus() != TableStatusEnum.OCCUPIED) {
-                        savedOrder = orderBUSImpl.insertEntity(order);
+                        savedOrder = orderBUSImpl.updateEntity(order);
                         success = savedOrder != null;
                         message = success ? "Lưu đơn hàng thành công!" : "Lỗi khi lưu đơn hàng.";
                     } else {

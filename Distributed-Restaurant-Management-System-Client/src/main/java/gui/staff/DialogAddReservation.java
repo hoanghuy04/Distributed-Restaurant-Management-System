@@ -6,6 +6,7 @@ package gui.staff;
 //Duong Hoang Huy
 
 import bus.*;
+import bus.request.ClientCallback;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.zxing.WriterException;
@@ -18,8 +19,6 @@ import model.*;
 import model.enums.*;
 import raven.toast.Notifications;
 import util.DatetimeFormatterUtil;
-import util.MailSenderUtil;
-import util.QrCodeGenerationUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,6 +29,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 /**
  * @author Huy.
  */
-public class DialogAddReservation extends javax.swing.JDialog {
+public class DialogAddReservation extends javax.swing.JDialog implements ClientCallback {
 
     EntityManager em;
     private CustomerBUS customerBUS;
@@ -103,6 +103,8 @@ public class DialogAddReservation extends javax.swing.JDialog {
      */
     public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation) throws Exception {
         super(new JFrame(), true);
+        UnicastRemoteObject.exportObject(this, 0);
+
         this.tabReservation = tabReservation;
         this.oldDate = LocalDate.now();
 
@@ -157,6 +159,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
 
     public DialogAddReservation(TreeMap<String, List<OrderEntity>> mapOfAllReservations, TabReservation tabReservation, OrderEntity preOrder) throws Exception {
         super(new JFrame(), true);
+        UnicastRemoteObject.exportObject(this, 0);
         this.tabReservation = tabReservation;
         this.oldDate = LocalDate.now();
         this.orderEntity = preOrder;
@@ -212,6 +215,29 @@ public class DialogAddReservation extends javax.swing.JDialog {
         // Đặt border cho JDialog bằng cách bọc JPanel
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setBorder(border);
+    }
+
+
+    @Override
+    public void notifyOrderResult(boolean success, String message, OrderEntity order) throws RemoteException {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(null, message, success ? "Thành công" : "Lỗi",
+                    success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
+            if (success) {
+                this.orderEntity = order; // Cập nhật orderEntity
+                if (checkNewReservation && order != null && order.getOrderId() != null) {
+                    tabReservation.getListOfAllReservations().add(order);
+                    tabReservation.addToMapOfAllReservations(order);
+                } else if (!checkNewReservation) {
+                    tabReservation.addToMapOfAllReservations(order);
+                }
+                try {
+                    this.tabReservation.getMainGUI().loadMainGUI(); // Tải lại giao diện chính
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setUI() {
@@ -351,91 +377,75 @@ public class DialogAddReservation extends javax.swing.JDialog {
         if (this.customerEntity == null && txtName.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin khách hàng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return false;
+        }
+
+        LocalTime expectedCompletionTime = LocalTime.parse(cbbCompletionTime.getSelectedItem().toString(), DatetimeFormatterUtil.getTimeFormatter());
+        LocalDateTime completionTime = reservationDateTime.plusHours(expectedCompletionTime.getHour())
+                .plusMinutes(expectedCompletionTime.getMinute());
+
+        int numberOfCust = Integer.parseInt(txtNumberOfCust.getText());
+        double deposit = txtDeposit.getText().trim().length() != 0 ? Double.parseDouble(txtDeposit.getText()) : 0;
+        EmployeeEntity emp = LoginGUI.emp;
+        String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
+        TableEntity table = tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId);
+
+        List<TableEntity> listOfCombinedTable = new ArrayList<>();
+        List<String> strs = cbbCombinedTables.getSelectedItems();
+        for (String tableName : strs) {
+            TableEntity t = tableBUS.findByName(tableName, floorId);
+            listOfCombinedTable.add(t);
+        }
+
+        if (this.orderEntity == null) {
+            this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table,
+                    OrderStatusEnum.SINGLE, OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
+                    PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
+            try {
+                // Gửi yêu cầu vào hàng đợi thay vì gọi trực tiếp insertEntity
+                orderBUS.queueOrderRequest(orderEntity, PaymentStatusEnum.UNPAID, this);
+                return true; // Trả về true để chờ xử lý bất đồng bộ
+            } catch (RemoteException e) {
+                JOptionPane.showMessageDialog(null, "Không thể thực hiện: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         } else {
-            LocalTime expectedCompletionTime = LocalTime.parse(cbbCompletionTime.getSelectedItem().toString(), DatetimeFormatterUtil.getTimeFormatter());
-            LocalDateTime completionTime = reservationDateTime.plusHours(expectedCompletionTime.getHour())
-                    .plusMinutes(expectedCompletionTime.getMinute());
+            this.checkNewReservation = false;
+            this.orderEntity.setReservationTime(reservationDateTime);
+            this.orderEntity.setExpectedCompletionTime(completionTime);
+            this.orderEntity.setNumberOfCustomer(numberOfCust);
+            this.orderEntity.setDeposit(deposit);
+            this.orderEntity.setEmployee(emp);
+            this.orderEntity.setTable(table);
 
-            int numberOfCust = Integer.parseInt(txtNumberOfCust.getText());
-
-            double deposit = txtDeposit.getText().trim().length() != 0 ? Double.parseDouble(txtDeposit.getText()) : 0;
-
-            EmployeeEntity emp = LoginGUI.emp;
-
-            String floorId = "F" + String.format("%04d", cbbFloor.getSelectedIndex() + 1);
-
-            TableEntity table = tableBUS.findByName(cbbTable.getSelectedItem().toString(), floorId);
-
-            List<TableEntity> listOfCombinedTable = new ArrayList<>();
-
-            List<String> strs = cbbCombinedTables.getSelectedItems();
-
-            for (String tableName : strs) {
-                TableEntity t = tableBUS.findByName(tableName, floorId);
-                listOfCombinedTable.add(t);
+            List<TableEntity> tabless = orderEntity.getCombinedTables();
+            if (tabless == null) {
+                tabless = new ArrayList<>();
             }
 
-            if (this.orderEntity == null) {
-                this.orderEntity = new OrderEntity(reservationDateTime, completionTime, numberOfCust, deposit, customerEntity, emp, table, OrderStatusEnum.SINGLE,
-                        OrderTypeEnum.ADVANCE, PaymentMethodEnum.convertToEnum(cbbPaymentMethod.getSelectedItem().toString()),
-                        PaymentStatusEnum.UNPAID, ReservationStatusEnum.PENDING, new HashSet<>(), listOfCombinedTable);
-                try {
-                    this.orderEntity = orderBUS.insertEntity(orderEntity);
-                    if (this.orderEntity.getOrderId() != null) {
-                        tabReservation.getListOfAllReservations().add(orderEntity);
-                        this.tabReservation.addToMapOfAllReservations(orderEntity);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Không thể thực hện");
-                        return false;
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Không thể thực hện");
-                    return false;
-                }
-            } else {
-                this.checkNewReservation = false;
-                this.orderEntity.setReservationTime(reservationDateTime);
-                this.orderEntity.setExpectedCompletionTime(completionTime);
-                this.orderEntity.setNumberOfCustomer(numberOfCust);
-                this.orderEntity.setDeposit(deposit);
-                this.orderEntity.setEmployee(emp);
-                this.orderEntity.setTable(table);
-
-                List<TableEntity> tabless = orderEntity.getCombinedTables();
-                if (tabless == null) {
-                    tabless = new ArrayList<>();
-                }
-
-                for (TableEntity t : tabless) {
-                    if (!listOfCombinedTable.contains(t)) {
-                        this.tabReservation.getMainGUI().getOrderGUI().getCombinedTables().remove(t);
-                    }
-                }
-
-                for (TableEntity t : listOfCombinedTable) {
-                    if (!tabless.contains(t)) {
-                        this.tabReservation.getMainGUI().getOrderGUI().getCombinedTables().add(t);
-                    }
-                }
-
-                this.orderEntity.setCombinedTables(listOfCombinedTable);
-
-                try {
-                    if (orderBUS.updateEntity(orderEntity)) {
-                        this.tabReservation.addToMapOfAllReservations(orderEntity);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Không thể thực hiện");
-                        return false;
-                    }
-                } catch (RemoteException e) {
-                    JOptionPane.showMessageDialog(null, "Không thể thực hiện");
-                    return false;
+            for (TableEntity t : tabless) {
+                if (!listOfCombinedTable.contains(t)) {
+                    this.tabReservation.getMainGUI().getOrderGUI().getCombinedTables().remove(t);
                 }
             }
-            return true;
+
+            for (TableEntity t : listOfCombinedTable) {
+                if (!tabless.contains(t)) {
+                    this.tabReservation.getMainGUI().getOrderGUI().getCombinedTables().add(t);
+                }
+            }
+
+            this.orderEntity.setCombinedTables(listOfCombinedTable);
+
+            try {
+                // Gửi yêu cầu cập nhật vào hàng đợi
+                orderBUS.queueOrderRequest(orderEntity, PaymentStatusEnum.UNPAID, this);
+                return true; // Trả về true để chờ xử lý bất đồng bộ
+            } catch (RemoteException e) {
+                JOptionPane.showMessageDialog(null, "Không thể thực hiện: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
     }
-
     private void sendEmailInBackground() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
@@ -1211,5 +1221,6 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private gui.custom.RoundedTextField txtName;
     private gui.custom.RoundedTextField txtNumberOfCust;
     private gui.custom.RoundedTextField txtPhoneNumber;
+
     // End of variables declaration//GEN-END:variables
 }

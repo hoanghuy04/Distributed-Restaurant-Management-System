@@ -10,7 +10,7 @@ public interface RoleBUS extends BaseBUS<RoleEntity, String> {
     RoleEntity insertEntity(RoleEntity t) throws RemoteException;
 
     @Override
-    boolean updateEntity(RoleEntity t) throws RemoteException;
+    RoleEntity updateEntity(RoleEntity t) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;
