@@ -36,8 +36,8 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
             if (et.isActive()) {
                 et.rollback();
             }
+            return false;
         }
-        return false;
     }
 
     @Override
