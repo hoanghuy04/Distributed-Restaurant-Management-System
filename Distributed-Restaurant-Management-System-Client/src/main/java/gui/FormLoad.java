@@ -54,6 +54,7 @@ public class FormLoad extends javax.swing.JDialog {
     public static RoleBUS roleBUS;
     public static FileBUS fileBUS;
 
+    public static MailBUS mailBUS;
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -164,6 +165,7 @@ public class FormLoad extends javax.swing.JDialog {
                 lookupTasks.add(() -> lookupBus("PromotionDetailBUS", PromotionDetailBUS.class));
                 lookupTasks.add(() -> lookupBus("RoleBUS", RoleBUS.class));
                 lookupTasks.add(() -> lookupBus("FileBUS", FileBUS.class));
+                lookupTasks.add(() -> lookupBus("MailBUS", MailBUS.class));
 
                 // Cập nhật tiến trình
                 doTask("Loading...", 5);
@@ -256,6 +258,9 @@ public class FormLoad extends javax.swing.JDialog {
                     break;
                 case "FileBUS":
                     fileBUS = (FileBUS) bus;
+                    break;
+                case "MailBUS":
+                    mailBUS = (MailBUS) bus;
                     break;
             }
             System.out.println("Connected to " + busName + " server");

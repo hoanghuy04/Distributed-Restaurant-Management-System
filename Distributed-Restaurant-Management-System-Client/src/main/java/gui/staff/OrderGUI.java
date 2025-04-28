@@ -713,7 +713,11 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 try {
                     btnSaveActionPerformed(evt);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    JOptionPane.showMessageDialog(null, "Không thể thực hiện");
+                    try {
+                        mainGUI.loadMainGUI();
+                    } catch (Exception ex) {
+                    }
                 }
             }
         });
@@ -728,7 +732,6 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 try {
                     btnPayActionPerformed(evt);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
                 }
             }
         });
