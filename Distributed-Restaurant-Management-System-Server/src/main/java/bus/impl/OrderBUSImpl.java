@@ -282,7 +282,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     }
     
     @Override
-    public Map<String, Double> getTotalRevenueByHours(LocalDateTime startDateTime, LocalDateTime endDateTime)  throws RemoteException {
+        public Map<String, Double> getTotalRevenueByHours(LocalDateTime startDateTime, LocalDateTime endDateTime)  throws RemoteException {
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH:00");
         LocalTime startHour = LocalTime.of(9, 0); 
         LocalTime endHour = LocalTime.of(21, 0);  
@@ -326,7 +326,6 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
 
     @Override
     public Map<String, Map<Integer, Integer>> getFrequencyPromotionStatsbyDatetime(LocalDateTime startedDate, LocalDateTime endedDate)  throws RemoteException {
-
         Map<String, Integer> mapOrder = orderDAL.getOrdersbyOrderdate(startedDate, endedDate)
                 .stream()
                 .filter(order -> order.getPromotion() != null)
@@ -378,6 +377,11 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     }
 
     @Override
+    public List<OrderEntity> findOrdersBetweenDates(LocalDateTime startDate, LocalDateTime endDate) throws RemoteException   {
+        return orderDAL.findOrdersBetweenDates(startDate, endDate);
+    }
+
+    @Override
     public double getTotalDiscount(LocalDateTime startedDate, LocalDateTime endedDate)  throws RemoteException {
 
         return orderDAL.getOrdersbyOrderdate(startedDate, endedDate)
@@ -389,7 +393,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
 
     public static void main(String[] args) throws Exception {
         OrderBUS orderBUS = new OrderBUSImpl(ConnectDB.getEntityManager());
-        orderBUS.getFrequencyPromotionStatsbyDatetime(LocalDateTime.of(2025, 4, 17, 0, 0),
-                LocalDateTime.of(2025, 4, 23, 23, 59)).entrySet().forEach(System.out::println);
+        orderBUS.findOrdersBetweenDates(LocalDate.of(2025, 3, 1).atStartOfDay(), LocalDate.of(2025,6,30).atTime(23,59))
+                .forEach(System.out::println);
     }
 }

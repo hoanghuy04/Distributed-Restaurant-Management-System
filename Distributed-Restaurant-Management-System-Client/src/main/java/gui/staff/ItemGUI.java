@@ -674,7 +674,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
                     System.out.println("Uploading img");
                     in.read(img, 0, img.length);
-                    fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+                    fileBUS.uploadFileToServer(img, "/img/"+fileClient.getName(), img.length);
                 }
 
                 // Cập nhật vào bảng
@@ -761,7 +761,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         ItemEntity itemEntity;
-        if (isValidate()) {
+        if (isValidate() && validateName()) {
             String name = txtName.getText();
             CategoryEntity category = categoryBUS.findByName(cbbCategory.getSelectedItem().toString());
             double costPrice = Double.parseDouble(txtCostPrice.getText());
@@ -787,7 +787,7 @@ public class ItemGUI extends javax.swing.JPanel {
                 FileInputStream in = new FileInputStream(fileClient);
 
                 in.read(img, 0, img.length);
-                fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+                fileBUS.uploadFileToServer(img, "/img/"+fileClient.getName(), img.length);
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
@@ -825,6 +825,7 @@ public class ItemGUI extends javax.swing.JPanel {
             txtStockQty.setText(String.valueOf(stockQty));
             cbStatus.setSelected(active);
             lblImg.setText("");
+            System.out.println("src/main/resources/img/item/" + imgPath);
             lblImg.setIcon(ResizeImage.resizeImage(new ImageIcon("src/main/resources/img/item/" + imgPath), 154, 142));
             txtDesc.setText(desc);
         }
@@ -868,6 +869,8 @@ public class ItemGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnExportActionPerformed
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
+
+
         importItemsToExcel().stream().forEach(i -> {
             try {
                 itemBUS.insertEntity(i);
@@ -1093,8 +1096,12 @@ public class ItemGUI extends javax.swing.JPanel {
                     Notifications.Location.TOP_RIGHT, "Vui lòng chọn hình ảnh cho món ăn!");
             return false;
         }
+        return true;
+    }
 
-       ItemEntity itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
+    private boolean validateName() throws RemoteException {
+        String name = txtName.getText();
+        ItemEntity itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
 
         if(itemEntity!=null) {
             Notifications.getInstance().show(Notifications.Type.ERROR,

@@ -5,7 +5,7 @@
  */
 package bus.impl;
 
-import bus.MailBUS;
+
 import lombok.NoArgsConstructor;
 import model.OrderEntity;
 import util.MailSenderUtil;
@@ -20,7 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
  * @date: 4/28/2025
  * @version: 1.0
  */
-public class MailBUSImpl extends UnicastRemoteObject implements MailBUS {
+public class MailBUSImpl extends UnicastRemoteObject implements bus.MailBUS {
 
     public MailBUSImpl() throws RemoteException {
         super();

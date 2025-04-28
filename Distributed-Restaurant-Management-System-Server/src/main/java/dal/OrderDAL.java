@@ -6,11 +6,8 @@ package dal;
 
 import common.Constants;
 import dal.connectDB.ConnectDB;
+import jakarta.persistence.*;
 import model.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -159,6 +156,14 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
             query.setParameter("dateTime", dateTime);
         }
 
+        return query.getResultList();
+    }
+
+    public List<OrderEntity> findOrdersBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        String jpql = "SELECT o FROM OrderEntity o WHERE o.reservationTime BETWEEN :startDate AND :endDate";
+        TypedQuery<OrderEntity> query = em.createQuery(jpql, OrderEntity.class);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
         return query.getResultList();
     }
 
