@@ -424,7 +424,7 @@ public class LoginGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameKeyReleased
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-//        new DialogPasswordRecover(this).setVisible(true);
+        new DialogPasswordRecover(this).setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**

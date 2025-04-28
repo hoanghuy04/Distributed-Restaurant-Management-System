@@ -11,6 +11,7 @@ package model;
  * @date: 1/17/2025
  * @version: 1.0
  */
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,12 +27,19 @@ import java.util.logging.Logger;
 
 @Data
 @Entity
-@Table(name = "items")
+@Table(name = "items", indexes = {
+        @Index(name = "idx_item_name", columnList = "name"),
+        @Index(name = "idx_item_category", columnList = "category_id"),
+        @Index(name = "idx_item_cost_price", columnList = "cost_price"),
+        @Index(name = "idx_item_stock_quantity", columnList = "stock_quantity"),
+        @Index(name = "idx_item_active", columnList = "active")
+})
+
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
-    @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
-    @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
-    @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
+        @NamedQuery(name = "ItemEntity.findAll", query = "select i from ItemEntity i"),
+        @NamedQuery(name = "ItemEntity.findByCategory", query = "select i from ItemEntity i where i.category.categoryId = :categoryId"),
+        @NamedQuery(name = "ItemEntity.findByName", query = "select i from ItemEntity i where i.name = :name")
 })
 public class ItemEntity extends BaseEntity implements Serializable {
 
@@ -89,8 +97,8 @@ public class ItemEntity extends BaseEntity implements Serializable {
     }
 
     public ItemEntity(String itemId, String name, double costPrice,
-            int stockQuantity, String description, String img, boolean active,
-            SizeEnum size, CategoryEntity category, Set<ItemToppingEntity> itemToppings) throws Exception {
+                      int stockQuantity, String description, String img, boolean active,
+                      SizeEnum size, CategoryEntity category, Set<ItemToppingEntity> itemToppings) throws Exception {
         this.itemId = itemId;
         this.description = description;
         this.img = img;
@@ -179,7 +187,7 @@ public class ItemEntity extends BaseEntity implements Serializable {
     }
 
     public double getTopDiscountPercentage() {
-        if(promotionDetails == null) {
+        if (promotionDetails == null) {
             return 0;
         } else {
             return promotionDetails.stream()

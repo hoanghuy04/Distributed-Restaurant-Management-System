@@ -51,6 +51,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private FloorBUS floorBus;
     private TableBUS tableBUS;
     private OrderBUS orderBUS;
+    private MailBUS mailBUS;
 
     private TreeMap<String, List<OrderEntity>> mapOfAllReservations;
     private DefaultComboBoxModel defaultComboBoxModel1;
@@ -111,6 +112,7 @@ public class DialogAddReservation extends javax.swing.JDialog {
         this.floorBus = FormLoad.floorBUS;
         this.tableBUS = FormLoad.tableBUS;
         this.orderBUS = FormLoad.orderBUS;
+        this.mailBUS = FormLoad.mailBUS;
 
         this.mapOfAllReservations = mapOfAllReservations;
         availableTables = new ArrayList<>();
@@ -437,12 +439,9 @@ public class DialogAddReservation extends javax.swing.JDialog {
     private void sendEmailInBackground() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
-            protected Void doInBackground() {
-                // Tạo mã QR cho đơn đặt chỗ
-                QrCodeGenerationUtil.generateQrCode(orderEntity.getOrderId());
+            protected Void doInBackground() throws Exception {
                 try {
-                    // Gửi email nếu là đơn đặt chỗ mới
-                    MailSenderUtil.sendBookingConfirmationEmail(orderEntity);
+                    mailBUS.sendBookingConfirmation(orderEntity);
                     Notifications.getInstance().show(
                             Notifications.Type.SUCCESS,
                             Notifications.Location.TOP_RIGHT,

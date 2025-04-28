@@ -23,13 +23,10 @@ public class QrCodeGenerationUtil {
 
     public static void generateQrCode(String data) {
         try {
-            // Đường dẫn tương đối tới thư mục "src/main/resources/QR_Code"
-            Path path = Paths.get("src", "main", "resources", "QR_Code", data + ".jpg");
+            Path path = Paths.get("resources", "qrcode", data + ".jpg");
 
-            // Tạo mã QR với kích thước 500x500
             BitMatrix matrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, 500, 500);
 
-            // Ghi mã QR ra file ảnh
             MatrixToImageWriter.writeToPath(matrix, "jpg", path);
 
             System.out.println("QR code generated and saved to " + path.toAbsolutePath());

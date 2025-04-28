@@ -292,7 +292,6 @@ public class DataGenerator {
         customer.setPhone(generateVietnamesePhoneNumber());
         LocalDateTime dayOfBirth = LocalDateTime.now().minusYears(18 + rand.nextInt(42));
         customer.setDayOfBirth(dayOfBirth);
-        customer.setAddress(generateAddress());
         customer.setRewardedPoint(customer.getRewardedPoint());
         customer.setCustomerLevel(customer.getLevelCustomer());
         return customer;
