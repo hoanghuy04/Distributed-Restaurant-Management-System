@@ -713,6 +713,7 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 try {
                     btnSaveActionPerformed(evt);
                 } catch (Exception e) {
+                    System.out.println(e.getMessage());
                     JOptionPane.showMessageDialog(null, "Không thể thực hiện");
                     try {
                         mainGUI.loadMainGUI();
