@@ -8,6 +8,7 @@ import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class MailSenderUtil {
+
+    private static final String QR_CODE_PATH = System.getProperty("user.dir") + "/resources/qrcode/";
 
     // Private constructor to prevent instantiation
     private MailSenderUtil() {
@@ -27,11 +30,11 @@ public final class MailSenderUtil {
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
 
-        // Thông tin người gửi
+        // Sender information
         String fromUser = "duonghoanghuydhi12@gmail.com";
         String fromUserPassword = "vcil nksh okpn ftgn";
 
-        // Tạo phiên làm việc và xác thực với email server
+        // Create session and authenticate with email server
         Session mailSession = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -39,55 +42,56 @@ public final class MailSenderUtil {
             }
         });
 
-        // Tạo và cấu hình email
+        // Create and configure email
         MimeMessage mimeMessage = new MimeMessage(mailSession);
         mimeMessage.setFrom(new InternetAddress(fromUser));
         mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
         mimeMessage.setSubject(subject);
         mimeMessage.setContent(multipart);
 
-        // Gửi email
+        // Send email
         Transport.send(mimeMessage);
-        System.out.println("Email successfully sent to " + recipient + "!");//hong quao ne
+        System.out.println("Email successfully sent to " + recipient + "!");
     }
 
     public static void sendBookingConfirmationEmail(OrderEntity order) throws MessagingException, IOException, WriterException {
         String recipient = order.getCustomer().getEmail();
         String subject = "Thông báo: Đặt bàn thành công";
-        MimeMultipart body = createBookingEmailBody(order); // Thay đổi kiểu dữ liệu của body thành MimeMultipart
+        MimeMultipart body = createBookingEmailBody(order);
 
-        sendEmail(recipient, subject, body); // Cập nhật để gửi MimeMultipart
+        sendEmail(recipient, subject, body);
     }
 
     private static MimeMultipart createBookingEmailBody(OrderEntity order) throws WriterException, IOException, MessagingException {
-        // Tạo MimeMultipart để chứa nội dung email
+        // Create MimeMultipart to hold email content
         MimeMultipart multipart = new MimeMultipart();
 
-        // Tạo phần nội dung văn bản
+        // Create text body part
         MimeBodyPart textBodyPart = new MimeBodyPart();
         textBodyPart.setContent(generateEmailText(order), "text/html; charset=UTF-8");
         multipart.addBodyPart(textBodyPart);
 
-        // Tạo MimeBodyPart cho hình ảnh QR code
+        // Create MimeBodyPart for QR code image
         MimeBodyPart imageBodyPart = new MimeBodyPart();
-        String qrCodeFilePath = "src/main/resources/QR_Code/" + order.getOrderId() + ".jpg"; // Đường dẫn đến hình ảnh QR code
-        DataSource fds = new FileDataSource(qrCodeFilePath);
+        String qrCodeFilePath = QR_CODE_PATH + order.getOrderId() + ".jpg";
+        File qrCodeFile = new File(qrCodeFilePath);
+        if (!qrCodeFile.exists()) {
+            Logger.getLogger(MailSenderUtil.class.getName()).log(Level.SEVERE, "QR code file not found: {0}", qrCodeFilePath);
+            throw new IOException("QR code file not found: " + qrCodeFilePath);
+        }
+        DataSource fds = new FileDataSource(qrCodeFile);
         imageBodyPart.setDataHandler(new DataHandler(fds));
         imageBodyPart.setHeader("Content-ID", "<qrCode>");
         multipart.addBodyPart(imageBodyPart);
-        // Trả về nội dung email dưới dạng MimeMultipart
-        return multipart; // Trả về MimeMultipart
+
+        return multipart;
     }
 
     public static void sendUpcomingReservationReminderEmails(List<OrderEntity> orders) throws MessagingException, IOException {
         for (OrderEntity order : orders) {
             String recipient = order.getCustomer().getEmail();
-            String subject = "Thông báo: Sắp đến hạn nhận bàn";  // Email subject
-
-            // Create email body as MimeMultipart
+            String subject = "Thông báo: Sắp đến hạn nhận bàn";
             MimeMultipart body = createUpcomingReservationEmailBody(order);
-
-            // Send email
             sendEmail(recipient, subject, body);
         }
     }
@@ -101,7 +105,7 @@ public final class MailSenderUtil {
                 + "<p>Chúng tôi xin nhắc nhở quý khách rằng thời gian nhận bàn của quý khách tại nhà hàng <strong>Zenta restaurant</strong> đang đến gần. Dưới đây là thông tin chi tiết:</p>\n"
                 + "<ul>\n"
                 + "<li><strong>Tên khách hàng:</strong> " + order.getCustomer().getName() + "</li>\n"
-                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone()+ "</li>\n"
+                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone() + "</li>\n"
                 + "<li><strong>Số lượng khách:</strong> " + order.getNumberOfCustomer() + "</li>\n"
                 + "<li><strong>Ngày đặt:</strong> " + order.getReservationTime().toLocalDate().format(DatetimeFormatterUtil.getDateFormatter()) + "</li>\n"
                 + "<li><strong>Giờ nhận bàn:</strong> " + order.getReservationTime().toLocalDate().format(DatetimeFormatterUtil.getDateFormatter()) + " "
@@ -123,12 +127,8 @@ public final class MailSenderUtil {
     public static void sendOrderCancellationEmails(List<OrderEntity> cancelledOrders) throws MessagingException, IOException {
         for (OrderEntity order : cancelledOrders) {
             String recipient = order.getCustomer().getEmail();
-            String subject = "Thông báo: Đơn đặt bàn đã bị hủy";  // Email subject
-
-            // Create email body as MimeMultipart
+            String subject = "Thông báo: Đơn đặt bàn đã bị hủy";
             MimeMultipart body = createOrderCancellationEmailBody(order);
-
-            // Send email
             sendEmail(recipient, subject, body);
         }
     }
@@ -142,7 +142,7 @@ public final class MailSenderUtil {
                 + "<p>Chúng tôi rất tiếc phải thông báo rằng đơn đặt bàn của quý khách tại nhà hàng <strong>Zenta restaurant</strong> đã bị hủy do quá hạn. Dưới đây là thông tin chi tiết:</p>\n"
                 + "<ul>\n"
                 + "<li><strong>Tên khách hàng:</strong> " + order.getCustomer().getName() + "</li>\n"
-                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone()+ "</li>\n"
+                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone() + "</li>\n"
                 + "<li><strong>Số lượng khách:</strong> " + order.getNumberOfCustomer() + "</li>\n"
                 + "<li><strong>Ngày đặt:</strong> " + order.getReservationTime().toLocalDate().format(DatetimeFormatterUtil.getDateFormatter()) + "</li>\n"
                 + "<li><strong>Giờ nhận bàn:</strong> " + order.getReservationTime().toLocalDate().format(DatetimeFormatterUtil.getDateFormatter()) + " "
@@ -163,13 +163,9 @@ public final class MailSenderUtil {
     public static void sendConfirmCodeToResetPassword(String email, String code) {
         try {
             String subject = "Mã xác nhận đặt lại mật khẩu";
-            MimeMultipart body = createResetPasswordEmailBody(code); // Tạo nội dung email
-            try {
-                sendEmail(email, subject, body);
-            } catch (IOException ex) {
-                Logger.getLogger(MailSenderUtil.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (MessagingException ex) {
+            MimeMultipart body = createResetPasswordEmailBody(code);
+            sendEmail(email, subject, body);
+        } catch (MessagingException | IOException ex) {
             Logger.getLogger(MailSenderUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -177,7 +173,7 @@ public final class MailSenderUtil {
     private static MimeMultipart createResetPasswordEmailBody(String code) throws MessagingException {
         MimeMultipart multipart = new MimeMultipart();
 
-        // Tạo phần nội dung văn bản
+        // Create text body part
         MimeBodyPart textBodyPart = new MimeBodyPart();
         String emailContent = "<p>Xin chào,</p>"
                 + "<p>Bạn đã yêu cầu đặt lại mật khẩu. Dưới đây là mã xác nhận của bạn:</p>"
@@ -188,7 +184,6 @@ public final class MailSenderUtil {
         textBodyPart.setContent(emailContent, "text/html; charset=UTF-8");
         multipart.addBodyPart(textBodyPart);
 
-        // Nếu cần đính kèm file (ví dụ: hướng dẫn PDF), có thể thêm tại đây
         return multipart;
     }
 
@@ -198,7 +193,7 @@ public final class MailSenderUtil {
                 + "Chúng tôi xin xác nhận thông tin đặt bàn của quý khách như sau:</p>\n"
                 + "<ul>\n"
                 + "<li><strong>Tên khách hàng:</strong> " + order.getCustomer().getName() + "</li>\n"
-                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone()+ "</li>\n"
+                + "<li><strong>Số điện thoại:</strong> " + order.getCustomer().getPhone() + "</li>\n"
                 + "<li><strong>Số lượng khách:</strong> " + order.getNumberOfCustomer() + "</li>\n"
                 + "<li><strong>Ngày đặt:</strong> " + order.getReservationTime().toLocalDate().format(DatetimeFormatterUtil.getDateFormatter()) + " "
                 + order.getReservationTime().toLocalTime().format(DatetimeFormatterUtil.getTimeFormatter()) + "</li>\n"
@@ -209,7 +204,7 @@ public final class MailSenderUtil {
                 + "</ul>\n"
                 + "<p>Quý khách vui lòng có mặt đúng giờ để đảm bảo trải nghiệm tốt nhất. Nếu có bất kỳ thay đổi nào hoặc cần thêm thông tin, xin vui lòng liên hệ với chúng tôi qua số hotline <strong>Zenta restaurant: " + Constants.HOTLINE + "</strong>.</p>\n"
                 + "<p>Rất mong được phục vụ quý khách!</p>\n"
-                + "<p><img src='cid:qrCode' alt='Mã QR đặt bàn' width='200' height='200' /></p>\n" // Sử dụng Content-ID để nhúng hình ảnh
+                + "<p><img src='cid:qrCode' alt='Mã QR đặt bàn' width='200' height='200' /></p>\n"
                 + "<p>Trân trọng,<br>\n"
                 + order.getEmployee().getFullname() + "!</p>\n";
     }

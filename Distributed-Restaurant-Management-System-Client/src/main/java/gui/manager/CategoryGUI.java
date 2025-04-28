@@ -9,12 +9,15 @@ import bus.impl.CategoryBUSImpl;
 import model.CategoryEntity;
 import gui.FormLoad;
 import gui.custom.TableDesign;
+import raven.toast.Notifications;
 
 import java.lang.Exception;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -163,7 +166,11 @@ public class CategoryGUI extends javax.swing.JPanel {
         btnAdd.setPreferredSize(new java.awt.Dimension(100, 52));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                try {
+                    btnAddActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnAdd);
@@ -173,7 +180,11 @@ public class CategoryGUI extends javax.swing.JPanel {
         btnUpdate.setPreferredSize(new java.awt.Dimension(102, 50));
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                try {
+                    btnUpdateActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         jPanel11.add(btnUpdate);
@@ -293,7 +304,7 @@ public class CategoryGUI extends javax.swing.JPanel {
         clearText();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         if (validData()) {
             try {
                 String name = lblName.getText().trim();
@@ -336,7 +347,7 @@ public class CategoryGUI extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnFindActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnUpdateActionPerformed
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
@@ -403,10 +414,17 @@ public class CategoryGUI extends javax.swing.JPanel {
         modelTable.setRowCount(0);
     }
 
-    private boolean validData() {
+    private boolean validData() throws Exception {
         String name = lblName.getText().trim();
         if (name.isEmpty() || name.isBlank()) {
             JOptionPane.showMessageDialog(null, "Tên không được rỗng");
+            return false;
+        }
+
+        CategoryEntity categoryEntity = categoryBUS.findByName(name);
+        if(categoryEntity!=null) {
+            Notifications.getInstance().show(Notifications.Type.ERROR,
+                    Notifications.Location.TOP_RIGHT, "Tên danh mục đã tồn tại!");
             return false;
         }
         return true;

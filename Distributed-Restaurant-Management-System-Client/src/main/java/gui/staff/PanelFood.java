@@ -98,6 +98,10 @@ public class PanelFood extends javax.swing.JPanel {
 
     public void setLblImgItem(String img) {
         System.out.println(img);
+        if (img == null) {
+            this.lblImgItem.setIcon(ResizeImage.resizeImage(new ImageIcon(getClass().getResource("/img/item/defaulItem.jpg")), 200, 160));
+            return;
+        }
         this.lblImgItem.setIcon(ResizeImage.resizeImage(new ImageIcon(getClass().getResource("/img/item/" + img)), 200, 160));
     }
 

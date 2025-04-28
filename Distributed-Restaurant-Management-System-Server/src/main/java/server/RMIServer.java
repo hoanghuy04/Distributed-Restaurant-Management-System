@@ -39,6 +39,7 @@ public class RMIServer {
             PromotionDetailBUS promotionDetailBUS = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
             RoleBUS roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
             FileBUS fileBUS = new FileBUSImpl("/resources");
+            MailBUS mailBUS = new MailBUSImpl();
 
             context.bind(getURI(getHostName(), CategoryBUS.class), categoryBUS);
             System.out.println("CategoryBUS is bound to RMI registry");
@@ -67,7 +68,8 @@ public class RMIServer {
             context.bind(getURI(getHostName(), RoleBUS.class), roleBUS);
             System.out.println("FileBUS is bound to RMI registry");
             context.bind(getURI(getHostName(), FileBUS.class), fileBUS);
-
+            System.out.println("MailBUS is bound to RMI registry");
+            context.bind(getURI(getHostName(), MailBUS.class), mailBUS);
 
             System.out.println("RMI Server is running...");
         } catch (Exception e) {
