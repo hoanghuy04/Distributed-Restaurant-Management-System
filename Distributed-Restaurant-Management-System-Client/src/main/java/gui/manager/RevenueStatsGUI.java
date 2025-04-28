@@ -12,22 +12,38 @@ import gui.FormLoad;
 import gui.custom.TableDesign;
 import gui.custom.chart.ModelChart;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.Exception;
+import java.rmi.RemoteException;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import model.CustomerEntity;
+import model.OrderEntity;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import util.DatetimeFormatterUtil;
 import util.DoubleFormatUlti;
 import gui.custom.chart.Chart;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import static java.time.LocalDateTime.now;
+
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 import raven.toast.Notifications;
 
+import javax.swing.*;
+
 /**
- *
  * @author ADMIN
  */
 public class RevenueStatsGUI extends javax.swing.JPanel {
@@ -38,15 +54,16 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
      */
     private TableDesign tableDesign;
     private OrderBUS orderBUS;
+
     public RevenueStatsGUI() throws Exception {
         orderBUS = FormLoad.orderBUS;
-        String headers[] = {"Mã hóa đơn","Khách hàng","Nhân viên","Ngày lập","Tổng tiền"};
-        List<Integer> tableWidth = Arrays.asList(50,80,80,120,150);
+        String headers[] = {"Mã hóa đơn", "Khách hàng", "Nhân viên", "Ngày lập", "Tổng tiền"};
+        List<Integer> tableWidth = Arrays.asList(50, 80, 80, 120, 150);
         tableDesign = new TableDesign(headers, tableWidth);
-        initComponents(); 
+        initComponents();
         LocalDate localDateStart = LocalDate.now();
         LocalDate localDateEnd = LocalDate.now();
-        LocalDateTime start = localDateStart.atStartOfDay(); 
+        LocalDateTime start = localDateStart.atStartOfDay();
         LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
         createChart(start, end, null);
     }
@@ -90,6 +107,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         lblProfit = new javax.swing.JLabel();
         comboStats = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
+        btnExport = new gui.custom.RoundedButton();
         panelSouth = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -158,18 +176,18 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addContainerGap())
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addContainerGap(24, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(20, 20, 20))
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addGap(20, 20, 20))
         );
 
         jPanel4.add(jPanel5, java.awt.BorderLayout.WEST);
@@ -190,22 +208,22 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblRevenue, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
-                .addContainerGap())
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblRevenue, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(lblRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(lblRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20))
         );
 
         jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
@@ -223,18 +241,18 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addContainerGap())
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                                .addContainerGap(24, Short.MAX_VALUE)
+                                .addComponent(jLabel7)
+                                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(20, 20, 20))
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(jLabel7)
+                                .addGap(20, 20, 20))
         );
 
         jPanel7.add(jPanel8, java.awt.BorderLayout.WEST);
@@ -254,22 +272,22 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblCapital, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
-                .addContainerGap())
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblCapital, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(lblCapital, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(lblCapital, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20))
         );
 
         jPanel7.add(jPanel9, java.awt.BorderLayout.CENTER);
@@ -287,18 +305,18 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
         jPanel22Layout.setHorizontalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel22Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addContainerGap())
+                jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel22Layout.createSequentialGroup()
+                                .addContainerGap(24, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addContainerGap())
         );
         jPanel22Layout.setVerticalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel22Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(20, 20, 20))
+                jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel22Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addGap(20, 20, 20))
         );
 
         jPanel21.add(jPanel22, java.awt.BorderLayout.WEST);
@@ -318,22 +336,22 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
         jPanel23.setLayout(jPanel23Layout);
         jPanel23Layout.setHorizontalGroup(
-            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel23Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblProfit, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
-                .addContainerGap())
+                jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel23Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblProfit, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         jPanel23Layout.setVerticalGroup(
-            jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel23Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(lblProfit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel23Layout.createSequentialGroup()
+                                .addContainerGap(33, Short.MAX_VALUE)
+                                .addComponent(lblProfit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20))
         );
 
         jPanel21.add(jPanel23, java.awt.BorderLayout.CENTER);
@@ -341,7 +359,7 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         jPanel1.add(jPanel21);
 
         comboStats.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        comboStats.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Hôm trước", "7 ngày trước", "30 ngày trước", "Năm nay", "Năm trước" }));
+        comboStats.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Hôm nay", "Hôm trước", "7 ngày trước", "30 ngày trước", "Năm nay", "Năm trước"}));
         comboStats.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 try {
@@ -356,54 +374,71 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel3.setText("Tiêu chí");
 
+        btnExport.setBackground(new java.awt.Color(0, 153, 51));
+        btnExport.setForeground(new java.awt.Color(255, 255, 255));
+        btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/excel_icon.png"))); // NOI18N
+        btnExport.setText("Export");
+        btnExport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnExportActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         javax.swing.GroupLayout panelNorthLayout = new javax.swing.GroupLayout(panelNorth);
         panelNorth.setLayout(panelNorthLayout);
         panelNorthLayout.setHorizontalGroup(
-            panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelNorthLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelNorthLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(startedDay, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
-                            .addComponent(comboStats, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(150, 150, 150)
-                        .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelNorthLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(endedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelNorthLayout.createSequentialGroup()
-                                .addGap(220, 220, 220)
-                                .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1302, Short.MAX_VALUE))
-                .addContainerGap())
+                panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelNorthLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelNorthLayout.createSequentialGroup()
+                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(startedDay, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+                                                        .addComponent(comboStats, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(150, 150, 150)
+                                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addGroup(panelNorthLayout.createSequentialGroup()
+                                                                .addComponent(jLabel1)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(endedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(panelNorthLayout.createSequentialGroup()
+                                                                .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1302, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         panelNorthLayout.setVerticalGroup(
-            panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelNorthLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(startedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(endedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(comboStats, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                        .addComponent(btnThongKe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 13, Short.MAX_VALUE))
+                panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelNorthLayout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(startedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(endedDay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(panelNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(comboStats, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                                                .addComponent(btnThongKe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 13, Short.MAX_VALUE))
         );
 
         dayPanel.add(panelNorth, java.awt.BorderLayout.NORTH);
@@ -419,12 +454,12 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 30, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 475, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel3);
@@ -439,12 +474,12 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 30, Short.MAX_VALUE)
         );
         jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 475, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel10);
@@ -465,49 +500,44 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_endedDayActionPerformed
 
     private void comboStatsItemStateChanged(java.awt.event.ItemEvent evt) throws Exception {//GEN-FIRST:event_comboStatsItemStateChanged
-        String selectedItem = comboStats.getSelectedItem().toString(); 
-        if(selectedItem.equals("Năm nay")) {
+        String selectedItem = comboStats.getSelectedItem().toString();
+        if (selectedItem.equals("Năm nay")) {
             LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear(), 1, 1);
             LocalDate localDateEnd = LocalDate.of(LocalDate.now().getYear(), 12, 31);
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
-            createChart(start,end,LocalDate.now().getYear());
-        } else
-        if(selectedItem.equals("Năm trước")) {
-            LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear()-1, 1, 1);
-            LocalDate localDateEnd = LocalDate.of(LocalDate.now().getYear()-1, 12, 31);
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            createChart(start, end, LocalDate.now().getYear());
+        } else if (selectedItem.equals("Năm trước")) {
+            LocalDate localDateStart = LocalDate.of(LocalDate.now().getYear() - 1, 1, 1);
+            LocalDate localDateEnd = LocalDate.of(LocalDate.now().getYear() - 1, 12, 31);
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
-            createChart(start,end,LocalDate.now().getYear()-1);
-             
-        } else
-        if(selectedItem.equals("Hôm nay")) {
+            createChart(start, end, LocalDate.now().getYear() - 1);
+
+        } else if (selectedItem.equals("Hôm nay")) {
             LocalDate localDateStart = LocalDate.now();
             LocalDate localDateEnd = LocalDate.now();
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
             createChart(start, end, null);
-        } else
-        if(selectedItem.equals("Hôm trước")) {
+        } else if (selectedItem.equals("Hôm trước")) {
             LocalDate localDateStart = LocalDate.now().minusDays(1);
             LocalDate localDateEnd = LocalDate.now().minusDays(1);
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
-            createChart(start,end,null);
-        } else
-        if(selectedItem.equals("7 ngày trước")) {
+            createChart(start, end, null);
+        } else if (selectedItem.equals("7 ngày trước")) {
             LocalDate localDateStart = LocalDate.now().minusDays(7);
             LocalDate localDateEnd = LocalDate.now();
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
-            createChart(start,end,null);
-        } else
-        if(selectedItem.equals("30 ngày trước")) {
+            createChart(start, end, null);
+        } else if (selectedItem.equals("30 ngày trước")) {
             LocalDate localDateStart = LocalDate.now().minusDays(30);
             LocalDate localDateEnd = LocalDate.now();
-            LocalDateTime start = localDateStart.atStartOfDay(); 
+            LocalDateTime start = localDateStart.atStartOfDay();
             LocalDateTime end = localDateEnd.atTime(23, 59, 59, 999999999);
-            createChart(start,end,null);
+            createChart(start, end, null);
         }
     }//GEN-LAST:event_comboStatsItemStateChanged
 
@@ -515,49 +545,346 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
         LocalDate startedDate = LocalDate.parse(startedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         LocalDate endedDate = LocalDate.parse(endedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         if (endedDate.isAfter(LocalDate.now())) {
-         Notifications.getInstance().show(
-                            Notifications.Type.WARNING,
-                            Notifications.Location.TOP_RIGHT,
-                            10000,
-                            "Thông báo: Vui lòng chọn ngày kết thúc sau ngày hiện tại.");
-        }
-        else if (startedDate.isAfter(LocalDate.now())) {
-         Notifications.getInstance().show(
-                            Notifications.Type.WARNING,
-                            Notifications.Location.TOP_RIGHT,
-                            10000,
-                            "Thông báo: Vui lòng chọn ngày bắt đầu trước ngày hiện tại.");
-        }
-        else if (startedDate.isAfter(endedDate)) {
-         Notifications.getInstance().show(
-                            Notifications.Type.WARNING,
-                            Notifications.Location.TOP_RIGHT,
-                            10000,
-                            "Thông báo: Vui lòng chọn ngày bắt đầu trước ngày kết thúc.");
-        }
-        else if (endedDate.isBefore(startedDate)) {
-         Notifications.getInstance().show(
-                            Notifications.Type.WARNING,
-                            Notifications.Location.TOP_RIGHT,
-                            10000,
-                            "Thông báo: Vui lòng chọn ngày kết thúc sau ngày bắt đầu.");
-        }
-        else {
+            Notifications.getInstance().show(
+                    Notifications.Type.WARNING,
+                    Notifications.Location.TOP_RIGHT,
+                    10000,
+                    "Thông báo: Vui lòng chọn ngày kết thúc sau ngày hiện tại.");
+        } else if (startedDate.isAfter(LocalDate.now())) {
+            Notifications.getInstance().show(
+                    Notifications.Type.WARNING,
+                    Notifications.Location.TOP_RIGHT,
+                    10000,
+                    "Thông báo: Vui lòng chọn ngày bắt đầu trước ngày hiện tại.");
+        } else if (startedDate.isAfter(endedDate)) {
+            Notifications.getInstance().show(
+                    Notifications.Type.WARNING,
+                    Notifications.Location.TOP_RIGHT,
+                    10000,
+                    "Thông báo: Vui lòng chọn ngày bắt đầu trước ngày kết thúc.");
+        } else if (endedDate.isBefore(startedDate)) {
+            Notifications.getInstance().show(
+                    Notifications.Type.WARNING,
+                    Notifications.Location.TOP_RIGHT,
+                    10000,
+                    "Thông báo: Vui lòng chọn ngày kết thúc sau ngày bắt đầu.");
+        } else {
             LocalDateTime start = startedDate.atStartOfDay(); // 00:00:00
             LocalDateTime end = endedDate.atTime(23, 59, 59, 999999999); // 23:59:59.999999999
             createChart(start, end, null);
         }
     }//GEN-LAST:event_btnThongKeActionPerformed
-   
+
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnExportActionPerformed
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        LocalDate startedDate = LocalDate.parse(startedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate endedDate = LocalDate.parse(endedDay.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        exportRevenueReport(Constants.REPORT_FILE_PATH + "/revenues/" + "report_revenues_" + startedDate.format(formatter) + "_" + endedDate.format(formatter) + ".xlsx", orderBUS.findOrdersBetweenDates(startedDate.atStartOfDay(), endedDate.atTime(23, 59)), startedDate, endedDate);
+        JOptionPane.showMessageDialog(
+                null,
+                "Export thành công ra file: " + "report_revenues_" + startedDate.format(formatter) + "_" + endedDate.format(formatter) + ".xlsx",
+                "<html><b>Thông báo</b></html>",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }//GEN-LAST:event_btnExportActionPerformed
+
     private void createChart(LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         stats.removeAll();
         Chart chart = new Chart();
         stats.add(chart);
-        updateChart(chart, startDate, endDate, year); 
+        updateChart(chart, startDate, endDate, year);
         stats.repaint();
         stats.revalidate();
     }
 
+
+    public void exportRevenueReport(String filePath, List<OrderEntity> orderEntities, LocalDate startDate, LocalDate endDate) throws RemoteException {
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        boolean isDailyReport = daysBetween < 30;
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Thống kê doanh thu");
+
+        createSystemTitle(workbook, sheet, 5);
+        createTitle(workbook, sheet, startDate, endDate, 5);
+
+        if (isDailyReport) {
+
+            generateDailyReport(workbook, sheet, orderEntities, startDate, endDate);
+        } else {
+
+            generateMonthlyReport(workbook, sheet, orderEntities, startDate, endDate);
+        }
+
+        // Thêm tổng số đơn và tổng doanh thu
+        int summaryRowIndex = sheet.getLastRowNum() + 2; // Tạo khoảng trống 1 dòng sau bảng dữ liệu
+
+        // Tính tổng số đơn và tổng doanh thu
+        int totalOrders = orderEntities.size();
+
+        // Tạo kiểu chữ đậm cho phần tổng kết
+        CellStyle summaryStyle = workbook.createCellStyle();
+        Font summaryFont = workbook.createFont();
+        summaryFont.setBold(true);
+        summaryFont.setFontHeightInPoints((short) 14);
+        summaryStyle.setFont(summaryFont);
+
+        Row totalOrdersRow = sheet.createRow(summaryRowIndex);
+        Cell totalOrdersLabelCell = totalOrdersRow.createCell(0);
+        totalOrdersLabelCell.setCellValue("Tổng số đơn:");
+        totalOrdersLabelCell.setCellStyle(summaryStyle);
+
+        Cell totalOrdersValueCell = totalOrdersRow.createCell(1);
+        totalOrdersValueCell.setCellValue(totalOrders);
+        totalOrdersValueCell.setCellStyle(summaryStyle);
+
+        Row totalCapitalRow = sheet.createRow(summaryRowIndex + 1);
+        Cell totalCapitalLabelCell = totalCapitalRow.createCell(0);
+        totalCapitalLabelCell.setCellValue("Tổng vốn (VND): ");
+        totalCapitalLabelCell.setCellStyle(summaryStyle);
+
+        Cell totalCapital = totalCapitalRow.createCell(1);
+        totalCapital.setCellValue(DoubleFormatUlti.format(orderBUS.getTotalCapital(startDate.atStartOfDay(), endDate.atTime(23, 59))));
+        totalCapital.setCellStyle(summaryStyle);
+
+        Row totalRevenueRow = sheet.createRow(summaryRowIndex + 2);
+        Cell totalRevenueLabelCell = totalRevenueRow.createCell(0);
+        totalRevenueLabelCell.setCellValue("Tổng doanh thu (VND): ");
+        totalRevenueLabelCell.setCellStyle(summaryStyle);
+
+        Cell totalRevenue = totalRevenueRow.createCell(1);
+        totalRevenue.setCellValue(DoubleFormatUlti.format(orderBUS.getTotalRevenue(startDate.atStartOfDay(), endDate.atTime(23, 59))));
+        totalRevenue.setCellStyle(summaryStyle);
+
+        Row totalProfitRow = sheet.createRow(summaryRowIndex + 3);
+        Cell totalProfitLabelCell = totalProfitRow.createCell(0);
+        totalProfitLabelCell.setCellValue("Tổng lợi nhuận (VND): ");
+        totalProfitLabelCell.setCellStyle(summaryStyle);
+
+        Cell totalProfit = totalProfitRow.createCell(1);
+        totalProfit.setCellValue(DoubleFormatUlti.format(
+                orderBUS.getTotalRevenue(startDate.atStartOfDay(), endDate.atTime(23, 59)) -
+                        orderBUS.getTotalCapital(startDate.atStartOfDay(), endDate.atTime(23, 59))));
+        totalProfit.setCellStyle(summaryStyle);
+
+        // Điều chỉnh độ rộng cột
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+
+        // Thêm khu vực ký tên
+        int signatureRowIndex = summaryRowIndex + 5; // Tạo khoảng trống sau phần tổng kết
+
+        // Tạo kiểu chữ cho chữ ký
+        CellStyle signatureStyle = workbook.createCellStyle();
+        Font signatureFont = workbook.createFont();
+        signatureFont.setFontHeightInPoints((short) 12); // Cỡ chữ 12
+        signatureStyle.setFont(signatureFont);
+        signatureStyle.setAlignment(HorizontalAlignment.CENTER); // Căn giữa
+        signatureStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        // Dòng ngày tháng năm
+        Row signatureDateRow = sheet.createRow(signatureRowIndex);
+        Cell signatureDateCell = signatureDateRow.createCell(2);
+        signatureDateCell.setCellValue("Ngày " + LocalDate.now().getDayOfMonth() + " tháng " + LocalDate.now().getMonthValue() + " năm " + LocalDate.now().getYear());
+        signatureDateCell.setCellStyle(signatureStyle);
+
+        // Gộp ô cho ngày tháng năm
+        sheet.addMergedRegion(new CellRangeAddress(signatureRowIndex, signatureRowIndex, 2, 4)); // Gộp từ cột 2 đến cột 4
+
+        // Dòng người lập báo cáo
+        Row signatureRow = sheet.createRow(signatureRowIndex + 1);
+        Cell signatureCell = signatureRow.createCell(2);
+        signatureCell.setCellValue("Người lập báo cáo");
+        signatureCell.setCellStyle(signatureStyle);
+
+        // Gộp ô cho người lập báo cáo
+        sheet.addMergedRegion(new CellRangeAddress(signatureRowIndex + 1, signatureRowIndex + 1, 2, 4)); // Gộp từ cột 2 đến cột 4
+
+        // Ghi workbook vào file
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+            System.out.println("Xuất dữ liệu ra tệp Excel thành công: " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void createSystemTitle(Workbook workbook, Sheet sheet, int columnCount) {
+        CellStyle systemTitleStyle = workbook.createCellStyle();
+        Font systemTitleFont = workbook.createFont();
+        systemTitleFont.setBold(true);
+        systemTitleFont.setFontHeightInPoints((short) 24); // Kích thước phông chữ cho tiêu đề hệ thống
+        systemTitleStyle.setFont(systemTitleFont);
+        systemTitleStyle.setAlignment(HorizontalAlignment.CENTER);
+        systemTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        Row systemTitleRow = sheet.createRow(0);
+        Cell systemTitleCell = systemTitleRow.createCell(0);
+        systemTitleCell.setCellValue("Hệ thống quản lý đặt bàn Zenta");
+        systemTitleCell.setCellStyle(systemTitleStyle);
+
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnCount - 1)); // Gộp ô từ cột 0 đến cột columnCount - 1
+    }
+
+    private static void createTitle(Workbook workbook, Sheet sheet, LocalDate startDate, LocalDate endDate, int columnCount) {
+
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 18); // Kích thước phông chữ cho tiêu đề file
+        titleStyle.setFont(titleFont);
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+        titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+
+        Row titleRow = sheet.createRow(2);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Báo cáo doanh thu từ " + startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                + " đến " + endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        titleCell.setCellStyle(titleStyle);
+
+        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnCount - 1)); // Gộp ô từ cột 0 đến cột columnCount - 1
+    }
+
+    private static void generateDailyReport(Workbook workbook, Sheet sheet, List<OrderEntity> orderEntities, LocalDate startDate, LocalDate endDate) {
+        Map<LocalDate, Double> dailyRevenue = orderEntities.stream()
+                .filter(order -> !order.getReservationTime().toLocalDate().isBefore(startDate) &&
+                        !order.getReservationTime().toLocalDate().isAfter(endDate))
+                .collect(Collectors.groupingBy(
+                        order -> order.getReservationTime().toLocalDate(),
+                        Collectors.summingDouble(OrderEntity::getTotalPrice)
+                ));
+
+        // Tạo tiêu đề cột
+        Row headerRow = sheet.createRow(4);
+        headerRow.createCell(0).setCellValue("STT");
+        headerRow.createCell(1).setCellValue("Ngày");
+        headerRow.createCell(2).setCellValue("Tổng tiền (VND)");
+
+        // Tạo kiểu ô cho tiêu đề
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerStyle.setFont(headerFont);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER); // Căn giữa nội dung
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
+        for (int i = 0; i < 3; i++) {
+            headerRow.getCell(i).setCellStyle(headerStyle);
+        }
+
+        // Tạo kiểu ô cho dữ liệu
+        CellStyle dataStyle = workbook.createCellStyle();
+        dataStyle.setAlignment(HorizontalAlignment.CENTER); // Căn giữa nội dung
+        dataStyle.setBorderTop(BorderStyle.THIN);
+        dataStyle.setBorderBottom(BorderStyle.THIN);
+        dataStyle.setBorderLeft(BorderStyle.THIN);
+        dataStyle.setBorderRight(BorderStyle.THIN);
+
+        // Ghi dữ liệu
+        int rowIndex = 5;
+        int serialNo = 1;
+        for (Map.Entry<LocalDate, Double> entry : dailyRevenue.entrySet()) {
+            Row row = sheet.createRow(rowIndex++);
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(serialNo++); // STT
+            cell0.setCellStyle(dataStyle);
+
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))); // Ngày
+            cell1.setCellStyle(dataStyle);
+
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(DoubleFormatUlti.format(entry.getValue())); // Doanh thu
+            cell2.setCellStyle(dataStyle);
+        }
+
+        // Điều chỉnh độ rộng cột
+        for (int i = 0; i < 3; i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
+
+    private static void generateMonthlyReport(Workbook workbook, Sheet sheet, List<OrderEntity> orderEntities, LocalDate startDate, LocalDate endDate) {
+
+        Map<Integer, Double> monthlyRevenue = orderEntities.stream()
+                .filter(order -> !order.getReservationTime().toLocalDate().isBefore(startDate) &&
+                        !order.getReservationTime().toLocalDate().isAfter(endDate))
+                .collect(Collectors.groupingBy(
+                        order -> order.getReservationTime().getMonthValue(),
+                        Collectors.summingDouble(OrderEntity::getTotalPrice)
+                ));
+
+        // Tạo tiêu đề cột
+        Row headerRow = sheet.createRow(4);
+        headerRow.createCell(0).setCellValue("STT");
+        headerRow.createCell(1).setCellValue("Tháng");
+        headerRow.createCell(2).setCellValue("Tổng tiền (VND)");
+        headerRow.createCell(3).setCellValue("Quý");
+
+        // Tạo kiểu ô cho tiêu đề
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerStyle.setFont(headerFont);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER); // Căn giữa nội dung
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
+        for (int i = 0; i < 4; i++) {
+            headerRow.getCell(i).setCellStyle(headerStyle);
+        }
+
+        // Tạo kiểu ô cho dữ liệu
+        CellStyle dataStyle = workbook.createCellStyle();
+        dataStyle.setAlignment(HorizontalAlignment.CENTER); // Căn giữa nội dung
+        dataStyle.setBorderTop(BorderStyle.THIN);
+        dataStyle.setBorderBottom(BorderStyle.THIN);
+        dataStyle.setBorderLeft(BorderStyle.THIN);
+        dataStyle.setBorderRight(BorderStyle.THIN);
+
+        // Ghi dữ liệu
+        int rowIndex = 5;
+        int serialNo = 1;
+        for (Map.Entry<Integer, Double> entry : monthlyRevenue.entrySet()) {
+            Row row = sheet.createRow(rowIndex++);
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(serialNo++); // STT
+            cell0.setCellStyle(dataStyle);
+
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue("Tháng " + entry.getKey()); // Tháng
+            cell1.setCellStyle(dataStyle);
+
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(DoubleFormatUlti.format(entry.getValue())); // Doanh thu
+            cell2.setCellStyle(dataStyle);
+
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue((entry.getKey() - 1) / 3 + 1); // Quý
+            cell3.setCellStyle(dataStyle);
+        }
+
+        // Điều chỉnh độ rộng cột
+        for (int i = 0; i < 4; i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
     private void updateChart(Chart chart, LocalDateTime startDate, LocalDateTime endDate, Integer year) throws Exception {
         chart.clear();
 
@@ -581,11 +908,12 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
             double capital = value.values().stream().findFirst().orElse(0.0);
             chart.addData(new ModelChart(dateOrMonth, new double[]{revenue, capital, revenue - capital}));
         });
-        chart.start(); 
+        chart.start();
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private gui.custom.RoundedButton btnExport;
     private gui.custom.RoundedButton btnThongKe;
     private javax.swing.JComboBox<String> comboStats;
     private javax.swing.JPanel dayPanel;

@@ -869,6 +869,8 @@ public class ItemGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnExportActionPerformed
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
+
+
         importItemsToExcel().stream().forEach(i -> {
             try {
                 itemBUS.insertEntity(i);
