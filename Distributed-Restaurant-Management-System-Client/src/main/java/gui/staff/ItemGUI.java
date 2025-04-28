@@ -674,7 +674,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
                     System.out.println("Uploading img");
                     in.read(img, 0, img.length);
-                    fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+                    fileBUS.uploadFileToServer(img, "/img/"+fileClient.getName(), img.length);
                 }
 
                 // Cập nhật vào bảng
@@ -787,7 +787,7 @@ public class ItemGUI extends javax.swing.JPanel {
                 FileInputStream in = new FileInputStream(fileClient);
 
                 in.read(img, 0, img.length);
-                fileBUS.uploadFileToServer(img, fileClient.getName(), img.length);
+                fileBUS.uploadFileToServer(img, "/img/"+fileClient.getName(), img.length);
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
@@ -825,6 +825,7 @@ public class ItemGUI extends javax.swing.JPanel {
             txtStockQty.setText(String.valueOf(stockQty));
             cbStatus.setSelected(active);
             lblImg.setText("");
+            System.out.println("src/main/resources/img/item/" + imgPath);
             lblImg.setIcon(ResizeImage.resizeImage(new ImageIcon("src/main/resources/img/item/" + imgPath), 154, 142));
             txtDesc.setText(desc);
         }

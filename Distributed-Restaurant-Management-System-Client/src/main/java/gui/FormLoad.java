@@ -184,10 +184,10 @@ public class FormLoad extends javax.swing.JDialog {
 
                ;
 
-                for (String s:  fileBUS.listFiles("")) {
+                for (String s:  fileBUS.listFiles("/resources/img")) {
                     System.out.println(s);
 
-                    byte [] mydata = fileBUS.downloadFileFromServer(s);
+                    byte [] mydata = fileBUS.downloadFileFromServer("/resources/img/" + s);
                     System.out.println("downloading...");
                     System.out.println(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item");
                     File clientpathfile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item"+ "\\" + s);
