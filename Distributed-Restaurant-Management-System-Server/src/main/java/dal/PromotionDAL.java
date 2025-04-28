@@ -48,13 +48,15 @@ public class PromotionDAL implements BaseDAL<PromotionEntity, String> {
         t.setPromotionId(IDGeneratorUtility.generateIDWithCreatedDate("P", "promotions", "promotion_id", "created_date", em, LocalDateTime.now()));
         JOptionPane.showMessageDialog(null, t.getPromotionId());
         executeTransaction(() -> em.persist(t));
-
         return t;
     }
 
     @Override
-    public boolean update(PromotionEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public PromotionEntity update(PromotionEntity t) {
+        if (t.getPromotionId() == null) {
+            t.setPromotionId(IDGeneratorUtility.generateIDWithCreatedDate("P", "promotions", "promotion_id", "created_date", em, LocalDateTime.now()));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

@@ -662,7 +662,7 @@ public class ItemGUI extends javax.swing.JPanel {
                 i.setActive(cbStatus.isSelected());
                 i.setImg(this.imgPath);
 
-                itemBUS.updateEntity(i);
+                i = itemBUS.updateEntity(i);
 
 
                 String asbPath = "src/main/resources/img/item/" + imgPath;
@@ -761,7 +761,7 @@ public class ItemGUI extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnAddActionPerformed
         ItemEntity itemEntity;
-        if (isValidate()) {
+        if (isValidate() && validateName()) {
             String name = txtName.getText();
             CategoryEntity category = categoryBUS.findByName(cbbCategory.getSelectedItem().toString());
             double costPrice = Double.parseDouble(txtCostPrice.getText());
@@ -1096,8 +1096,12 @@ public class ItemGUI extends javax.swing.JPanel {
                     Notifications.Location.TOP_RIGHT, "Vui lòng chọn hình ảnh cho món ăn!");
             return false;
         }
+        return true;
+    }
 
-       ItemEntity itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
+    private boolean validateName() throws RemoteException {
+        String name = txtName.getText();
+        ItemEntity itemEntity = itemBUS.findOneByName(name, cbbCategory.getSelectedItem().toString());
 
         if(itemEntity!=null) {
             Notifications.getInstance().show(Notifications.Type.ERROR,

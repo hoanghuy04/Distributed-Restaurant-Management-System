@@ -818,7 +818,6 @@ public class RevenueStatsGUI extends javax.swing.JPanel {
     }
 
     private static void generateMonthlyReport(Workbook workbook, Sheet sheet, List<OrderEntity> orderEntities, LocalDate startDate, LocalDate endDate) {
-
         Map<Integer, Double> monthlyRevenue = orderEntities.stream()
                 .filter(order -> !order.getReservationTime().toLocalDate().isBefore(startDate) &&
                         !order.getReservationTime().toLocalDate().isAfter(endDate))

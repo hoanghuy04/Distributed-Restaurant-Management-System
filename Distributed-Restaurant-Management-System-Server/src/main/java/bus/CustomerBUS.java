@@ -11,7 +11,7 @@ public interface CustomerBUS extends BaseBUS<CustomerEntity, String> {
     CustomerEntity insertEntity(CustomerEntity customer) throws RemoteException;
 
     @Override
-    boolean updateEntity(CustomerEntity customer) throws RemoteException;
+    CustomerEntity updateEntity(CustomerEntity customer) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

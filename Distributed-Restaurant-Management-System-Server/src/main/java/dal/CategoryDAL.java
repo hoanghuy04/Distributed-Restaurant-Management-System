@@ -32,8 +32,11 @@ public class CategoryDAL implements BaseDAL<CategoryEntity, String> {
     }
 
     @Override
-    public boolean update(CategoryEntity category) {
-        return executeTransaction(() -> entityManager.merge(category));
+    public CategoryEntity update(CategoryEntity category) {
+        if (category.getCategoryId() == null) {
+            category.setCategoryId(IDGeneratorUtility.generateSimpleID("C", "categories", "category_id", entityManager));
+        }
+        return executeTransaction(() -> entityManager.merge(category)) ? category : null;
     }
 
     @Override

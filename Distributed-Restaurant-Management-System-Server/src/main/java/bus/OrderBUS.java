@@ -18,7 +18,7 @@ public interface OrderBUS extends BaseBUS<OrderEntity, String>, Remote {
     OrderEntity insertEntity(OrderEntity orderEntity) throws RemoteException;
 
     @Override
-    boolean updateEntity(OrderEntity orderEntity) throws RemoteException;
+    OrderEntity updateEntity(OrderEntity orderEntity) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

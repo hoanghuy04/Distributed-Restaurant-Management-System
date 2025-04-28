@@ -76,11 +76,11 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     }
 
     @Override
-    public boolean updateEntity(OrderEntity orderEntity)  throws RemoteException {
+    public OrderEntity updateEntity(OrderEntity orderEntity)  throws RemoteException {
         String tableId = orderEntity.getTable().getTableId();
         try {
             // Cập nhật đơn hàng
-            boolean updated = orderDAL.update(orderEntity);
+            OrderEntity updated = orderDAL.update(orderEntity);
             // Cập nhật trạng thái bàn
             TableStatusEnum finalStatus = (orderEntity.getPaymentStatus() == PaymentStatusEnum.PAID)
                     ? TableStatusEnum.AVAILABLE
@@ -94,7 +94,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
         }
     }
 
-    public void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws Exception {
+    public synchronized void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws Exception {
         OrderRequest request = new OrderRequest(orderEntity, paymentStatus, callback);
         queueProcessor.addOrderRequest(request);
     }

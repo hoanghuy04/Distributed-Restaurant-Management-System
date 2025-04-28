@@ -427,7 +427,7 @@ public class DialogPasswordRecover extends javax.swing.JDialog {
 
         if (password.equalsIgnoreCase(confirmPassword)) {
             emp.setPassword(employeeBUS.hashPassword(password));
-            employeeBUS.updateEntity(emp);
+            emp = employeeBUS.updateEntity(emp);
             this.dispose();
             this.loginGUI.setTxtName(emp.getEmployeeId());
             this.loginGUI.setTxtPass(password);

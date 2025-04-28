@@ -34,7 +34,7 @@ public class ItemToppingBUSImpl extends UnicastRemoteObject implements bus.ItemT
     }
 
     @Override
-    public boolean updateEntity(ItemToppingEntity itemTopping)  throws RemoteException {
+    public ItemToppingEntity updateEntity(ItemToppingEntity itemTopping)  throws RemoteException {
         return itemToppingDAL.update(itemTopping);
     }
 

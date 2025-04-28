@@ -26,7 +26,7 @@ public class RoleBUSImpl extends UnicastRemoteObject implements bus.RoleBUS {
     }
 
     @Override
-    public boolean updateEntity(RoleEntity t)  throws RemoteException {
+    public RoleEntity updateEntity(RoleEntity t)  throws RemoteException {
         return roleDAL.update(t);
     }
 

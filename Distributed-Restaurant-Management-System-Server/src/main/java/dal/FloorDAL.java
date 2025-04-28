@@ -46,10 +46,12 @@ public class FloorDAL implements BaseDAL<FloorEntity, String> {
     }
 
     @Override
-    public boolean update(FloorEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public FloorEntity update(FloorEntity t) {
+        if (t.getFloorId() == null) {
+            t.setFloorId(IDGeneratorUtility.generateSimpleID("F", "floors", "floor_id", em));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
-
     @Override
     public boolean deleteById(String id) {
         return false;

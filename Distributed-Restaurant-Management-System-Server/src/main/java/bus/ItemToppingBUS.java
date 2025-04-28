@@ -13,7 +13,7 @@ public interface ItemToppingBUS extends BaseBUS<ItemToppingEntity, ItemToppingId
     ItemToppingEntity insertEntity(ItemToppingEntity itemTopping) throws RemoteException;
 
     @Override
-    boolean updateEntity(ItemToppingEntity itemTopping) throws RemoteException;
+    ItemToppingEntity updateEntity(ItemToppingEntity itemTopping) throws RemoteException;
 
     @Override
     boolean deleteEntity(ItemToppingId id) throws RemoteException;

@@ -51,8 +51,8 @@ public class PromotionDetailDAL implements BaseDAL<PromotionDetailEntity, Promot
     }
 
     @Override
-    public boolean update(PromotionDetailEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public PromotionDetailEntity update(PromotionDetailEntity t) {
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

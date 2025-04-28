@@ -22,7 +22,7 @@ public class FloorBUSImpl extends UnicastRemoteObject implements bus.FloorBUS {
     }
 
     @Override
-    public boolean updateEntity(FloorEntity floor)  throws RemoteException {
+    public FloorEntity updateEntity(FloorEntity floor)  throws RemoteException {
         return floorDAL.update(floor);
     }
 

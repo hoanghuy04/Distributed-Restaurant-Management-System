@@ -15,7 +15,7 @@ public interface TableBUS  extends BaseBUS<TableEntity, String> {
 
     TableEntity insertEntity(TableEntity table) throws RemoteException;
 
-    boolean updateEntity(TableEntity table) throws RemoteException;
+    TableEntity updateEntity(TableEntity table) throws RemoteException;
 
     boolean deleteEntity(String id) throws RemoteException;
 

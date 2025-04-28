@@ -11,7 +11,7 @@ public interface OrderDetailBUS extends BaseBUS<OrderDetailEntity, OrderDetailId
     OrderDetailEntity insertEntity(OrderDetailEntity orderDetail) throws RemoteException;
 
     @Override
-    boolean updateEntity(OrderDetailEntity orderDetail) throws RemoteException;
+    OrderDetailEntity updateEntity(OrderDetailEntity orderDetail) throws RemoteException;
 
     @Override
     boolean deleteEntity(OrderDetailId id) throws RemoteException;

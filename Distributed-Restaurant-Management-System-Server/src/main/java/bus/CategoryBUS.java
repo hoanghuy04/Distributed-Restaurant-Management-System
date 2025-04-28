@@ -10,7 +10,7 @@ public interface CategoryBUS extends BaseBUS<CategoryEntity, String> {
     CategoryEntity insertEntity(CategoryEntity category) throws RemoteException;
 
     @Override
-    boolean updateEntity(CategoryEntity category) throws RemoteException;
+    CategoryEntity updateEntity(CategoryEntity category) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

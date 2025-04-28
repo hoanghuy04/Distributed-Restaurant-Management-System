@@ -21,7 +21,7 @@ public class RMIServer {
     public static void main(String[] args) {
         try {
             System.setProperty("sun.rmi.transport.tcp.readTimeout", "60000");
-            System.setProperty("java.rmi.server.hostname", "huyHoangPc");
+            System.setProperty("java.rmi.server.hostname", "MSI");
             Context context = new InitialContext();
             LocateRegistry.createRegistry(PORT);
 

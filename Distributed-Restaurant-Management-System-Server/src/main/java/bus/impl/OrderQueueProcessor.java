@@ -18,29 +18,29 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class OrderQueueProcessor  {
+public class OrderQueueProcessor {
     private final BlockingQueue<OrderRequest> orderQueue = new LinkedBlockingQueue<>();
     private final Map<String, Lock> tableLocks = new ConcurrentHashMap<>();
     private final OrderBUS orderBUS;
     private volatile boolean running = true;
 
-    public OrderQueueProcessor(OrderBUS orderBUS) throws Exception {
+    public OrderQueueProcessor(OrderBUS orderBUS) {
         this.orderBUS = orderBUS;
         startProcessing();
     }
 
     // Thêm yêu cầu vào hàng đợi
-    public void addOrderRequest(OrderRequest request) throws Exception {
+    public void addOrderRequest(OrderRequest request) {
         orderQueue.offer(request);
     }
 
     // Dừng xử lý
-    public void stop() throws Exception{
+    public void stop() {
         running = false;
     }
 
     // Bắt đầu thread xử lý hàng đợi
-    public void startProcessing() throws Exception {
+    private void startProcessing() {
         new Thread(() -> {
             while (running) {
                 try {
@@ -57,7 +57,7 @@ public class OrderQueueProcessor  {
     }
 
     // Xử lý một yêu cầu
-    public void processRequest(OrderRequest request) throws Exception {
+    private void processRequest(OrderRequest request) {
         String tableId = request.getOrderEntity().getTable().getTableId();
         Lock lock = tableLocks.computeIfAbsent(tableId, k -> new ReentrantLock());
         lock.lock();
@@ -75,7 +75,7 @@ public class OrderQueueProcessor  {
             try {
                 if (paymentStatus == PaymentStatusEnum.PAID) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
-                    success = orderBUSImpl.updateEntity(order);
+                    success = orderBUSImpl.updateEntity(order).getOrderId() != null;
                     message = success ? "Thanh toán đơn hàng thành công!" : "Lỗi khi thanh toán đơn hàng.";
                 } else {
                     if (order.getTable().getTableStatus() != TableStatusEnum.OCCUPIED) {

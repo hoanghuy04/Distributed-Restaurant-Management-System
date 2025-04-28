@@ -33,7 +33,7 @@ public class ItemBUSImpl extends UnicastRemoteObject implements bus.ItemBUS {
     }
 
     @Override
-    public boolean updateEntity(ItemEntity item)  throws RemoteException {
+    public ItemEntity updateEntity(ItemEntity item)  throws RemoteException {
         return itemDAL.update(item);
     }
 

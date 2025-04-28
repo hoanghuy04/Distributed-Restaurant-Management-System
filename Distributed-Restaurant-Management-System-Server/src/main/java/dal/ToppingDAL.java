@@ -55,8 +55,11 @@ public class ToppingDAL implements BaseDAL<ToppingEntity, String> {
     }
 
     @Override
-    public boolean update(ToppingEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public ToppingEntity update(ToppingEntity t) {
+        if (t.getToppingId() == null) {
+            t.setToppingId(IDGeneratorUtility.generateIDWithCreatedDate("T", "toppings", "topping_id", "created_date", em, LocalDateTime.now()));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

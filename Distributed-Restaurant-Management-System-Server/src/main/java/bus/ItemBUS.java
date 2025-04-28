@@ -14,7 +14,7 @@ public interface ItemBUS extends BaseBUS<ItemEntity, String> {
     ItemEntity insertEntity(ItemEntity item) throws RemoteException;
 
     @Override
-    boolean updateEntity(ItemEntity item) throws RemoteException;
+    ItemEntity updateEntity(ItemEntity item) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;
