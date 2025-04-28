@@ -22,7 +22,14 @@ import java.util.Set;
  */
 @Data
 @Entity
-@Table(name = "toppings")
+@Table(
+        name = "toppings",
+        indexes = {
+                @Index(name = "idx_cost_price", columnList = "cost_price"),
+                @Index(name = "idx_stock_quantity", columnList = "stock_quantity"),
+                @Index(name = "idx_description", columnList = "description")
+        }
+)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "ToppingEntity.findAll", query = "select t from ToppingEntity t"),

@@ -333,7 +333,7 @@ public class TableGUI extends javax.swing.JPanel {
                 String id = table.getValueAt(selectedRow, 0).toString();
                 TableEntity f = getTableDataFromUI();
                 f.setTableId(id);
-                if (tableBUS.updateEntity(f)) {
+                if (tableBUS.updateEntity(f) != null) {
                     JOptionPane.showMessageDialog(null, "Cập nhật bàn thành công");
                     loadData();
                     clearData();
