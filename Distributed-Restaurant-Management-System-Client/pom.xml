@@ -92,19 +92,19 @@
             <artifactId>svgSalamander</artifactId>
             <version>1.1.4</version>
         </dependency>
-        
+
         <dependency>
             <groupId>raven.toast</groupId>
             <artifactId>swing-toast-notifications</artifactId>
             <version>1.0.3</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.github.sarxos</groupId>
             <artifactId>webcam-capture</artifactId>
             <version>0.3.12</version>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
         <dependency>
             <groupId>com.google.zxing</groupId>
@@ -131,7 +131,7 @@
             <version>1.1.1</version>
         </dependency>
 
-        
+
         <!-- https://mvnrepository.com/artifact/org.swinglabs/swingx -->
         <dependency>
             <groupId>org.swinglabs</groupId>
@@ -155,7 +155,7 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
