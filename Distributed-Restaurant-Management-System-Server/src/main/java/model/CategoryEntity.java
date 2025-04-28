@@ -16,7 +16,12 @@ import java.io.Serializable;
  */
 @Data
 @Entity
-@Table(name = "categories")
+@Table(name = "categories",   indexes = {
+        @Index(name = "idx_category_id", columnList = "category_id"),
+        @Index(name = "idx_name", columnList = "name"),
+        @Index(name = "idx_active", columnList = "active")
+})
+
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
         @NamedQuery(name = "CategoryEntity.findAll", query = "select c from CategoryEntity c"),

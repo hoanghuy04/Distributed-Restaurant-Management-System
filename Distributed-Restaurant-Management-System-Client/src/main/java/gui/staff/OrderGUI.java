@@ -732,7 +732,6 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 try {
                     btnPayActionPerformed(evt);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
                 }
             }
         });

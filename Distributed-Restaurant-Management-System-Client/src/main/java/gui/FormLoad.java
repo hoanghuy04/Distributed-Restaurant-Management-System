@@ -14,7 +14,14 @@ import gui.main.LoginGUI;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.rmi.Naming;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JDialog;
 
 import static util.HostNameUtil.*;
@@ -27,6 +34,7 @@ public class FormLoad extends javax.swing.JDialog {
 
     private static final Dotenv dotenv = Dotenv.load();
     private static final String SERVER_HOST_NAME = dotenv.get("SERVER_HOST_NAME");
+
 
     /**
      * Creates new form Application
@@ -44,6 +52,7 @@ public class FormLoad extends javax.swing.JDialog {
     public static ToppingBUS toppingBUS;
     public static ItemToppingBUS itemToppingBUS;
     public static RoleBUS roleBUS;
+    public static FileBUS fileBUS;
 
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -134,48 +143,127 @@ public class FormLoad extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        new Thread(() -> {
+            try {
+                // Tạo thread pool để thực hiện các lookup song song
+                ExecutorService executor = Executors.newFixedThreadPool(5); // Số thread tối đa (có thể điều chỉnh)
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Load dữ liệu thực tế cho OrderGUI
+                // Danh sách các BUS cần lookup
+                List<Runnable> lookupTasks = new ArrayList<>();
+                lookupTasks.add(() -> lookupBus("CategoryBUS", CategoryBUS.class));
+                lookupTasks.add(() -> lookupBus("ItemBUS", ItemBUS.class));
+                lookupTasks.add(() -> lookupBus("FloorBUS", FloorBUS.class));
+                lookupTasks.add(() -> lookupBus("TableBUS", TableBUS.class));
+                lookupTasks.add(() -> lookupBus("CustomerBUS", CustomerBUS.class));
+                lookupTasks.add(() -> lookupBus("OrderBUS", OrderBUS.class));
+                lookupTasks.add(() -> lookupBus("OrderDetailBUS", OrderDetailBUS.class));
+                lookupTasks.add(() -> lookupBus("EmployeeBUS", EmployeeBUS.class));
+                lookupTasks.add(() -> lookupBus("PromotionBUS", PromotionBUS.class));
+                lookupTasks.add(() -> lookupBus("ToppingBUS", ToppingBUS.class));
+                lookupTasks.add(() -> lookupBus("ItemToppingBUS", ItemToppingBUS.class));
+                lookupTasks.add(() -> lookupBus("PromotionDetailBUS", PromotionDetailBUS.class));
+                lookupTasks.add(() -> lookupBus("RoleBUS", RoleBUS.class));
+                lookupTasks.add(() -> lookupBus("FileBUS", FileBUS.class));
 
-                    doTask("Loading...", 5);
+                // Cập nhật tiến trình
+                doTask("Loading...", 5);
 
-                    categoryBUS = (CategoryBUS ) ((Object) Naming.lookup(getURI(SERVER_HOST_NAME, CategoryBUS.class)));
-                    itemBUS = (ItemBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemBUS.class));
-                    floorBUS = (FloorBUS) Naming.lookup(getURI(SERVER_HOST_NAME, FloorBUS.class));
-                    tableBUS = (TableBUS) Naming.lookup(getURI(SERVER_HOST_NAME, TableBUS.class));
-                    customerBUS = (CustomerBUS) Naming.lookup(getURI(SERVER_HOST_NAME, CustomerBUS.class));
-                    orderBUS = (OrderBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderBUS.class));
-                    orderDetailBUS = (OrderDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, OrderDetailBUS.class));
-                    employeeBUS = (EmployeeBUS) Naming.lookup(getURI(SERVER_HOST_NAME, EmployeeBUS.class));
-                    promotionBUS = (PromotionBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionBUS.class));
-                    toppingBUS = (ToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ToppingBUS.class));
-                    itemToppingBUS = (ItemToppingBUS) Naming.lookup(getURI(SERVER_HOST_NAME, ItemToppingBUS.class));
-                    promotionDetailBUS = (PromotionDetailBUS) Naming.lookup(getURI(SERVER_HOST_NAME, PromotionDetailBUS.class));
-                    roleBUS = (RoleBUS) Naming.lookup(getURI(SERVER_HOST_NAME, RoleBUS.class));
-
-
-                    doTask("Loading...", 50);
-
-                    doTask("Loading...", 5);
-                    // Gọi tầng bus để tải dữ liệu thực tế
-
-                    // Hoàn tất
-                    doTask("Done ...", 20);
-
-                    dispose();
-                    curvesPanel1.stop();
-                    new LoginGUI().setVisible(true);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Thực thi tất cả các tác vụ lookup song song
+                for (Runnable task : lookupTasks) {
+                    executor.submit(task);
                 }
+
+                // Đóng thread pool và chờ tất cả tác vụ hoàn tất
+                executor.shutdown();
+                executor.awaitTermination(30, TimeUnit.SECONDS); // Timeout 30 giây
+
+                doTask("Loading...", 50);
+
+                // Hoàn tất
+                doTask("Done ...", 20);
+
+               ;
+
+                for (String s:  fileBUS.listFiles("")) {
+                    System.out.println(s);
+// /resources/qrcode/O123213.jpg
+                    byte [] mydata = fileBUS.downloadFileFromServer(s);
+                    System.out.println("downloading...");
+                    System.out.println(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item");
+                    File clientpathfile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item"+ "\\" + s);
+                    FileOutputStream out= new FileOutputStream(clientpathfile);
+                    out.write(mydata);
+                    out.flush();
+                    out.close();
+                }
+
+                // Đóng form hiện tại và mở LoginGUI
+                dispose();
+                curvesPanel1.stop();
+                new LoginGUI().setVisible(true);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
     }//GEN-LAST:event_formWindowOpened
+
+    // Hàm hỗ trợ lookup BUS
+    private void lookupBus(String busName, Class<?> busClass) {
+        try {
+            System.out.println("Connecting to " + busName + "...");
+            Object bus = Naming.lookup(getURI(SERVER_HOST_NAME, busClass));
+            // Gán đối tượng vào biến tương ứng
+            switch (busName) {
+                case "CategoryBUS":
+                    categoryBUS = (CategoryBUS) bus;
+                    break;
+                case "ItemBUS":
+                    itemBUS = (ItemBUS) bus;
+                    break;
+                case "FloorBUS":
+                    floorBUS = (FloorBUS) bus;
+                    break;
+                case "TableBUS":
+                    tableBUS = (TableBUS) bus;
+                    break;
+                case "CustomerBUS":
+                    customerBUS = (CustomerBUS) bus;
+                    break;
+                case "OrderBUS":
+                    orderBUS = (OrderBUS) bus;
+                    break;
+                case "OrderDetailBUS":
+                    orderDetailBUS = (OrderDetailBUS) bus;
+                    break;
+                case "EmployeeBUS":
+                    employeeBUS = (EmployeeBUS) bus;
+                    break;
+                case "PromotionBUS":
+                    promotionBUS = (PromotionBUS) bus;
+                    break;
+                case "ToppingBUS":
+                    toppingBUS = (ToppingBUS) bus;
+                    break;
+                case "ItemToppingBUS":
+                    itemToppingBUS = (ItemToppingBUS) bus;
+                    break;
+                case "PromotionDetailBUS":
+                    promotionDetailBUS = (PromotionDetailBUS) bus;
+                    break;
+                case "RoleBUS":
+                    roleBUS = (RoleBUS) bus;
+                    break;
+                case "FileBUS":
+                    fileBUS = (FileBUS) bus;
+                    break;
+            }
+            System.out.println("Connected to " + busName + " server");
+        } catch (Exception e) {
+            System.err.println("Failed to connect to " + busName + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void doTask(String taskName, int progress) throws Exception {
         lbStatus.setText(taskName);

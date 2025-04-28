@@ -2,7 +2,6 @@ package gui.custom;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
 
 /**
  *
@@ -21,11 +20,7 @@ public class PanelView extends javax.swing.JPanel {
         cmdView.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    event.onView(row);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                event.onView(row);
             }
         });
     }
@@ -39,14 +34,14 @@ public class PanelView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cmdView = new gui.custom.ActionButton();
+        cmdView = new ActionButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
         cmdView.setBackground(new java.awt.Color(255, 255, 255));
         cmdView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icon/png/icons8-eye-15.png"))); // NOI18N
-        cmdView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmdView.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 cmdViewActionPerformed(evt);
             }
         });
@@ -69,12 +64,12 @@ public class PanelView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdViewActionPerformed
+    private void cmdViewActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmdViewActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdViewActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private gui.custom.ActionButton cmdView;
+    private ActionButton cmdView;
     // End of variables declaration//GEN-END:variables
 }

@@ -126,8 +126,9 @@ public class ItemDAL implements BaseDAL<ItemEntity, String> {
             parameters.put("name", "%" + name + "%");
         }
         if (categoryId != null && !categoryId.trim().isEmpty()) {
-            jpql.append(" and i.categoryId = :categoryId");
+            jpql.append(" and i.category.categoryId = :categoryId");
             parameters.put("categoryId", categoryId);
+
         }
         if (costPrice != null) {
             jpql.append(" and i.costPrice = :costPrice");
