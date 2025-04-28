@@ -29,7 +29,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     }
 
     // Lazy initialization của orderBUS
-    private OrderBUS getOrderBUS() throws RemoteException {
+    private OrderBUS getOrderBUS() throws Exception {
         if (orderBUS == null) {
             orderBUS = new OrderBUSImpl(em);
         }
@@ -94,7 +94,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     }
 
     @Override
-    public List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime, int option)  throws RemoteException {
+    public List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime, int option) throws Exception {
         List<TableEntity> tables = tableDAL.getListOfAvailableTables(floorId, reservationDateTime);
         List<OrderEntity> orders = getOrderBUS().getCurrentOrdersAndReservations(reservationDateTime, option);
 
@@ -116,7 +116,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     }
 
     @Override
-    public List<TableEntity> getListTablesByStatus(String floorId, String status)  throws RemoteException {
+    public List<TableEntity> getListTablesByStatus(String floorId, String status) throws Exception {
         List<TableEntity> list = tableDAL.findAll().stream().filter(x -> x.getFloor().getFloorId().equals(floorId)).collect(Collectors.toList());
         List<OrderEntity> orders = getOrderBUS().getListOfReservations(LocalDate.now(), LocalTime.now(), "ADVANCE");
         List<TableEntity> reservedList = orders.stream().map(x -> x.getTable()).collect(Collectors.toList());

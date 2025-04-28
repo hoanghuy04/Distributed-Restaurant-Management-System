@@ -146,11 +146,11 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
                 query.setParameter("endDateTime", endDateTime);
             }
         } else {
-//            jpql += " AND o.reservationTime >= :dateTime";
-//            LocalDateTime dateTime = LocalDateTime.now().minusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES);
-//            System.out.println(dateTime);
+            jpql += " AND o.reservationTime >= :dateTime";
+            LocalDateTime dateTime = LocalDateTime.now().minusMinutes(Constants.RESERVATION_TIMEOUT_MINUTES);
+            System.out.println(dateTime);
             query = em.createQuery(jpql, OrderEntity.class);
-//            query.setParameter("dateTime", dateTime);
+            query.setParameter("dateTime", dateTime);
         }
 
         return query.getResultList();
