@@ -40,9 +40,6 @@ public class CustomerEntity extends BaseEntity implements Serializable {
     @Column(name = "phone", nullable = false, columnDefinition = "nvarchar(255)")
     private String phone;
 
-    @Embedded
-    private Address address;
-
     @Column(name = "day_of_birth")
     private LocalDateTime dayOfBirth;
 
@@ -57,11 +54,10 @@ public class CustomerEntity extends BaseEntity implements Serializable {
     @ToString.Exclude
     private Set<OrderEntity> orders;
 
-    public CustomerEntity(String name, String email, String phone, Address address, LocalDateTime dayOfBirth) {
+    public CustomerEntity(String name, String email, String phone, LocalDateTime dayOfBirth) {
         setName(name);
         setEmail(email);
         setPhone(phone);
-//        setAddress(address);
         setDayOfBirth(dayOfBirth);
         setCustomerLevel(CustomerLevelEnum.NEW);
     }
@@ -75,7 +71,6 @@ public class CustomerEntity extends BaseEntity implements Serializable {
         setName(name);
         setEmail(email);
         setPhone(phoneNumber);
-        setAddress(address);
         setCreatedDate(createdDate);
         setDayOfBirth(dayOfBirth);
         setOrders(orders);

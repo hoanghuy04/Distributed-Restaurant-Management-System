@@ -23,17 +23,34 @@ public interface BaseDAL <T, ID>{
     boolean deleteById(ID id);
     T findById(ID id);
     List<T> findAll();
-    static boolean executeTransaction(EntityManager entityManager, Runnable runnable) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    static public boolean executeTransaction(EntityManager em, Runnable action) {
+        EntityTransaction et = em.getTransaction();
         try {
-            transaction.begin();
-            runnable.run();
-            transaction.commit();
+            if (et.isActive()) {
+                throw new IllegalStateException("Giao dịch đang hoạt động, không thể bắt đầu giao dịch mới");
+            }
+            et.begin();
+            action.run();
+            if (!et.isActive()) {
+                throw new IllegalStateException("Giao dịch không được bắt đầu đúng cách");
+            }
+            et.commit();
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
+            if (et.isActive()) {
+                try {
+                    et.rollback();
+                } catch (Exception rollbackEx) {
+                    rollbackEx.printStackTrace();
+                }
+            }
+            System.err.println("Transaction failed: " + e.getMessage());
             e.printStackTrace();
-            transaction.rollback();
             return false;
+        } finally {
+            if (em.isOpen()) {
+                em.clear(); // Xóa trạng thái của EntityManager
+            }
         }
     }
 }

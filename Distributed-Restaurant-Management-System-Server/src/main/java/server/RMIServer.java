@@ -21,7 +21,7 @@ public class RMIServer {
     public static void main(String[] args) {
         try {
             System.setProperty("sun.rmi.transport.tcp.readTimeout", "60000");
-            System.setProperty("java.rmi.server.hostname", "huyHoangPc");
+            System.setProperty("java.rmi.server.hostname", "HoangHuy");
             Context context = new InitialContext();
             LocateRegistry.createRegistry(PORT);
 
@@ -38,7 +38,7 @@ public class RMIServer {
             ItemToppingBUS itemToppingBUS = new ItemToppingBUSImpl(ConnectDB.getEntityManager());
             PromotionDetailBUS promotionDetailBUS = new PromotionDetailBUSImpl(ConnectDB.getEntityManager());
             RoleBUS roleBUS = new RoleBUSImpl(ConnectDB.getEntityManager());
-            FileBUS fileBUS = new FileBUSImpl();
+            FileBUS fileBUS = new FileBUSImpl("/resources");
 
             context.bind(getURI(getHostName(), CategoryBUS.class), categoryBUS);
             System.out.println("CategoryBUS is bound to RMI registry");
@@ -65,9 +65,9 @@ public class RMIServer {
             context.bind(getURI(getHostName(), PromotionDetailBUS.class), promotionDetailBUS);
             System.out.println("PromotionDetailBUS is bound to RMI registry");
             context.bind(getURI(getHostName(), RoleBUS.class), roleBUS);
-            System.out.println("RoleBUS is bound to RMI registry");
-            context.bind(getURI(getHostName(), FileBUS.class), fileBUS);
             System.out.println("FileBUS is bound to RMI registry");
+            context.bind(getURI(getHostName(), FileBUS.class), fileBUS);
+
 
             System.out.println("RMI Server is running...");
         } catch (Exception e) {

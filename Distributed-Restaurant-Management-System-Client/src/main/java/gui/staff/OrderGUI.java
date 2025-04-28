@@ -1006,7 +1006,6 @@ public class OrderGUI extends JPanel implements ClientCallback {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_btnSaveActionPerformed
         if (createOrder(PaymentStatusEnum.UNPAID)) {
-            JOptionPane.showMessageDialog(null, "Lưu đơn thành công");
             mainGUI.loadMainGUI();
         }
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -1386,17 +1385,21 @@ public class OrderGUI extends JPanel implements ClientCallback {
                 }
             }
 
-            // Gửi yêu cầu vào hàng đợi thay vì gọi trực tiếp
-            try {
-                orderBUS.queueOrderRequest(o, paymentStatus, this);
-                return true; // Trả về true để chờ xử lý bất đồng bộ
-            } catch (RemoteException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return false;
+            if(isNewOrder) {
+                // Gửi yêu cầu vào hàng đợi thay vì gọi trực tiếp
+                try {
+                    orderBUS.queueOrderRequest(o, paymentStatus, this);
+                    return true; // Trả về true để chờ xử lý bất đồng bộ
+                } catch (RemoteException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            } else {
+                orderBUS.updateEntity(o);
             }
         }
 
-        return false;
+        return isSwitched;
     }
     private void updateTableStatus(TableEntity table, TableStatusEnum status) throws Exception {
         table.setTableStatus(status);
@@ -1911,14 +1914,19 @@ public class OrderGUI extends JPanel implements ClientCallback {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(null, message, success ? "Thành công" : "Lỗi",
                     success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
-            if (success) {
-                if (order != null) {
-                    this.o = order; // Cập nhật order nếu thành công
-                }
+            if (success && order != null) {
+                this.o = order;
                 try {
+                    if (order.getPaymentStatus() == PaymentStatusEnum.PAID) {
+                        table.setTableStatus(TableStatusEnum.AVAILABLE);
+                        tableBUS.updateEntity(table);
+                        combinedTables.clear();
+                        DialogReceipt dialog = new DialogReceipt(mainGUI, o);
+                        dialog.setVisible(true);
+                    }
                     mainGUI.loadMainGUI();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật giao diện: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

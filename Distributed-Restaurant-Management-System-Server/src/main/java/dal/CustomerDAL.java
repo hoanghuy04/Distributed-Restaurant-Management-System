@@ -84,7 +84,7 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
                 .orElse(null);
     }
 
-    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB, String address) {
+    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB) {
         StringBuilder queryBuilder = new StringBuilder("SELECT c FROM CustomerEntity c WHERE 1=1 ");
         List<Object> parameters = new ArrayList<>();
 
@@ -98,10 +98,7 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
             queryBuilder.append("AND c.email LIKE :email ");
         }
         if (dOB != null) {
-            queryBuilder.append("AND c.dateOfBirth = :dOB ");
-        }
-        if (address != null && !address.isEmpty()) {
-            queryBuilder.append("AND c.address LIKE :address ");
+            queryBuilder.append("AND FUNCTION('DATE', c.dayOfBirth) = :dOB ");
         }
 
         Query query = em.createQuery(queryBuilder.toString(), CustomerEntity.class);
@@ -116,11 +113,29 @@ public class CustomerDAL implements BaseDAL<CustomerEntity, String> {
             query.setParameter("email", "%" + email + "%");
         }
         if (dOB != null) {
-            query.setParameter("dOB", dOB);
-        }
-        if (address != null && !address.isEmpty()) {
-            query.setParameter("address", "%" + address + "%");
+            query.setParameter("dOB", dOB.toLocalDate());  // Lấy LocalDate, chỉ ngày-tháng-năm
         }
         return query.getResultList();
+    }
+
+    public boolean existsByPhoneOrEmail(String phone, String email) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(c) FROM CustomerEntity c WHERE 1=1");
+        if (phone != null) {
+            queryBuilder.append(" AND c.phone = :phone");
+        }
+        if (email != null) {
+            queryBuilder.append(" AND c.email = :email");
+        }
+
+        Query query = em.createQuery(queryBuilder.toString(), Long.class);
+        if (phone != null) {
+            query.setParameter("phone", phone);
+        }
+        if (email != null) {
+            query.setParameter("email", email);
+        }
+
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
     }
 }

@@ -31,7 +31,12 @@ import java.util.Set;
  */
 @Data
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_table_id", columnList = "table_id"),
+        @Index(name = "idx_order_status", columnList = "order_status"),
+        @Index(name = "idx_order_type", columnList = "order_type"),
+        @Index(name = "idx_reservation_time", columnList = "reservation_time")
+})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NamedQueries({
     @NamedQuery(name = "OrderEntity.findAll", query = "select o from OrderEntity o")
@@ -110,7 +115,7 @@ public class OrderEntity extends BaseEntity implements Serializable {
     private ReservationStatusEnum reservationStatus;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<OrderDetailEntity> orderDetails;
 
     @Override
