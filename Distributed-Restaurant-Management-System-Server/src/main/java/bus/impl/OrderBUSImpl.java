@@ -45,7 +45,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
     private OrderQueueProcessor queueProcessor;
     private final EntityManager em;
 
-    public OrderBUSImpl(EntityManager em)  throws RemoteException {
+    public OrderBUSImpl(EntityManager em) throws Exception{
         this.em = em;
         orderDAL = new OrderDAL(em);
         queueProcessor = new OrderQueueProcessor(this);
@@ -94,7 +94,7 @@ public class OrderBUSImpl extends UnicastRemoteObject implements bus.OrderBUS {
         }
     }
 
-    public void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws RemoteException {
+    public void queueOrderRequest(OrderEntity orderEntity, PaymentStatusEnum paymentStatus, ClientCallback callback) throws Exception {
         OrderRequest request = new OrderRequest(orderEntity, paymentStatus, callback);
         queueProcessor.addOrderRequest(request);
     }

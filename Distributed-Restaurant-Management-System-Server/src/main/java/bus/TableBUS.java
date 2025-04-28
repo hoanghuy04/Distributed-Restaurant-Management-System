@@ -23,9 +23,9 @@ public interface TableBUS  extends BaseBUS<TableEntity, String> {
 
     List<TableEntity> getAllEntities() throws RemoteException;
 
-    List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime, int option) throws RemoteException;
+    List<TableEntity> getListOfAvailableTables(String floorId, LocalDateTime reservationDateTime, int option) throws Exception;
 
-    List<TableEntity> getListTablesByStatus(String floorId, String status) throws RemoteException;
+    List<TableEntity> getListTablesByStatus(String floorId, String status) throws Exception;
 
     TableEntity findByName(String name, String floorId) throws RemoteException;
 

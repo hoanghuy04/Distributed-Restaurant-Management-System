@@ -18,29 +18,29 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class OrderQueueProcessor {
+public class OrderQueueProcessor  {
     private final BlockingQueue<OrderRequest> orderQueue = new LinkedBlockingQueue<>();
     private final Map<String, Lock> tableLocks = new ConcurrentHashMap<>();
     private final OrderBUS orderBUS;
     private volatile boolean running = true;
 
-    public OrderQueueProcessor(OrderBUS orderBUS) {
+    public OrderQueueProcessor(OrderBUS orderBUS) throws Exception {
         this.orderBUS = orderBUS;
         startProcessing();
     }
 
     // Thêm yêu cầu vào hàng đợi
-    public void addOrderRequest(OrderRequest request) {
+    public void addOrderRequest(OrderRequest request) throws Exception {
         orderQueue.offer(request);
     }
 
     // Dừng xử lý
-    public void stop() {
+    public void stop() throws Exception{
         running = false;
     }
 
     // Bắt đầu thread xử lý hàng đợi
-    private void startProcessing() {
+    public void startProcessing() throws Exception {
         new Thread(() -> {
             while (running) {
                 try {
@@ -57,7 +57,7 @@ public class OrderQueueProcessor {
     }
 
     // Xử lý một yêu cầu
-    private void processRequest(OrderRequest request) {
+    public void processRequest(OrderRequest request) throws Exception {
         String tableId = request.getOrderEntity().getTable().getTableId();
         Lock lock = tableLocks.computeIfAbsent(tableId, k -> new ReentrantLock());
         lock.lock();
