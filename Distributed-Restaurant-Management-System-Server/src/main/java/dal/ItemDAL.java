@@ -42,13 +42,15 @@ public class ItemDAL implements BaseDAL<ItemEntity, String> {
     public ItemEntity insert(ItemEntity t) {
         t.setItemId(IDGeneratorUtility.generateIDWithCreatedDate("I", "items", "item_id", "created_date", em, LocalDateTime.now()));
         executeTransaction(() -> em.persist(t));
-
         return t;
     }
 
     @Override
-    public boolean update(ItemEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public ItemEntity update(ItemEntity t) {
+        if (t.getItemId() == null) {
+            t.setItemId(IDGeneratorUtility.generateIDWithCreatedDate("I", "items", "item_id", "created_date", em, LocalDateTime.now()));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

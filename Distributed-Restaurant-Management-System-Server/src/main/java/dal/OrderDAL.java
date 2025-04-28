@@ -68,11 +68,17 @@ public class OrderDAL implements BaseDAL<OrderEntity, String> {
 
 
     @Override
-    public boolean update(OrderEntity orderEntity) {
+    public OrderEntity update(OrderEntity orderEntity) {
         if (orderEntity.getOrderDetails() == null) {
             orderEntity.setOrderDetails(new HashSet<>());
         }
-        return executeTransaction(() -> em.merge(orderEntity));
+
+        if(orderEntity.getOrderId() == null) {
+            orderEntity.setOrderId(IDGeneratorUtility.generateIDWithCreatedDate(
+                    "O", "orders", "order_id", "reservation_time", em, orderEntity.getReservationTime()));
+        }
+
+        return executeTransaction(() -> em.merge(orderEntity))? orderEntity : null;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface ToppingBUS extends BaseBUS<ToppingEntity, String> {
     ToppingEntity insertEntity(ToppingEntity topping) throws RemoteException;
 
     @Override
-    boolean updateEntity(ToppingEntity topping) throws RemoteException;
+    ToppingEntity updateEntity(ToppingEntity topping) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

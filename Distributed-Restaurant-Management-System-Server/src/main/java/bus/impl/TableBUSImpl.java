@@ -74,7 +74,7 @@ public class TableBUSImpl extends UnicastRemoteObject implements bus.TableBUS {
     }
 
     @Override
-    public boolean updateEntity(TableEntity table)  throws RemoteException {
+    public TableEntity updateEntity(TableEntity table)  throws RemoteException {
         return tableDAL.update(table);
     }
 

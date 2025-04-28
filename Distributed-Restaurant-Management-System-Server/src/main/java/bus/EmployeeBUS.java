@@ -11,7 +11,7 @@ public interface EmployeeBUS extends BaseBUS<EmployeeEntity, String> {
     EmployeeEntity insertEntity(EmployeeEntity employee) throws RemoteException;
 
     @Override
-    boolean updateEntity(EmployeeEntity employee) throws RemoteException;
+    EmployeeEntity updateEntity(EmployeeEntity employee) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

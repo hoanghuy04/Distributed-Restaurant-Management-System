@@ -53,8 +53,8 @@ public class OrderDetailDAL implements BaseDAL<OrderDetailEntity, OrderDetailId>
     }
 
     @Override
-    public boolean update(OrderDetailEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public OrderDetailEntity update(OrderDetailEntity t) {
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

@@ -51,8 +51,11 @@ public class EmployeeDAL implements BaseDAL<EmployeeEntity, String> {
         return t;
     }
     @Override
-    public boolean update(EmployeeEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public EmployeeEntity update(EmployeeEntity t) {
+        if (t.getEmployeeId() == null) {
+            t.setEmployeeId(IDGeneratorUtility.generateIDWithCreatedDate("Emp", "employees", "employee_id", "created_date", em, LocalDateTime.now()));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
 
     @Override

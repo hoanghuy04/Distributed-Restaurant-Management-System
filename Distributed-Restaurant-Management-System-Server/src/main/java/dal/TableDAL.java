@@ -36,8 +36,8 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
             if (et.isActive()) {
                 et.rollback();
             }
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -48,10 +48,12 @@ public class TableDAL implements BaseDAL<TableEntity, String> {
     }
 
     @Override
-    public boolean update(TableEntity t) {
-        return executeTransaction(() -> em.merge(t));
+    public TableEntity update(TableEntity t) {
+        if (t.getTableId() == null) {
+            t.setTableId(IDGeneratorUtility.generateSimpleID(t.getFloor().getFloorId() + "T", "tables", "table_id", em));
+        }
+        return executeTransaction(() -> em.merge(t)) ? t : null;
     }
-
     @Override
     public boolean deleteById(String id) {
         return false;

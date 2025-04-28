@@ -28,7 +28,7 @@ public class EmployeeBUSImpl extends UnicastRemoteObject implements bus.Employee
     }
 
     @Override
-    public boolean updateEntity(EmployeeEntity employee)  throws RemoteException {
+    public EmployeeEntity updateEntity(EmployeeEntity employee)  throws RemoteException {
         return employeeDAL.update(employee);
     }
 

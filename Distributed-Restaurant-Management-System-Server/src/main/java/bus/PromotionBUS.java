@@ -14,7 +14,7 @@ public interface PromotionBUS extends BaseBUS<PromotionEntity, String> {
     PromotionEntity insertEntity(PromotionEntity promotion) throws RemoteException;
 
     @Override
-    boolean updateEntity(PromotionEntity promotion) throws RemoteException;
+    PromotionEntity updateEntity(PromotionEntity promotion) throws RemoteException;
 
     @Override
     boolean deleteEntity(String id) throws RemoteException;

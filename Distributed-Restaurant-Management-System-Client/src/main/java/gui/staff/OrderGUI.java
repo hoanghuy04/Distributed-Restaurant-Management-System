@@ -1408,9 +1408,9 @@ public class OrderGUI extends JPanel implements ClientCallback {
     private void updateTableStatus(TableEntity table, TableStatusEnum status) throws Exception {
         table.setTableStatus(status);
         TableEntity updatedTable = tableBUS.updateEntity(table);
-        if (updatedTable == null) {
-            throw new RemoteException("Cập nhật trạng thái bàn thất bại");
-        }
+//        if (updatedTable == null) {
+//            throw new RemoteException("Cập nhật trạng thái bàn thất bại");
+//        }
     }
 
     private void processPaidOrder(OrderEntity o) throws Exception {
