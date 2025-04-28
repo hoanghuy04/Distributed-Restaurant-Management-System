@@ -2,8 +2,13 @@ package bus.impl;
 
 import bus.OrderBUS;
 import bus.request.OrderRequest;
+import dal.OrderDAL;
+import dal.connectDB.ConnectDB;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Table;
 import model.OrderEntity;
 import model.enums.PaymentStatusEnum;
+import model.enums.TableStatusEnum;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -41,7 +46,9 @@ public class OrderQueueProcessor {
                 try {
                     OrderRequest request = orderQueue.take(); // Lấy yêu cầu từ hàng đợi
                     processRequest(request);
-                } catch (InterruptedException e) {
+                    Thread.sleep(1000); // Đợi 1 giây sau khi xử lý xong yêu cầu
+                } catch (Exception e) {
+                    System.out.println("Error processing order request: " + e.getMessage());
                     Thread.currentThread().interrupt();
                     break;
                 }
@@ -53,8 +60,8 @@ public class OrderQueueProcessor {
     private void processRequest(OrderRequest request) {
         String tableId = request.getOrderEntity().getTable().getTableId();
         Lock lock = tableLocks.computeIfAbsent(tableId, k -> new ReentrantLock());
-
         lock.lock();
+        EntityManager em = ConnectDB.getEntityManager(); // Tạo EntityManager mới
         try {
             OrderEntity order = request.getOrderEntity();
             PaymentStatusEnum paymentStatus = request.getPaymentStatus();
@@ -62,27 +69,38 @@ public class OrderQueueProcessor {
             String message;
             OrderEntity savedOrder = null;
 
+            OrderDAL orderDAL = new OrderDAL(em);
+            OrderBUSImpl orderBUSImpl = new OrderBUSImpl(em);
+
             try {
                 if (paymentStatus == PaymentStatusEnum.PAID) {
                     order.setPaymentStatus(PaymentStatusEnum.PAID);
-                    success = orderBUS.updateEntity(order);
+                    success = orderBUSImpl.updateEntity(order);
                     message = success ? "Thanh toán đơn hàng thành công!" : "Lỗi khi thanh toán đơn hàng.";
                 } else {
-                    savedOrder = orderBUS.insertEntity(order);
-                    success = savedOrder != null;
-                    message = success ? "Lưu đơn hàng thành công!" : "Lỗi khi lưu đơn hàng.";
+                    if (order.getTable().getTableStatus() != TableStatusEnum.OCCUPIED) {
+                        savedOrder = orderBUSImpl.insertEntity(order);
+                        success = savedOrder != null;
+                        message = success ? "Lưu đơn hàng thành công!" : "Lỗi khi lưu đơn hàng.";
+                    } else {
+                        message = "Bàn đã được đặt trước!";
+                        success = false;
+                    }
                 }
-                // Thông báo kết quả cho client
                 request.getCallback().notifyOrderResult(success, message, savedOrder);
             } catch (RemoteException e) {
                 request.getCallback().notifyOrderResult(false, "Lỗi: " + e.getMessage(), null);
             }
-        } catch (RemoteException e) {
-            // Xử lý lỗi khi gọi callback
+        } catch (Exception e) {
             e.printStackTrace();
+            try {
+                request.getCallback().notifyOrderResult(false, "Lỗi xử lý yêu cầu: " + e.getMessage(), null);
+            } catch (RemoteException re) {
+                re.printStackTrace();
+            }
         } finally {
             lock.unlock();
-            tableLocks.remove(tableId); // Xóa khóa sau khi xử lý xong
+            tableLocks.remove(tableId);
         }
     }
 }

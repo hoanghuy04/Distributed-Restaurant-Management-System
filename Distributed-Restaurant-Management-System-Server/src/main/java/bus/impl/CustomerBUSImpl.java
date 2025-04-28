@@ -49,7 +49,13 @@ public class CustomerBUSImpl extends UnicastRemoteObject implements bus.Customer
     }
     
     @Override
-    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB, String address)  throws RemoteException {
-        return customerDAL.getCustomersByKeyword(name, phoneNumber, email, dOB, address);
+    public List<CustomerEntity> getCustomersByKeyword(String name, String phoneNumber, String email, LocalDateTime dOB)  throws RemoteException {
+        return customerDAL.getCustomersByKeyword(name, phoneNumber, email, dOB);
     }
+
+    @Override
+    public boolean existsByPhoneOrEmail(String phone, String email) throws RemoteException {
+        return customerDAL.existsByPhoneOrEmail(phone, email);
+    }
+
 }

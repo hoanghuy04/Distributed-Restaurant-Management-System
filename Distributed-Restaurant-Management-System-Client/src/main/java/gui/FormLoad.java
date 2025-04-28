@@ -54,6 +54,7 @@ public class FormLoad extends javax.swing.JDialog {
     public static RoleBUS roleBUS;
     public static FileBUS fileBUS;
 
+    public static MailBUS mailBUS;
     public FormLoad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -164,6 +165,7 @@ public class FormLoad extends javax.swing.JDialog {
                 lookupTasks.add(() -> lookupBus("PromotionDetailBUS", PromotionDetailBUS.class));
                 lookupTasks.add(() -> lookupBus("RoleBUS", RoleBUS.class));
                 lookupTasks.add(() -> lookupBus("FileBUS", FileBUS.class));
+                lookupTasks.add(() -> lookupBus("MailBUS", MailBUS.class));
 
                 // Cập nhật tiến trình
                 doTask("Loading...", 5);
@@ -184,10 +186,10 @@ public class FormLoad extends javax.swing.JDialog {
 
                ;
 
-                for (String s:  fileBUS.listFiles("")) {
+                for (String s:  fileBUS.listFiles("/resources/img")) {
                     System.out.println(s);
-// /resources/qrcode/O123213.jpg
-                    byte [] mydata = fileBUS.downloadFileFromServer(s);
+
+                    byte [] mydata = fileBUS.downloadFileFromServer("/resources/img/" + s);
                     System.out.println("downloading...");
                     System.out.println(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item");
                     File clientpathfile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\img\\item"+ "\\" + s);
@@ -256,6 +258,9 @@ public class FormLoad extends javax.swing.JDialog {
                     break;
                 case "FileBUS":
                     fileBUS = (FileBUS) bus;
+                    break;
+                case "MailBUS":
+                    mailBUS = (MailBUS) bus;
                     break;
             }
             System.out.println("Connected to " + busName + " server");

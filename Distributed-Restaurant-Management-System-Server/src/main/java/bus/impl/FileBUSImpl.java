@@ -8,12 +8,20 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class FileBUSImpl extends UnicastRemoteObject implements FileBUS {
 
-    private String imgPath =  System.getProperty("user.dir") + "/img";
+    //    private String imgPath =  System.getProperty("user.dir") + "/img";
+//
+//    public FileBUSImpl() throws RemoteException {
+//
+//        String currPath = System.getProperty("user.dir");
+//        File storageDir = new File(currPath + "/img");
+//        storageDir.mkdir();
+//    }
+    private String imgPath;
+    private final String USER_DIR = System.getProperty("user.dir");
 
-    public FileBUSImpl() throws RemoteException {
-
-        String currPath = System.getProperty("user.dir");
-        File storageDir = new File(currPath + "/img");
+    public FileBUSImpl(String savedfolder) throws RemoteException {
+        this.imgPath = USER_DIR + savedfolder;
+        File storageDir = new File(this.imgPath);
         storageDir.mkdir();
     }
 
@@ -25,7 +33,7 @@ public class FileBUSImpl extends UnicastRemoteObject implements FileBUS {
             byte[] fileData = mybyte;
 
             out.write(mybyte);
-                out.flush();
+            out.flush();
             out.close();
 
         } catch (FileNotFoundException e) {
@@ -38,9 +46,9 @@ public class FileBUSImpl extends UnicastRemoteObject implements FileBUS {
 
     @Override
     public byte[] downloadFileFromServer(String servername) throws RemoteException {
-        byte [] mydata;
-        File serverFilePath = new File(imgPath + "/" + servername);
-        mydata=new byte[(int) serverFilePath.length()];
+        byte[] mydata;
+        File serverFilePath = new File(USER_DIR + servername);
+        mydata = new byte[(int) serverFilePath.length()];
         FileInputStream in;
         try {
             in = new FileInputStream(serverFilePath);
@@ -66,7 +74,7 @@ public class FileBUSImpl extends UnicastRemoteObject implements FileBUS {
 
     @Override
     public String[] listFiles(String serverpath) throws RemoteException {
-        File serverFilePath = new File(imgPath);
+        File serverFilePath = new File(USER_DIR + serverpath);
         return serverFilePath.list();
     }
 }
