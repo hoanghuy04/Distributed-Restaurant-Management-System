@@ -27,7 +27,7 @@ public class FileBUSImpl extends UnicastRemoteObject implements FileBUS {
 
     @Override
     public void uploadFileToServer(byte[] mybyte, String fileName, int length) throws RemoteException {
-        File serverFilePath = new File(imgPath + "/" + fileName);
+        File serverFilePath = new File(imgPath + fileName);
         try {
             FileOutputStream out = new FileOutputStream(serverFilePath);
             byte[] fileData = mybyte;
